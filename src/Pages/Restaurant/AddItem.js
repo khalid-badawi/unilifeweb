@@ -147,7 +147,7 @@ export default function AddItem() {
             type="submit"
             sx={{
               backgroundColor: "#8F00FF",
-              paddingX: 10,
+              paddingX: 15,
               paddingY: 1,
               height: 40,
 

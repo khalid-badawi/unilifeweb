@@ -6,6 +6,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuIcon from "@mui/icons-material/RestaurantMenu";
 import OrdersIcon from "@mui/icons-material/TableRestaurant";
+import ReviewsIcon from "@mui/icons-material/StarHalf";
 import AddIcon from "@mui/icons-material/Add";
 import Logo1 from "../../assets/Logo1.png";
 
@@ -124,6 +125,13 @@ export default function SidebarNav() {
               title="Orders"
               to="/orders"
               icon={<OrdersIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Ratings"
+              to="/reviews"
+              icon={<ReviewsIcon />}
               selected={selected}
               setSelected={setSelected}
             />

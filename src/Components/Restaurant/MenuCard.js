@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Box } from "@mui/material";
 
 export default function MenuCard({ title, desc, img }) {
   return (
@@ -24,14 +25,19 @@ export default function MenuCard({ title, desc, img }) {
           species, ranging across all continents except Antarctica
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" sx={{ color: "#8F00FF" }}>
-          Edit
-        </Button>
-        <Button size="small" sx={{ color: "#8F00FF" }}>
-          Delete
-        </Button>
-      </CardActions>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <CardActions>
+          <Button size="small" sx={{ color: "#8F00FF" }}>
+            Edit
+          </Button>
+          <Button size="small" sx={{ color: "#8F00FF" }}>
+            Delete
+          </Button>
+        </CardActions>
+        <Typography variant="subtitle2" sx={{ mt: 1.5, mr: 2 }}>
+          100₪
+        </Typography>
+      </Box>
     </Card>
   );
 }

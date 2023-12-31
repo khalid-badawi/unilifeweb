@@ -2,7 +2,15 @@ import React from "react";
 import CustomInput from "../Components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, Container, Link, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  Link,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Logo1 from "../assets/Logo1.png";
 import "./Login.css";
 
@@ -36,45 +44,71 @@ export default function Login() {
         style={{
           paddingTop: 80,
           paddingBottom: 100,
-          paddingRight: 40,
-          paddingLeft: 40,
+          paddingRight: 70,
+          paddingLeft: 70,
+          width: 500,
+          justifyContent: "center",
+          alignItems: "center",
           margin: "auto",
         }}
       >
-        <img src={Logo1} alt="uniLife" className="img" />
-        <Typography variant="h4" component="h3" sx={{ marginBottom: 3 }}>
-          Sign In
-        </Typography>
-        <form onSubmit={formik.handleSubmit}>
-          <CustomInput
-            type="email"
-            placeholder="Email"
-            formik={formik}
-            value={formik.values.email}
-            setValue={(value) => formik.setFieldValue("email", value)}
-          />
-
-          <CustomInput
-            type="password"
-            placeholder="Password"
-            formik={formik}
-            value={formik.values.password}
-            setValue={(value) => formik.setFieldValue("password", value)}
-          />
-          <Button
-            variant="contained"
-            type="submit"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            textAlign: "center",
+          }}
+        >
+          <img src={Logo1} alt="uniLife" className="img" />
+          <Typography
+            variant="h4"
+            component="h3"
             sx={{
-              backgroundColor: "#8F00FF",
-              paddingX: 5,
-              paddingY: 1,
-              marginY: 1,
+              marginBottom: 3,
+              alignSelf: "center",
             }}
           >
             Sign In
-          </Button>
-        </form>
-        <Button sx={{ color: "gray" }}>Forgot Password?</Button>
+          </Typography>
+          <form onSubmit={formik.handleSubmit}>
+            <FormControl fullWidth>
+              <CustomInput
+                type="email"
+                placeholder="Email"
+                formik={formik}
+                value={formik.values.email}
+                setValue={(value) => formik.setFieldValue("email", value)}
+              />
+            </FormControl>
+
+            <CustomInput
+              type="password"
+              placeholder="Password"
+              formik={formik}
+              value={formik.values.password}
+              setValue={(value) => formik.setFieldValue("password", value)}
+            />
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{
+                backgroundColor: "#8F00FF",
+                paddingX: 10,
+                paddingY: 1,
+                marginY: 1,
+                ":hover": {
+                  backgroundColor: "#6A00CC", // Change this color for hover effect
+                  cursor: "pointer", // Optional: Change cursor on hover
+                },
+                alignSelf: "center",
+              }}
+            >
+              Sign In
+            </Button>
+          </form>
+          <Button sx={{ color: "gray" }}>Forgot Password?</Button>
+        </Box>
       </Paper>
     </Container>
   );
