@@ -10,7 +10,7 @@ export default function ReviewCard({ reviewer, date, content, rating }) {
     <Card
       sx={{
         maxWidth: 400, // Adjust the maximum width as needed
-        height: 600,
+        height: 550,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
