@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CustomInput from "../Components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { login } from "../APIS/userAPI";
 import {
   Box,
   Button,
@@ -11,14 +12,23 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setId, setRole, setError, setIsAuth } from "../slice/user";
 import Logo1 from "../assets/Logo1.png";
 import "./Login.css";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  const [email, setEmail] = useState("Kefac@gmail.com");
+  const [password, setPassword] = useState("12345678");
+  const role = useSelector((state) => state.user.role);
+  const isAuth = useSelector((state) => state.user.isAuth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: email,
+      password: password,
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
@@ -29,7 +39,55 @@ export default function Login() {
       console.log("Form values:", values);
     },
   });
-
+  console.log(formik.values.email, formik.values.password);
+  async function action(e) {
+    e.preventDefault();
+    try {
+      const res = await login(formik.values.email, formik.values.password);
+      console.log("res:", res);
+      //const { token } = res.data;
+      let { status } = res;
+      console.log("status", status);
+      if (status === 200) {
+        const {
+          data: {
+            token,
+            data: { id, role },
+          },
+        } = res;
+        localStorage.setItem("token", token);
+        dispatch(setIsAuth(true));
+        dispatch(setId(id));
+        dispatch(setRole(role));
+      } else {
+        console.log("status", res.response.data);
+        status = res.response.status;
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        console.log("message:", message);
+        dispatch(setIsAuth(false));
+        if (status === 400) {
+          dispatch(setError(message));
+        } else if (status === 500) {
+          dispatch(setError("Internal Server Error"));
+        }
+      }
+    } catch (err) {
+      dispatch(setError("Internal Server Error"));
+      //console.log("The error:", err);
+    }
+  }
+  useEffect(() => {
+    console.log("The isAuth:", isAuth);
+    if (isAuth) {
+      if (role === "admin") navigate("/admin", { replace: true });
+      else if (role === "restaurant") navigate("/", { replace: true });
+      else if (role === "dormitory") navigate("/dormitory", { replace: true });
+    } //else navigate("/");
+  }, [isAuth, role, navigate]);
   return (
     <Container
       sx={{
@@ -78,7 +136,10 @@ export default function Login() {
                 placeholder="Email"
                 formik={formik}
                 value={formik.values.email}
-                setValue={(value) => formik.setFieldValue("email", value)}
+                setValue={
+                  (value) =>
+                    setEmail(value) /* formik.setFieldValue("email", value)*/
+                }
               />
             </FormControl>
 
@@ -87,11 +148,15 @@ export default function Login() {
               placeholder="Password"
               formik={formik}
               value={formik.values.password}
-              setValue={(value) => formik.setFieldValue("password", value)}
+              setValue={
+                (value) =>
+                  setPassword(value) /*formik.setFieldValue("password", value)*/
+              }
             />
             <Button
               variant="contained"
               type="submit"
+              onClick={(e) => action(e)}
               sx={{
                 backgroundColor: "#8F00FF",
                 paddingX: 10,

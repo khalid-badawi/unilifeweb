@@ -1,9 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
-import { orders } from "../../data/mockData";
+//import { orders } from "../../data/mockData";
 import OrderDetails from "./OrderDetails";
+import { setOrder } from "../../slice/restaurant";
+import { setError } from "../../slice/user";
+import { useDispatch, useSelector } from "react-redux";
+import { getOrders } from "../../APIS/restaurantAPI";
 export default function Orders() {
+  let orders = useSelector((state) => state.restaurant.orders);
+  const id = useSelector((state) => state.user.id);
+  const [orderId, setOrderId] = useState(null);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    async function fetchOrder() {
+      const res = await getOrders(id);
+      console.log(res);
+      let status = res.status;
+      if (status === 200) {
+        dispatch(setOrder(res.data.data));
+      } else {
+        status = res.response.status;
+        console.log(status);
+        if (status === 404 || status === 401 || status === 403) {
+          const message = res.response.data.message;
+          dispatch(setError(message));
+        }
+        console.log(res);
+      }
+    }
+    fetchOrder();
+  }, []);
+  // console.log("orders:", orders[0].items);
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -23,7 +51,7 @@ export default function Orders() {
   const columns = [
     { field: "id", headerName: "Order ID", width: 200 },
     { field: "studentName", headerName: "Student Name", width: 200 },
-    { field: "orderedAt", headerName: "Ordered At", width: 200 },
+    { field: "createdAt", headerName: "Ordered At", width: 200 },
     {
       field: "status",
       headerName: "Status",
@@ -136,8 +164,8 @@ export default function Orders() {
   };
   const handleDetailsClick = (orderId) => {
     console.log(`Button clicked for order ID: ${orderId}.`);
+    setOrderId(orderId);
     handleOpenModal();
-    // Perform any other necessary actions here, like updating the order status.
   };
 
   const getStatusColor = (status) => {
@@ -164,6 +192,7 @@ export default function Orders() {
   return (
     <Box pl={2}>
       <Box sx={{ height: 900 }}>
+        (
         <DataGrid
           columns={columns}
           rows={orders}
@@ -178,11 +207,15 @@ export default function Orders() {
           }}
           rowSelection={false}
         />
+        )
       </Box>
-      <OrderDetails
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-      />
+      {orderId && (
+        <OrderDetails
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+          id={orderId}
+        />
+      )}
     </Box>
   );
 }
