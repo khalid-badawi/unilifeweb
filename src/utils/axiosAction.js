@@ -80,13 +80,13 @@ export async function postDataFiles(
     return err;
   }
 }
-export async function putData(endpoint, value, token = null, ...params) {
+export async function putData(endpoint, value = null, token = null, ...params) {
   try {
     console.log("The URL", process.env.BASE_URL);
     const ids = params.join("/");
     const res = await axios.patch(
       `${BASE_URL}/${endpoint}/${ids}`,
-      JSON.stringify(value),
+      value && JSON.stringify(value),
       {
         headers: {
           "Content-Type": "application/json",

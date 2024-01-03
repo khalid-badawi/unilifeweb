@@ -18,12 +18,23 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OrderDetails({ isModalOpen, handleCloseModal, id }) {
+export default function OrderDetails({
+  isModalOpen,
+  handleCloseModal,
+  id,
+  handleUpdateClick,
+}) {
   const orders = useSelector((state) => state.restaurant.orders);
   console.log("inside detailed:", id);
 
   const order = orders.filter((item) => item.id === id)[0];
+  const userId = useSelector((state) => state.user.id);
   const { studentName, phoneNum, createdAt, items, notes } = order;
+  /* const updateOrder = async (e) => {
+    e.preventDefault();
+    const res = await updateOrders(userId, id);
+    console.log(res);
+  };*/
   console.log("inside detailed order:", order);
   return (
     <React.Fragment>
@@ -179,6 +190,7 @@ export default function OrderDetails({ isModalOpen, handleCloseModal, id }) {
             }}
             variant="outlined"
             color="primary"
+            onClick={handleUpdateClick}
           >
             Update to
           </Button>
