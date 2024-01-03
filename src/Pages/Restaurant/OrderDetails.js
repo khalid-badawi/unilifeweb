@@ -12,12 +12,19 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { Box, ListItemSecondaryAction } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OrderDetails({ isModalOpen, handleCloseModal }) {
+export default function OrderDetails({ isModalOpen, handleCloseModal, id }) {
+  const orders = useSelector((state) => state.restaurant.orders);
+  console.log("inside detailed:", id);
+
+  const order = orders.filter((item) => item.id === id)[0];
+  const { studentName, phoneNum, createdAt, items, notes } = order;
+  console.log("inside detailed order:", order);
   return (
     <React.Fragment>
       <Dialog
@@ -59,19 +66,19 @@ export default function OrderDetails({ isModalOpen, handleCloseModal }) {
         >
           <Box sx={{ ml: 2, mr: 3 }}>
             <Typography variant="subtitle2">Order ID</Typography>
-            <Typography variant="body1">3</Typography>
+            <Typography variant="body1">{id}</Typography>
           </Box>
           <Box>
             <Typography variant="subtitle2">Name</Typography>
-            <Typography variant="body1">Khalid Badawi</Typography>
+            <Typography variant="body1">{studentName}</Typography>
           </Box>
           <Box>
             <Typography variant="subtitle2">Phone number</Typography>
-            <Typography variant="body1">0597401453</Typography>
+            <Typography variant="body1">{phoneNum}</Typography>
           </Box>
           <Box>
             <Typography variant="subtitle2">Ordered at</Typography>
-            <Typography variant="body1">0597401453</Typography>
+            <Typography variant="body1">{createdAt}</Typography>
           </Box>
         </Box>
         <Divider sx={{ backgroundColor: "#8F00FF", mr: 2, ml: 2 }} />
@@ -84,167 +91,69 @@ export default function OrderDetails({ isModalOpen, handleCloseModal }) {
               mt: 1,
             }}
           >
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" sx={{}}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" style={{ color: "#8F00FF" }}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" sx={{}}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" style={{ color: "#8F00FF" }}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" sx={{}}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" style={{ color: "#8F00FF" }}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" sx={{}}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" style={{ color: "#8F00FF" }}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText
-                primary={
-                  <Typography variant="h6" sx={{}}>
-                    Cheese Burger{" "}
-                  </Typography>
-                }
-                secondary="100₪"
-              />
-              <ListItemSecondaryAction>
-                <span style={{ color: "gray" }}>x1</span>
-              </ListItemSecondaryAction>
-            </ListItem>
+            {items &&
+              items.map((item, i) => {
+                console.log(i);
+                const style = i % 2 === 1 ? { color: "#8F00FF" } : {};
+                return (
+                  <>
+                    <ListItem>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6" sx={{}} style={style}>
+                            {item.nameOfFood}
+                          </Typography>
+                        }
+                        secondary={`${item.unitPrice}₪`}
+                      />
+                      <ListItemSecondaryAction>
+                        <span style={{ color: "gray" }}>x{item.Qauntity}</span>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider />
+                  </>
+                );
+              })}
           </List>
         </Box>
         <Divider sx={{ mt: 1 }} />
-        <Box
-          sx={{
-            mr: 2,
-            ml: 2,
-            mt: 3,
-            pb: 5,
-            pl: 1,
-            pr: 2,
-            pt: 1,
-            backgroundColor: "rgba(0, 0, 0, 0.05)", // Adjust the opacity and color as needed
-          }}
-        >
-          <Typography
-            variant="h6"
-            component="div"
+        {notes && (
+          <Box
             sx={{
-              borderTopRightRadius: 5,
-              borderTopLeftRadius: 5,
+              mr: 2,
+              ml: 2,
+              mt: 3,
+              pb: 5,
+              pl: 1,
+              pr: 2,
+              pt: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.05)", // Adjust the opacity and color as needed
             }}
           >
-            Notes:
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{
-              borderTopRightRadius: 5,
-              borderTopLeftRadius: 5,
-            }}
-          >
-            No hot sausage, no union
-          </Typography>
-        </Box>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                borderTopRightRadius: 5,
+                borderTopLeftRadius: 5,
+              }}
+            >
+              Notes:
+            </Typography>
+            (
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{
+                borderTopRightRadius: 5,
+                borderTopLeftRadius: 5,
+              }}
+            >
+              {notes}
+            </Typography>
+            )
+          </Box>
+        )}
         <Box
           sx={{
             display: "flex",

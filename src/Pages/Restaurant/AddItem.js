@@ -6,18 +6,57 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
+import { addToMenu } from "../../APIS/restaurantAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setError } from "../../slice/user";
+
 export default function AddItem() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
+  const id = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
+  async function handleAdd(e) {
+    e.preventDefault();
+    const data = JSON.stringify({
+      nameOfFood: title,
+      description,
+      category,
+      price,
+    });
+    const res = await addToMenu(id, data, image);
+    let status = res.status;
+    if (status === 201) {
+      console.log(status);
+    } else {
+      status = res.response.status;
+      console.log(status);
+      if (
+        status === 409 ||
+        status === 404 ||
+        status === 401 ||
+        status === 403
+      ) {
+        const message = res.response.data.message;
+        dispatch(setError(message));
+      }
+      console.log(res);
+    }
+  }
+  console.log(image);
   const formik = useFormik({
     initialValues: {
-      title: "",
-      description: "",
-      price: "",
-      category: "",
-      image: "",
+      title,
+      description,
+      price,
+      category,
+      image,
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Required"),
@@ -33,6 +72,7 @@ export default function AddItem() {
       console.log("Form values:", values);
     },
   });
+  console.log(formik.values.description);
   return (
     <Box pl={2} pr={2}>
       <form onSubmit={formik.handleSubmit}>
@@ -42,7 +82,10 @@ export default function AddItem() {
             placeholder="title"
             formik={formik}
             value={formik.values.title}
-            setValue={(value) => formik.setFieldValue("title", value)}
+            setValue={
+              (value) =>
+                setTitle(value) /*formik.setFieldValue("title", value)*/
+            }
           />
         </FormControl>
 
@@ -51,14 +94,22 @@ export default function AddItem() {
           placeholder="Description"
           formik={formik}
           value={formik.values.description}
-          setValue={(value) => formik.setFieldValue("description", value)}
+          setValue={
+            (value) =>
+              setDescription(
+                value
+              ) /*formik.setFieldValue("description", value)*/
+          }
         />
         <CustomInput
           type="price"
           placeholder="Price ₪"
           formik={formik}
           value={formik.values.price}
-          setValue={(value) => formik.setFieldValue("password", value)}
+          setValue={
+            (value) =>
+              setPrice(value) /*formik.setFieldValue("password", value)*/
+          }
         />
         <FormControl
           fullWidth
@@ -80,8 +131,9 @@ export default function AddItem() {
             id="demo-simple-select"
             label="Category"
             value={formik.values.category}
-            onChange={(event) =>
-              formik.setFieldValue("category", event.target.value)
+            onChange={
+              (event) => setCategory(event.target.value)
+              /*formik.setFieldValue("category", event.target.value)*/
             }
             onBlur={formik.handleBlur}
             error={formik.touched.category && Boolean(formik.errors.category)}
@@ -112,7 +164,8 @@ export default function AddItem() {
               accept="image/*"
               onChange={(event) => {
                 const selectedImage = event.target.files[0];
-                formik.setFieldValue("image", selectedImage);
+                /* formik.setFieldValue("image", selectedImage);*/
+                setImage(selectedImage);
                 formik.setFieldTouched("image", true);
               }}
               style={{ display: "none" }}
@@ -145,6 +198,7 @@ export default function AddItem() {
           <Button
             variant="contained"
             type="submit"
+            onClick={(e) => handleAdd(e)}
             sx={{
               backgroundColor: "#8F00FF",
               paddingX: 15,
