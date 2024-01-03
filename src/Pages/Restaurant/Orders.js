@@ -6,7 +6,7 @@ import OrderDetails from "./OrderDetails";
 import { setOrder } from "../../slice/restaurant";
 import { setError } from "../../slice/user";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders } from "../../APIS/restaurantAPI";
+import { getOrders, updateOrders } from "../../APIS/restaurantAPI";
 export default function Orders() {
   let orders = useSelector((state) => state.restaurant.orders);
   const id = useSelector((state) => state.user.id);
@@ -155,12 +155,13 @@ export default function Orders() {
     return statusList[nextIndex];
   };
 
-  const handleUpdateClick = (orderId, currentStatus) => {
+  const handleUpdateClick = async (orderId, currentStatus) => {
     const nextStatus = getNextStatus(currentStatus);
     console.log(
       `Button clicked for order ID: ${orderId}. Updating status to: ${nextStatus}`
     );
-    // Perform any other necessary actions here, like updating the order status.
+    const res = await updateOrders(id, orderId);
+    console.log(res);
   };
   const handleDetailsClick = (orderId) => {
     console.log(`Button clicked for order ID: ${orderId}.`);
@@ -214,6 +215,7 @@ export default function Orders() {
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
           id={orderId}
+          handleUpdateClick={handleUpdateClick}
         />
       )}
     </Box>

@@ -3,6 +3,7 @@ import {
   postData,
   postDataFiles,
   deleteData,
+  putData,
 } from "../utils/axiosAction";
 
 export const getMyMenu = async (id) => {
@@ -31,8 +32,13 @@ export async function getOrders(restaurantId) {
   return response;
 }
 export async function updateOrders(restaurantId, orderId) {
-  /*const token = localStorage.getItem("token");
-  const response = await getData("orders/restaurant", token, restaurantId);
-  //console.log(response);
-  return response;*/
+  const token = localStorage.getItem("token");
+  const response = await putData(
+    "order",
+    { id: "111" },
+    token,
+    restaurantId,
+    orderId
+  );
+  return response;
 }
