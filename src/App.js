@@ -15,6 +15,10 @@ import Orders from "./Pages/Restaurant/Orders";
 import Menu from "./Pages/Restaurant/Menu";
 import AddItem from "./Pages/Restaurant/AddItem";
 import ReviewPage from "./Pages/Restaurant/ReviewPage";
+import AddRestaurant from "./Pages/MainAdmin/AddRestaurant";
+import AddFaculty from "./Pages/MainAdmin/AddFaculty";
+import FacultyList from "./Pages/MainAdmin/FacultyList";
+import FloorsList from "./Pages/MainAdmin/FloorsList";
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
   { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
@@ -26,7 +30,8 @@ const adminSidebar = [
   { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
   { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
   { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
-  { title: "Faculties", to: "/admin/faculty", icon: <OrdersIcon /> },
+  { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
+  { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
 ];
 
 function App() {
@@ -71,7 +76,11 @@ function App() {
           <Route path="/restaurant/menu" element={<Menu />} />
           <Route path="/restaurant/menuadd" element={<AddItem />} />
           <Route path="/restaurant/reviews" element={<ReviewPage />} />
-          <Route path="/admin/addMenu" element={<ReviewPage />} />
+          <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
+          <Route path="/admin/facultyadd" element={<AddFaculty />} />
+          <Route path="/admin/faculties" element={<FacultyList />} />
+          <Route path="/admin/floors" element={<FloorsList />} />
+          {/*edit to be like /admin/(facultyId)/floors*/}
         </Routes>
       </main>
     </div>

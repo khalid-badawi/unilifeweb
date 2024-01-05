@@ -26,7 +26,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-export default function SidebarNav() {
+export default function SidebarNav({ menuItems }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
@@ -100,41 +100,16 @@ export default function SidebarNav() {
           )}
 
           <Box>
-            <Item
-              title="Dashboard"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Menu"
-              to="/menu"
-              icon={<MenuIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Add to menu"
-              to="/menuadd"
-              icon={<AddIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Orders"
-              to="/orders"
-              icon={<OrdersIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Ratings"
-              to="/reviews"
-              icon={<ReviewsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {menuItems.map((menuItem) => (
+              <Item
+                key={menuItem.title}
+                title={menuItem.title}
+                to={menuItem.to}
+                icon={menuItem.icon}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ))}
           </Box>
         </Menu>
       </Sidebar>
