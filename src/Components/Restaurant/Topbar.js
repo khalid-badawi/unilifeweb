@@ -12,9 +12,13 @@ export default function Topbar() {
           <SearchIcon sx={{}} />
         </IconButton>
       </Box>
-      <Box display="flex">
+      <Box display="flex" color="white">
         <IconButton>
-          <Typography variant="body" component="body" sx={{ color: "#8F00FF" }}>
+          <Typography
+            variant="body"
+            component="body"
+            sx={{ color: "#8F00FF", backgroundColor: "transparent" }}
+          >
             Log Out
           </Typography>
           <LogoutIcon sx={{ color: "#8F00FF", ml: 1 }} />

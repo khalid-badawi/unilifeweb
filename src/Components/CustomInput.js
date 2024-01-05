@@ -1,8 +1,10 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import "./CustomInput.css";
+
 const CustomInput = ({ type, placeholder, value, setValue, formik }) => {
-  const fieldName = type === "password" ? "password" : "email";
+  const isError = (field) =>
+    formik.touched[field] && Boolean(formik.errors[field]);
 
   return (
     <div className="input-container">
@@ -29,8 +31,8 @@ const CustomInput = ({ type, placeholder, value, setValue, formik }) => {
           setValue(e.target.value);
           formik.handleChange(e);
         }}
-        error={formik.touched[type] && Boolean(formik.errors[type])}
-        helperText={formik.touched[type] ? formik.errors[type] : ""}
+        error={isError(type)}
+        helperText={isError(type) ? formik.errors[type] : ""}
       />
     </div>
   );
