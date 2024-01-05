@@ -3,6 +3,11 @@ const initialState = {
   menu: [],
   orders: [],
   reviewsData: [],
+  weeklyRevenue: "",
+  weeklyPerc: "",
+  totalPeople: "",
+  dashBoardFood: [],
+  totalOrder: "",
 };
 const restaurant = createSlice({
   name: "restaurant",
@@ -21,7 +26,32 @@ const restaurant = createSlice({
     addReview(state, action) {
       state.reviewsData.push(action.payload);
     },
+    setWeeklyRevenue(state, action) {
+      state.weeklyRevenue = action.payload;
+    },
+    setWeeklyPerc(state, action) {
+      state.weeklyPerc = action.payload;
+    },
+    setTotalPeople(state, action) {
+      state.totalPeople = action.payload;
+    },
+    setDashboard(state, action) {
+      state.dashBoardFood = action.payload;
+    },
+    setTotalOrder(state, action) {
+      state.totalOrder = action.payload;
+    },
   },
 });
-export const { addFood, setMenu, setOrder, addReview } = restaurant.actions;
+export const {
+  addFood,
+  setMenu,
+  setOrder,
+  addReview,
+  setWeeklyRevenue,
+  setWeeklyPerc,
+  setTotalPeople,
+  setDashboard,
+  setTotalOrder,
+} = restaurant.actions;
 export default restaurant.reducer;

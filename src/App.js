@@ -15,6 +15,7 @@ import Orders from "./Pages/Restaurant/Orders";
 import Menu from "./Pages/Restaurant/Menu";
 import AddItem from "./Pages/Restaurant/AddItem";
 import ReviewPage from "./Pages/Restaurant/ReviewPage";
+import EditItem from "./Pages/Restaurant/EidtItem";
 import AddRestaurant from "./Pages/MainAdmin/AddRestaurant";
 import AddFaculty from "./Pages/MainAdmin/AddFaculty";
 import FacultyList from "./Pages/MainAdmin/FacultyList";
@@ -46,7 +47,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={adminSidebar} />
+        <Sidebar menuItems={restaurantSidebar} />
       </>
     );
   };
@@ -75,6 +76,11 @@ function App() {
           <Route path="/restaurant/orders" element={<Orders />} />
           <Route path="/restaurant/menu" element={<Menu />} />
           <Route path="/restaurant/menuadd" element={<AddItem />} />
+
+          <Route path="/restaurant/menuedit/:foodId" element={<EditItem />} />
+          <Route path="/restaurant/reviews" elemen={<ReviewPage />} />
+          <Route path="/admin/addMenu" element={<ReviewPage />} />
+          <Route path="/admin/addMenu" element={<ReviewPage />} />
           <Route path="/restaurant/reviews" element={<ReviewPage />} />
           <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
           <Route path="/admin/facultyadd" element={<AddFaculty />} />

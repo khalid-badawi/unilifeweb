@@ -1,8 +1,8 @@
 import {
   getData,
-  postData,
   postDataFiles,
   deleteData,
+  putDataFiles,
   putData,
 } from "../utils/axiosAction";
 
@@ -18,6 +18,11 @@ export async function addToMenu(id, data, image) {
   return await postDataFiles("menu", data, image, token, id);
   /*console.log(response);
   return response.data.data;*/
+}
+export async function editMenu(id, foodId, data, image) {
+  const token = localStorage.getItem("token");
+  console.log(token);
+  return await putDataFiles("menu", data, image, token, foodId, id);
 }
 export async function deleteFood(restaurantId, foodId) {
   const token = localStorage.getItem("token");
@@ -40,5 +45,26 @@ export async function updateOrders(restaurantId, orderId) {
     restaurantId,
     orderId
   );
+  return response;
+}
+export async function getWeeklyRevenue(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("weeklydashboard", token, restaurantId);
+  return response;
+}
+export async function getTotalPeople(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("totalpeople", token, restaurantId);
+  return response;
+}
+export async function getDashboardFood(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("dashboard/food", token, restaurantId);
+  return response;
+}
+export async function getTotalOrder(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("totalorder", token, restaurantId);
+  console.log(response);
   return response;
 }
