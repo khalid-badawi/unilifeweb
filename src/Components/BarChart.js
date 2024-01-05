@@ -13,12 +13,23 @@ const customTooltip = (bar) => {
   );
 };
 
+const customTooltip = (bar) => {
+  return (
+    <Box>
+      {" "}
+      <Typography variant="body1">count:{bar.data.orderCount}</Typography>
+    </Box>
+  );
+};
+
 const BarChart = ({ isDashboard = false }) => {
   // const theme = useTheme();
   const foodDashBoard = useSelector((state) => state.restaurant.dashBoardFood);
   const colors = ["green", "yellow", "orange", "red", "purple"];
 
   const data = foodDashBoard.map((item, i) => ({ ...item, color: colors[i] }));
+  const theme = useTheme();
+
   return (
     <ResponsiveBar
       data={data}
