@@ -84,7 +84,8 @@ export default function Login() {
     console.log("The isAuth:", isAuth);
     if (isAuth) {
       if (role === "admin") navigate("/admin", { replace: true });
-      else if (role === "restaurant") navigate("/", { replace: true });
+      else if (role === "restaurant")
+        navigate("/restaurant/home", { replace: true });
       else if (role === "dormitory") navigate("/dormitory", { replace: true });
     } //else navigate("/");
   }, [isAuth, role, navigate]);

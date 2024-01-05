@@ -10,10 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteFood } from "../../APIS/restaurantAPI";
 import { setMenu } from "../../slice/restaurant";
 import { setError } from "../../slice/user";
-import { idID } from "@mui/material/locale";
+import { useNavigate } from "react-router";
+///import { idID } from "@mui/material/locale";
 
 export default function MenuCard({ title, desc, img, price, foodId }) {
   const menu = useSelector((state) => state.restaurant.menu);
+  const naviagte = useNavigate();
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   async function handleDelete(e) {
@@ -52,7 +54,11 @@ export default function MenuCard({ title, desc, img, price, foodId }) {
       </CardContent>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <CardActions>
-          <Button size="small" sx={{ color: "#8F00FF" }}>
+          <Button
+            size="small"
+            sx={{ color: "#8F00FF" }}
+            onClick={() => naviagte(`/restaurant/menuedit/${foodId}`)}
+          >
             Edit
           </Button>
           <Button

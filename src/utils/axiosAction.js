@@ -80,6 +80,36 @@ export async function postDataFiles(
     return err;
   }
 }
+export async function putDataFiles(
+  endpoint,
+  data,
+  file,
+  token = null,
+  ...params
+) {
+  try {
+    console.log("The URL", process.env.BASE_URL);
+    const formData = new FormData();
+    formData.append("data", data);
+    formData.append("image", file);
+    const ids = params.join("/");
+    const res = await axios.patch(`${BASE_URL}/${endpoint}/${ids}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        /*"x-rapidapi-host": RAPIDAPI_HOST,
+        "x-rapidapi-key": RAPIDAPI_KEY,*/
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    //await storeTokenInKeychain(response.data.token);
+    //const token = await getTokenFromKeychain();
+    // console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err.message);
+    return err;
+  }
+}
 export async function putData(endpoint, value = null, token = null, ...params) {
   try {
     console.log("The URL", process.env.BASE_URL);
@@ -94,9 +124,6 @@ export async function putData(endpoint, value = null, token = null, ...params) {
         },
       }
     );
-    //await storeTokenInKeychain(response.data.token);
-    //const token = await getTokenFromKeychain();
-    // console.log(res);
     return res;
   } catch (err) {
     console.log(err.message);
@@ -114,9 +141,6 @@ export async function deleteData(endpoint, token = null, ...params) {
         Authorization: `Bearer ${token}`,
       },
     });
-    //await storeTokenInKeychain(response.data.token);
-    //const token = await getTokenFromKeychain();
-    // console.log(res);
     return res;
   } catch (err) {
     console.log(err.message);

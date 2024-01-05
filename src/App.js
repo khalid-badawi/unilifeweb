@@ -15,6 +15,7 @@ import Orders from "./Pages/Restaurant/Orders";
 import Menu from "./Pages/Restaurant/Menu";
 import AddItem from "./Pages/Restaurant/AddItem";
 import ReviewPage from "./Pages/Restaurant/ReviewPage";
+import EditItem from "./Pages/Restaurant/EidtItem";
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
   { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
@@ -41,7 +42,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={adminSidebar} />
+        <Sidebar menuItems={restaurantSidebar} />
       </>
     );
   };
@@ -70,7 +71,9 @@ function App() {
           <Route path="/restaurant/orders" element={<Orders />} />
           <Route path="/restaurant/menu" element={<Menu />} />
           <Route path="/restaurant/menuadd" element={<AddItem />} />
-          <Route path="/restaurant/reviews" element={<ReviewPage />} />
+          <Route path="/restaurant/menuedit/:foodId" element={<EditItem />} />
+          <Route path="/restaurant/reviews" elemen={<ReviewPage />} />
+          <Route path="/admin/addMenu" element={<ReviewPage />} />
           <Route path="/admin/addMenu" element={<ReviewPage />} />
         </Routes>
       </main>
