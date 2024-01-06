@@ -4,11 +4,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
-import { addFaculty } from "../../APIS/adminAPI";
+import { addFaculty, editFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
+import { useParams } from "react-router";
+import { setColleges } from "../../slice/admin";
 export default function AddFaculty() {
   const id = useSelector((state) => state.user.id);
-
+  const colleges = useSelector((state) => state.user.colleges);
+  const { facultyId } = useParams();
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
@@ -36,10 +39,20 @@ export default function AddFaculty() {
     }),
     onSubmit: async (values) => {
       console.log("Form values:", values);
-      const res = await addFaculty(id, values);
+      const res = await editFaculty(id, facultyId, values);
       console.log(res);
       let { status } = res;
-      if (status === 201) {
+      if (status === 200) {
+        const newFaculties = colleges.map((item) =>
+          item.facultyNumber === facultyId
+            ? {
+                facultyNumber: values.facultyNumber,
+                facultyName: values.facultyName,
+                coordinates: values.coordinates,
+              }
+            : item
+        );
+        dispatch(setColleges(newFaculties));
       } else {
         status = res.response.status;
         const {
@@ -192,7 +205,7 @@ export default function AddFaculty() {
             },
           }}
         >
-          Add Faculty
+          Edit Faculty
         </Button>
       </form>
     </Box>

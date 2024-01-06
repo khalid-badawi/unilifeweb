@@ -19,16 +19,14 @@ import "./Login.css";
 import { useNavigate } from "react-router";
 
 export default function Login() {
-  const [email, setEmail] = useState("Kefac@gmail.com");
-  const [password, setPassword] = useState("12345678");
   const role = useSelector((state) => state.user.role);
   const isAuth = useSelector((state) => state.user.isAuth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      email: email,
-      password: password,
+      email: "admin@gmail.com",
+      password: "12345678",
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
@@ -39,6 +37,7 @@ export default function Login() {
       console.log("Form values:", values);
     },
   });
+  const { email, password } = formik.values;
   console.log(formik.values.email, formik.values.password);
   async function action(e) {
     e.preventDefault();
@@ -83,7 +82,7 @@ export default function Login() {
   useEffect(() => {
     console.log("The isAuth:", isAuth);
     if (isAuth) {
-      if (role === "admin") navigate("/admin", { replace: true });
+      if (role === "admin") navigate("/admin/home", { replace: true });
       else if (role === "restaurant")
         navigate("/restaurant/home", { replace: true });
       else if (role === "dormitory") navigate("/dormitory", { replace: true });
@@ -136,11 +135,8 @@ export default function Login() {
                 type="email"
                 placeholder="Email"
                 formik={formik}
-                value={formik.values.email}
-                setValue={
-                  (value) =>
-                    setEmail(value) /* formik.setFieldValue("email", value)*/
-                }
+                value={email}
+                setValue={(value) => formik.setFieldValue("email", value)}
               />
             </FormControl>
 
@@ -148,11 +144,8 @@ export default function Login() {
               type="password"
               placeholder="Password"
               formik={formik}
-              value={formik.values.password}
-              setValue={
-                (value) =>
-                  setPassword(value) /*formik.setFieldValue("password", value)*/
-              }
+              value={password}
+              setValue={(value) => formik.setFieldValue("password", value)}
             />
             <Button
               variant="contained"

@@ -8,6 +8,7 @@ const initialState = {
   totalPeople: "",
   dashBoardFood: [],
   totalOrder: "",
+  lastReviwer: {},
 };
 const restaurant = createSlice({
   name: "restaurant",
@@ -41,6 +42,9 @@ const restaurant = createSlice({
     setTotalOrder(state, action) {
       state.totalOrder = action.payload;
     },
+    setLastReviwer(state, action) {
+      state.lastReviwer = action.payload;
+    },
   },
 });
 export const {
@@ -53,5 +57,6 @@ export const {
   setTotalPeople,
   setDashboard,
   setTotalOrder,
+  setLastReviwer,
 } = restaurant.actions;
 export default restaurant.reducer;

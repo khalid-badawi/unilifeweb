@@ -65,6 +65,11 @@ export async function getDashboardFood(restaurantId) {
 export async function getTotalOrder(restaurantId) {
   const token = localStorage.getItem("token");
   const response = await getData("totalorder", token, restaurantId);
+  return response;
+}
+export async function getLastReviwer(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("lastreviwer", token, restaurantId);
   console.log(response);
   return response;
 }
