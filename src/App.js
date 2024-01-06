@@ -47,7 +47,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={restaurantSidebar} />
+        <Sidebar menuItems={adminSidebar} />
       </>
     );
   };
@@ -72,20 +72,20 @@ function App() {
         {renderTopbar()}
         <Routes>
           <Route path="/restaurant/home" element={<Home />} />
-          <Route path="/signin" element={<Login />} />
+          <Route path="/signin" element={<Login />} index />
           <Route path="/restaurant/orders" element={<Orders />} />
           <Route path="/restaurant/menu" element={<Menu />} />
           <Route path="/restaurant/menuadd" element={<AddItem />} />
-
           <Route path="/restaurant/menuedit/:foodId" element={<EditItem />} />
           <Route path="/restaurant/reviews" elemen={<ReviewPage />} />
           <Route path="/admin/addMenu" element={<ReviewPage />} />
           <Route path="/admin/addMenu" element={<ReviewPage />} />
           <Route path="/restaurant/reviews" element={<ReviewPage />} />
+
           <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
           <Route path="/admin/facultyadd" element={<AddFaculty />} />
           <Route path="/admin/faculties" element={<FacultyList />} />
-          <Route path="/admin/floors" element={<FloorsList />} />
+          <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
           {/*edit to be like /admin/(facultyId)/floors*/}
         </Routes>
       </main>

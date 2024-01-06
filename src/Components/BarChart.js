@@ -13,15 +13,6 @@ const customTooltip = (bar) => {
   );
 };
 
-const customTooltip = (bar) => {
-  return (
-    <Box>
-      {" "}
-      <Typography variant="body1">count:{bar.data.orderCount}</Typography>
-    </Box>
-  );
-};
-
 const BarChart = ({ isDashboard = false }) => {
   // const theme = useTheme();
   const foodDashBoard = useSelector((state) => state.restaurant.dashBoardFood);
