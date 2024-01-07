@@ -47,13 +47,18 @@ export async function getFaculties(adminId) {
   const res = await getData("faculty", token, adminId);
   return res;
 }
-export async function getFloors(adminId, facultyId) {
-  const token = localStorage.getItem("token");
-  const res = await getData("floor", token, adminId, facultyId);
-  return res;
-}
 export async function addFloor(data, adminId, facultyId) {
   const token = localStorage.getItem("token");
   const res = await postData("floor", data, token, adminId, facultyId);
+  return res;
+}
+export async function deleteFloor(adminId, floorId, facultyId) {
+  const token = localStorage.getItem("token");
+  const res = await deleteData("floor", token, adminId, floorId, facultyId);
+  return res;
+}
+export async function getFloors(adminId, facultyId) {
+  const token = localStorage.getItem("token");
+  const res = await getData("floor", token, adminId, facultyId);
   return res;
 }
