@@ -15,7 +15,7 @@ import {
 
 //import { floors as mockFloors } from "../../data/mockData";
 import { useParams } from "react-router";
-import { addFloor, getFloors } from "../../APIS/adminAPI";
+import { addFloor, deleteFloor, getFloors } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setFloors, setFacultytName } from "../../slice/admin";
 import { setError } from "../../slice/user";
@@ -23,8 +23,29 @@ import { setError } from "../../slice/user";
 const FloorList = () => {
   const floors = useSelector((state) => state.admin.floors);
   const { facultyId } = useParams();
+  console.log("facultyId:", facultyId);
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
+  async function handleDelete(floorId) {
+    console.log("removed clicked");
+    const res = await deleteFloor(id, floorId, facultyId);
+    console.log(res);
+    let { status } = res;
+    if (status === 204) {
+      const newFloors = floors.filter((floor) => floor.id !== floorId);
+      dispatch(setFloors(newFloors));
+    } else {
+      status = res.response.status;
+      if (status === 401 || status === 403 || status === 404) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      }
+    }
+  }
   useEffect(() => {
     async function fetchData() {
       const res = await getFloors(id, facultyId);
@@ -32,6 +53,7 @@ const FloorList = () => {
       let { status } = res;
       if (status === 200) {
         const { data } = res;
+
         const { floors, facultyName } = data;
         console.log("data:", data);
         console.log("facultytName:", facultyName);
@@ -44,7 +66,8 @@ const FloorList = () => {
             data: { message },
           },
         } = res;
-        if (status === 401 || status === 403) {
+        //if (status === 404) dispatch(setFloors([]));
+        if (status === 401 || status === 403 || status === 404) {
           dispatch(setError(message));
         }
       }
@@ -79,6 +102,7 @@ const FloorList = () => {
                       cursor: "pointer",
                     },
                   }}
+                  onClick={() => handleDelete(floor.id)}
                 >
                   Remove
                 </Button>

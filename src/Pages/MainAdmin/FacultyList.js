@@ -27,15 +27,13 @@ const FacultyList = () => {
     const res = await editFaculty(id, faculty.facultyNumber);
     console.log(res);
   }
-  async function handleDelete(facultyNumber) {
-    console.log(facultyNumber);
-    const res = await deleteFaculty(id, facultyNumber);
+  async function handleDelete(facultyId) {
+    console.log(facultyId);
+    const res = await deleteFaculty(id, facultyId);
     console.log(res);
     let { status } = res;
     if (status === 204) {
-      const newColleges = colleges.filter(
-        (item) => item.facultyNumber !== facultyNumber
-      );
+      const newColleges = colleges.filter((item) => item.id !== facultyId);
       dispatch(setColleges(newColleges));
     } else {
       status = res.response.status;
@@ -74,7 +72,7 @@ const FacultyList = () => {
   }, []);
   const handleViewFloors = (faculty) => {
     setSelectedFaculty(faculty);
-    navigate(`/admin/floors/${faculty.facultyNumber}`);
+    navigate(`/admin/floors/${faculty.id}`);
     console.log(faculty);
   };
 
@@ -134,7 +132,7 @@ const FacultyList = () => {
                         cursor: "pointer",
                       },
                     }}
-                    onClick={() => handleDelete(faculty.facultyNumber)}
+                    onClick={() => handleDelete(faculty.id)}
                   >
                     Remove
                   </Button>
