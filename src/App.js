@@ -20,6 +20,7 @@ import AddRestaurant from "./Pages/MainAdmin/AddRestaurant";
 import AddFaculty from "./Pages/MainAdmin/AddFaculty";
 import FacultyList from "./Pages/MainAdmin/FacultyList";
 import FloorsList from "./Pages/MainAdmin/FloorsList";
+import EditFaculty from "./Pages/MainAdmin/EditFaculty";
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
   { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
@@ -84,6 +85,10 @@ function App() {
 
           <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
           <Route path="/admin/facultyadd" element={<AddFaculty />} />
+          <Route
+            path="/admin/facultyedit/:facultyId"
+            element={<EditFaculty />}
+          />
           <Route path="/admin/faculties" element={<FacultyList />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
           {/*edit to be like /admin/(facultyId)/floors*/}
