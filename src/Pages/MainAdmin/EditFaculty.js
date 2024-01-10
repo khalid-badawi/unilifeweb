@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, FormControl } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -8,18 +8,16 @@ import { addFaculty, editFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
 import { useParams } from "react-router";
 import { setColleges } from "../../slice/admin";
-export default function AddFaculty() {
+export default function EditFaculty() {
   const id = useSelector((state) => state.user.id);
-  const colleges = useSelector((state) => state.user.colleges);
+  const colleges = useSelector((state) => state.admin.colleges);
   const { facultyId } = useParams();
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       facultyName: "",
       facultyNumber: "",
-      coordinates: [
-        { longitude: "", latitude: "" }, // Initial set of coordinates
-      ],
+      coordinates: [{ lon: "", lat: "" }],
     },
     validationSchema: Yup.object({
       facultyName: Yup.string().required("Required"),
@@ -27,10 +25,10 @@ export default function AddFaculty() {
       coordinates: Yup.array()
         .of(
           Yup.object().shape({
-            longitude: Yup.number()
+            lon: Yup.number()
               .typeError("Must be a number")
               .required("Required"),
-            latitude: Yup.number()
+            lat: Yup.number()
               .typeError("Must be a number")
               .required("Required"),
           })
@@ -72,11 +70,19 @@ export default function AddFaculty() {
       }
     },
   });
-
+  useEffect(() => {
+    const data = colleges.filter(
+      (faculty) => faculty.id === parseInt(facultyId)
+    )[0];
+    const { facultyName, facultyNumber, locations } = data;
+    formik.setFieldValue("facultyName", facultyName);
+    formik.setFieldValue("facultyNumber", facultyNumber);
+    formik.setFieldValue("coordinates", locations);
+  }, []);
   const addCoordinates = () => {
     formik.setFieldValue("coordinates", [
       ...formik.values.coordinates,
-      { longitude: "", latitude: "" },
+      { lon: "", lat: "" },
     ]);
   };
 
@@ -113,12 +119,12 @@ export default function AddFaculty() {
           <div key={index}>
             <FormControl fullWidth>
               <CustomInput
-                type={`coordinates[${index}].longitude`}
+                type={`coordinates[${index}].lon`}
                 placeholder={`Longitude ${index + 1}`}
                 formik={formik}
-                value={coord.longitude}
+                value={coord.lon}
                 setValue={(value) =>
-                  formik.setFieldValue(`coordinates[${index}].longitude`, value)
+                  formik.setFieldValue(`coordinates[${index}].lon`, value)
                 }
               />
               {formik.touched.coordinates &&
@@ -134,12 +140,12 @@ export default function AddFaculty() {
 
             <FormControl fullWidth>
               <CustomInput
-                type={`coordinates[${index}].latitude`}
+                type={`coordinates[${index}].lat`}
                 placeholder={`Latitude ${index + 1}`}
                 formik={formik}
-                value={coord.latitude}
+                value={coord.lat}
                 setValue={(value) =>
-                  formik.setFieldValue(`coordinates[${index}].latitude`, value)
+                  formik.setFieldValue(`coordinates[${index}].lat`, value)
                 }
               />
               {formik.touched.coordinates &&
@@ -148,7 +154,7 @@ export default function AddFaculty() {
                   <div
                     style={{ color: "#d32f6b", fontSize: 12, marginLeft: 15 }}
                   >
-                    {formik.errors.coordinates[index].latitude}
+                    {formik.errors.coordinates[index].lat}
                   </div>
                 )}
             </FormControl>

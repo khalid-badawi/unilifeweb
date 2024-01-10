@@ -20,6 +20,7 @@ import AddRestaurant from "./Pages/MainAdmin/AddRestaurant";
 import AddFaculty from "./Pages/MainAdmin/AddFaculty";
 import FacultyList from "./Pages/MainAdmin/FacultyList";
 import FloorsList from "./Pages/MainAdmin/FloorsList";
+import EditFaculty from "./Pages/MainAdmin/EditFaculty";
 import ClassesList from "./Pages/MainAdmin/ClassesList";
 import StudentsList from "./Pages/MainAdmin/StudentsList";
 
@@ -88,6 +89,10 @@ function App() {
 
           <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
           <Route path="/admin/facultyadd" element={<AddFaculty />} />
+          <Route
+            path="/admin/facultyedit/:facultyId"
+            element={<EditFaculty />}
+          />
           <Route path="/admin/faculties" element={<FacultyList />} />
           <Route path="/admin/floors" element={<FloorsList />} />
           <Route path="/admin/classes" element={<ClassesList />} />

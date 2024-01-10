@@ -115,7 +115,7 @@ const FacultyList = () => {
                         cursor: "pointer",
                       },
                     }}
-                    onClick={() => handleEdit(faculty)}
+                    onClick={() => navigate(`/admin/facultyedit/${faculty.id}`)}
                   >
                     Edit
                   </Button>
