@@ -92,3 +92,17 @@ export const dummyFaculties = [
   },
 ];
 export const floors = ["B2", "B1", "G", "1", "2"];
+export const classes = [
+  10, 20, 30, 40, 50, 60, 70, 80, 90, 110, 120, 130, 140, 150,
+];
+export const students = [
+  {
+    id: 1,
+    username: "Khalid",
+    Email: "Khalid@gmail.com",
+    major: "Computer Engineering",
+    phoneNum: "0597401453",
+    joinedIn: "14-5-2023",
+    banned: false,
+  },
+];
