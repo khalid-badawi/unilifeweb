@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -10,19 +11,25 @@ import React, { useState } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addToMenu } from "../../APIS/restaurantAPI";
+import { editMenu } from "../../APIS/restaurantAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
-
-export default function AddItem() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState("");
-  const id = useSelector((state) => state.user.id);
+import { setMenu } from "../../slice/restaurant";
+export default function EditItem() {
+  const { foodId } = useParams();
+  console.log("foodId", foodId);
+  const userId = useSelector((state) => state.user.id);
+  const menu = useSelector((state) => state.restaurant.menu);
+  console.log("menu", menu);
+  const data = menu.filter((item) => item.foodId === parseInt(foodId))[0];
   const dispatch = useDispatch();
-  async function handleAdd(e) {
+  const [title, setTitle] = useState(data.nameOfFood);
+  const [description, setDescription] = useState(data.description);
+  const [price, setPrice] = useState(data.price);
+  const [category, setCategory] = useState(data.category);
+  const [image, setImage] = useState(data.image);
+
+  async function handleEidt(e) {
     e.preventDefault();
     const data = JSON.stringify({
       nameOfFood: title,
@@ -30,10 +37,17 @@ export default function AddItem() {
       category,
       price,
     });
-    const res = await addToMenu(id, data, image);
+    const res = await editMenu(userId, foodId, data, image);
+    console.log("menu", res);
     let status = res.status;
-    if (status === 201) {
+    if (status === 200) {
       console.log(status);
+      const newMenu = menu.map((item) =>
+        item.foodId !== foodId
+          ? item
+          : { nameOfFood: title, description, price, category, image }
+      );
+      dispatch(setMenu(newMenu));
     } else {
       status = res.response.status;
       console.log(status);
@@ -198,7 +212,7 @@ export default function AddItem() {
           <Button
             variant="contained"
             type="submit"
-            onClick={(e) => handleAdd(e)}
+            onClick={(e) => handleEidt(e)}
             sx={{
               backgroundColor: "#8F00FF",
               paddingX: 15,
@@ -211,7 +225,7 @@ export default function AddItem() {
               },
             }}
           >
-            Add
+            Eidt
           </Button>
         </Box>
       </form>
