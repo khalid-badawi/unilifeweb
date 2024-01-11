@@ -3,7 +3,8 @@ const initialState = {
   restaurants: [],
   colleges: [],
   floors: [],
-  facultytName: "",
+  classes: [],
+  facultyName: "",
 };
 const admin = createSlice({
   name: "admin",
@@ -18,11 +19,19 @@ const admin = createSlice({
     setFloors(state, action) {
       state.floors = action.payload;
     },
-    setFacultytName(state, action) {
-      state.facultytName = action.payload;
+    setClasses(state, action) {
+      state.classes = action.payload;
+    },
+    setFacultyName(state, action) {
+      state.facultyName = action.payload;
     },
   },
 });
-export const { setRestaurants, setColleges, setFloors, setFacultytName } =
-  admin.actions;
+export const {
+  setRestaurants,
+  setColleges,
+  setFloors,
+  setFacultyName,
+  setClasses,
+} = admin.actions;
 export default admin.reducer;

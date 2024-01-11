@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -14,8 +14,35 @@ import {
 } from "@mui/material";
 
 import { classes as mockClasses } from "../../data/mockData";
-
-const FloorList = ({ classes }) => {
+import { useParams } from "react-router";
+import { addCalss, deleteCalss, getCalsses } from "../../APIS/adminAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setClasses } from "../../slice/admin";
+import { setError } from "../../slice/user";
+const FloorList = () => {
+  const id = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
+  const classes = useSelector((state) => state.admin.classes);
+  async function handleDelete(classId) {
+    console.log("removed clicked");
+    const res = await deleteCalss(id, classId);
+    console.log(res);
+    let { status } = res;
+    if (status === 204) {
+      const newClasses = classes.filter((item) => item.id !== classId);
+      dispatch(setClasses(newClasses));
+    } else {
+      status = res.response.status;
+      if (status === 401 || status === 403 || status === 404) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      }
+    }
+  }
   return (
     <TableContainer
       component={Paper}
@@ -32,10 +59,11 @@ const FloorList = ({ classes }) => {
         <TableBody>
           {classes.map((item, index) => (
             <TableRow key={index}>
-              <TableCell>{item}</TableCell>
+              <TableCell>{item.number}</TableCell>
               <TableCell>
                 <Button
                   type="button"
+                  onClick={() => handleDelete(item.id)}
                   sx={{
                     color: "#8F00FF",
                     paddingY: 1,
@@ -75,18 +103,69 @@ const FloorList = ({ classes }) => {
 
 const ClassesList = () => {
   const [isAddingClass, setIsAddingClass] = useState(false);
+  const [facultyName, setFacultyName] = useState("");
   const [newClass, setNewClass] = useState("");
-  const [classes, setClasses] = useState(mockClasses);
+  const classes = useSelector((state) => state.admin.classes);
+  const { floorId, facultyId } = useParams();
+  const id = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    async function fetcData() {
+      const res = await getCalsses(id, facultyId, floorId);
+      console.log("classes:", res);
+      let { status } = res;
+      if (status === 200) {
+        const {
+          data: { classrooms, facultyName },
+        } = res;
+        console.log("data:", classrooms);
+        dispatch(setClasses(classrooms));
+        setFacultyName(facultyName);
+      } else {
+        status = res.response.status;
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        if (status === 401 || status === 403) {
+          dispatch(setError(message));
+        }
+      }
+    }
+    fetcData();
+  }, []);
   const handleAddFloorClick = () => {
     setIsAddingClass(true);
   };
 
-  const handleAddFloor = () => {
+  const handleAddCalss = async (e) => {
+    e.preventDefault();
     if (newClass.trim() !== "") {
-      setClasses([...classes, newClass]);
-      setNewClass("");
-      setIsAddingClass(false);
+      console.log(newClass);
+      const res = await addCalss({ number: newClass }, id, facultyId, floorId);
+      console.log("classes:", res);
+      let { status } = res;
+      if (status === 201) {
+        const {
+          data: { id },
+        } = res;
+        const newClasses = [...classes, { number: newClass, id }];
+        setNewClass("");
+        setIsAddingClass(false);
+        dispatch(setClasses(newClasses));
+      } else {
+        status = res.response.status;
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        if (status === 401 || status === 403) {
+          dispatch(setError(message));
+        }
+      }
     }
   };
 
@@ -98,9 +177,9 @@ const ClassesList = () => {
   return (
     <Box ml={1} mr={1} height={500}>
       <Typography variant="h4" sx={{ mb: 1 }}>
-        Engineering Faculty
+        {facultyName}
       </Typography>
-      <FloorList classes={classes} />
+      <FloorList />
       {isAddingClass ? (
         <Box mt={2}>
           <TextField
@@ -112,7 +191,7 @@ const ClassesList = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddFloor}
+            onClick={(e) => handleAddCalss(e)}
             sx={{
               backgroundColor: "#8F00FF",
               paddingX: 5,
