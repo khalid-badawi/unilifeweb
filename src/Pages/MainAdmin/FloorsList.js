@@ -14,18 +14,25 @@ import {
 } from "@mui/material";
 
 //import { floors as mockFloors } from "../../data/mockData";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { addFloor, deleteFloor, getFloors } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { setFloors, setFacultytName } from "../../slice/admin";
+import { setFloors, setFacultyName } from "../../slice/admin";
 import { setError } from "../../slice/user";
 
 const FloorList = () => {
+  const [selectedFloor, setSelectedFloor] = useState("");
   const floors = useSelector((state) => state.admin.floors);
   const { facultyId } = useParams();
+  const navigate = useNavigate();
   console.log("facultyId:", facultyId);
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
+  const handleViewClasses = (floor) => {
+    setSelectedFloor(floor);
+    navigate(`/admin/classes/${facultyId}/${floor.id}`);
+    console.log(floor);
+  };
   async function handleDelete(floorId) {
     console.log("removed clicked");
     const res = await deleteFloor(id, floorId, facultyId);
@@ -58,7 +65,7 @@ const FloorList = () => {
         console.log("data:", data);
         console.log("facultytName:", facultyName);
         dispatch(setFloors(floors));
-        dispatch(setFacultytName(facultyName));
+        dispatch(setFacultyName(facultyName));
       } else {
         status = res.response.status;
         const {
@@ -110,6 +117,7 @@ const FloorList = () => {
               <TableCell>
                 <Button
                   type="button"
+                  onClick={() => handleViewClasses(floor)}
                   sx={{
                     color: "#8F00FF",
                     paddingY: 1,
@@ -136,8 +144,8 @@ const FloorsList = () => {
   const [newFloor, setNewFloor] = useState("");
   const [reference, setReference] = useState("");
   const floors = useSelector((state) => state.admin.floors);
-  const facultytName = useSelector((state) => state.admin.facultytName);
-  console.log(facultytName);
+  const facultyName = useSelector((state) => state.admin.facultyName);
+  console.log(facultyName);
   const { facultyId } = useParams();
   const id = useSelector((state) => state.user.id);
   // const [floors, setFloors] = useState(ff);
@@ -155,7 +163,10 @@ const FloorsList = () => {
       console.log(res);
       let { status } = res;
       if (status === 201) {
-        dispatch(setFloors([...floors, { name: newFloor, reference }]));
+        const { data } = res;
+
+        const { id } = data;
+        dispatch(setFloors([...floors, { name: newFloor, reference, id }]));
         setNewFloor("");
         setReference("");
         setIsAddingFloor(false);
@@ -181,7 +192,7 @@ const FloorsList = () => {
   return (
     <Box ml={1} mr={1}>
       <Typography variant="h4" sx={{ mb: 1 }}>
-        {facultytName}
+        {facultyName}
       </Typography>
       <FloorList floors={floors} />
       {isAddingFloor ? (

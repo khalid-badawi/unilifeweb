@@ -62,3 +62,26 @@ export async function getFloors(adminId, facultyId) {
   const res = await getData("floor", token, adminId, facultyId);
   return res;
 }
+export async function addCalss(data, adminId, facultyId, floorId) {
+  const token = localStorage.getItem("token");
+  const res = await postData("class", data, token, adminId, facultyId, floorId);
+  return res;
+}
+export async function deleteCalss(adminId, classId) {
+  //  console.log(facultyId, " ", floorId);
+  const token = localStorage.getItem("token");
+  const res = await deleteData("class", token, adminId, classId);
+  return res;
+}
+export async function getCalsses(adminId, facultyId, floorId) {
+  console.log(facultyId, " ", floorId);
+  const token = localStorage.getItem("token");
+  const res = await getData("class", token, adminId, facultyId, floorId);
+  return res;
+}
+export async function getStudents(adminId) {
+  //  console.log(facultyId, " ", floorId);
+  const token = localStorage.getItem("token");
+  const res = await getData("student", token, adminId);
+  return res;
+}

@@ -95,7 +95,10 @@ function App() {
           />
           <Route path="/admin/faculties" element={<FacultyList />} />
           <Route path="/admin/floors" element={<FloorsList />} />
-          <Route path="/admin/classes" element={<ClassesList />} />
+          <Route
+            path="/admin/classes/:facultyId/:floorId"
+            element={<ClassesList />}
+          />
           <Route path="/admin/students" element={<StudentsList />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
           {/*edit to be like /admin/(facultyId)/floors*/}
