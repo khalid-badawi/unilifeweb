@@ -21,6 +21,8 @@ import FacultyList from "./Pages/MainAdmin/FacultyList";
 import FloorsList from "./Pages/MainAdmin/FloorsList";
 import ClassesList from "./Pages/MainAdmin/ClassesList";
 import StudentsList from "./Pages/MainAdmin/StudentsList";
+import RestaurantsList from "./Pages/MainAdmin/RestaurantsList";
+import Posts from "./Pages/MainAdmin/Posts";
 
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
@@ -36,6 +38,8 @@ const adminSidebar = [
   { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
   { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
   { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
+  { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
+  { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
 ];
 
 function App() {
@@ -86,6 +90,8 @@ function App() {
           <Route path="/admin/floors" element={<FloorsList />} />
           <Route path="/admin/classes" element={<ClassesList />} />
           <Route path="/admin/students" element={<StudentsList />} />
+          <Route path="/admin/restaurants" element={<RestaurantsList />} />
+          <Route path="/admin/posts" element={<Posts />} />
           {/*edit to be like /admin/(facultyId)/floors*/}
         </Routes>
       </main>

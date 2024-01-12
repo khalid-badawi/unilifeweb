@@ -9,6 +9,7 @@ import {
   TableRow,
   Paper,
   Button,
+  Box,
 } from "@mui/material";
 import FloorsList from "./FloorsList";
 import { dummyFaculties } from "../../data/mockData";
@@ -24,7 +25,7 @@ const FacultyList = () => {
   };
 
   return (
-    <div>
+    <Box sx={{ mr: 1, ml: 1 }}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -106,7 +107,7 @@ const FacultyList = () => {
       </TableContainer>
 
       {selectedFaculty && <FloorsList faculty={selectedFaculty} />}
-    </div>
+    </Box>
   );
 };
 

@@ -1,20 +1,9 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Box, Button } from "@mui/material";
+import { restaurants } from "../../data/mockData";
 
-export const students = [
-  {
-    id: 1,
-    username: "Khalid",
-    email: "Khalid@gmail.com",
-    major: "Computer Engineering",
-    phoneNum: "0597401453",
-    joinedIn: "14-5-2023",
-    banned: false,
-  },
-];
-
-const StudentsList = () => {
+const RestaurantsList = () => {
   const columns = [
     {
       field: "avatar",
@@ -25,28 +14,14 @@ const StudentsList = () => {
       ),
     },
     { field: "id", headerName: "ID", width: 100 },
-    { field: "username", headerName: "Username", width: 200 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "major", headerName: "Major", width: 200 },
+    { field: "username", headerName: "Restaurant Name", width: 200 },
+    { field: "Email", headerName: "Email", width: 200 },
+
     { field: "phoneNum", headerName: "Phone Number", width: 150 },
-    { field: "joinedIn", headerName: "Joined In", width: 150 },
+    { field: "joinedIn", headerName: "Registered on", width: 150 },
+
     {
-      field: "banned",
-      headerName: "Banned?",
-      width: 100,
-      renderCell: (params) => (
-        <div
-          style={{
-            color: params.row.banned ? "red" : "green",
-            fontWeight: "bold",
-          }}
-        >
-          {params.row.banned ? "Yes" : "No"}
-        </div>
-      ),
-    },
-    {
-      field: "actions",
+      field: "action1",
       headerName: "",
       width: 100,
 
@@ -63,7 +38,29 @@ const StudentsList = () => {
           }}
           color="primary"
         >
-          {params.row.banned ? "Unban" : "Ban"}
+          Edit
+        </Button>
+      ),
+    },
+    {
+      field: "action2",
+      headerName: "",
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          type="button"
+          sx={{
+            color: "#8F00FF",
+            paddingY: 1,
+            height: 40,
+            ":hover": {
+              backgroundColor: "rgba(0,0,0,0.05)",
+              cursor: "pointer",
+            },
+          }}
+          color="primary"
+        >
+          Remove
         </Button>
       ),
     },
@@ -74,7 +71,7 @@ const StudentsList = () => {
       <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}
-          rows={students}
+          rows={restaurants}
           getRowId={(row) => row.id}
           getRowClassName={(params) => `status-${params.row.status}`}
           pageSize={10}
@@ -85,4 +82,4 @@ const StudentsList = () => {
   );
 };
 
-export default StudentsList;
+export default RestaurantsList;

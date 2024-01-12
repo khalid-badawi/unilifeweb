@@ -3,16 +3,11 @@ import { Box, Icon, IconButton, InputBase, Typography } from "@mui/material";
 import { useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 export default function Topbar() {
   return (
     <Box display="flex" justifyContent="space-between" padding={2}>
-      <Box display="flex" backgroundColor="#F0EFF1" borderRadius="5px">
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon sx={{}} />
-        </IconButton>
-      </Box>
-      <Box display="flex" color="white">
+      <Box display="flex" color="white" marginLeft="auto">
         <IconButton>
           <Typography
             variant="body"
