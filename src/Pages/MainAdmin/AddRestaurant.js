@@ -10,7 +10,13 @@ import React from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
+import { addRestaurant } from "../../APIS/adminAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setError } from "../../slice/user";
+
 export default function AddRestaurant() {
+  const id = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       restaurantName: "",
@@ -18,7 +24,7 @@ export default function AddRestaurant() {
       password: "",
       confirmPassword: "",
       phoneNum: "",
-      image: null,
+      image: "",
     },
     validationSchema: Yup.object({
       restaurantName: Yup.string().required("Required"),
@@ -37,12 +43,22 @@ export default function AddRestaurant() {
         .required("Required"),
       image: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
     }),
-    onSubmit: (values) => {
-      // Handle authentication logic here
-      const formData = new FormData();
-      formData.append("image", values.image);
-
-      console.log("Form values:", values);
+    onSubmit: async (values) => {
+      console.log("values:", values);
+      const res = await addRestaurant(id, values);
+      let status = res.status;
+      if (status === 201) {
+      } else {
+        status = res.response.status;
+        if (status === 401 || status === 409 || status === 403) {
+          const {
+            response: {
+              data: { message },
+            },
+          } = res;
+          dispatch(setError(message));
+        }
+      }
     },
   });
   console.log(formik.values.image);

@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
-import { mockBarData as data } from "../data/mockData";
+//import { mockBarData as data } from "../data/mockData";
+import { useSelector } from "react-redux";
 
 const customTooltip = (bar) => {
   return (
@@ -13,6 +14,11 @@ const customTooltip = (bar) => {
 };
 
 const BarChart = ({ isDashboard = false }) => {
+  // const theme = useTheme();
+  const foodDashBoard = useSelector((state) => state.restaurant.dashBoardFood);
+  const colors = ["green", "yellow", "orange", "red", "purple"];
+
+  const data = foodDashBoard.map((item, i) => ({ ...item, color: colors[i] }));
   const theme = useTheme();
 
   return (

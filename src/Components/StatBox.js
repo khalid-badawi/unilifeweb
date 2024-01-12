@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import ProgressCircle from "./Progress";
-export default function StatBox({ title, subtitle, icon, day }) {
+export default function StatBox({ title, subtitle, icon, day, perc }) {
   return (
     <Box
       width="300px"
@@ -54,7 +54,7 @@ export default function StatBox({ title, subtitle, icon, day }) {
             fontWeight: "500",
           }}
         >
-          +5%
+          {perc}
         </Typography>
       </Box>
     </Box>
