@@ -64,22 +64,19 @@ const StudentsList = () => {
     {
       field: "actions",
       headerName: "",
-      width: 200,
+      width: 100,
 
       renderCell: (params) => (
         <Button
           sx={{
-            backgroundColor: "#8F00FF",
-            color: "white",
-            width: 130,
-            borderColor: "#8F00FF",
+            color: "#8F00FF",
+            paddingY: 1,
+            height: 40,
             ":hover": {
-              color: "#8F00FF",
-              backgroundColor: "white",
-              borderColor: "#8F00FF",
+              backgroundColor: "rgba(0,0,0,0.05)",
+              cursor: "pointer",
             },
           }}
-          variant="outlined"
           color="primary"
         >
           {params.row.banned ? "Unban" : "Ban"}
@@ -90,7 +87,7 @@ const StudentsList = () => {
 
   return (
     <Box pl={2}>
-      <Box sx={{ height: 500 }}>
+      <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}
           rows={students}

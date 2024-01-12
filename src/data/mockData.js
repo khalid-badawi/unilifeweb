@@ -106,3 +106,12 @@ export const students = [
     banned: false,
   },
 ];
+export const restaurants = [
+  {
+    id: 1,
+    username: "Khalid",
+    Email: "Khalid@gmail.com",
+    phoneNum: "0597401453",
+    joinedIn: "14-5-2023",
+  },
+];
