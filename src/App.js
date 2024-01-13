@@ -56,7 +56,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={adminSidebar} />
+        <Sidebar menuItems={restaurantSidebar} />
       </>
     );
   };
