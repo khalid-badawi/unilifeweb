@@ -7,11 +7,88 @@ import { setOrder } from "../../slice/restaurant";
 import { setError } from "../../slice/user";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrders, updateOrders } from "../../APIS/restaurantAPI";
+import io from "socket.io-client";
+const socket = io.connect("http://192.168.1.8:3000");
+
 export default function Orders() {
+  useEffect(() => {
+    // Connect to the server and listen for private messages
+    const connectToSocket = () => {
+      socket.connect();
+      console.log("CONNEEEEEEEEEEEECTING");
+    };
+
+    const handleReconnect = (attemptNumber) => {
+      console.log(`Reconnecting... Attempt ${attemptNumber}`);
+    };
+
+    const handleConnect = () => {
+      console.log("Connected to Socket.IO");
+    };
+
+    const handleDisconnect = () => {
+      console.log("Disconnected from Socket.IO");
+      // Attempt to reconnect when disconnected
+      connectToSocket();
+    };
+
+    // Set up event listeners for connection status
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+
+    socket.io.opts.reconnection = true; // Enable reconnection
+    socket.io.opts.reconnectionAttempts = Infinity; // Retry indefinitely
+    socket.io.opts.reconnectionDelay = 1000; // Initial delay before reconnecting
+    socket.io.opts.reconnectionDelayMax = 5000; // Maximum delay between reconnects
+    socket.io.opts.randomizationFactor = 0.5; // Randomization factor for delay
+
+    // Start the initial connection
+    connectToSocket();
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+      //Remove event listeners
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+    };
+  }, []);
+
   let orders = useSelector((state) => state.restaurant.orders);
   const id = useSelector((state) => state.user.id);
   const [orderId, setOrderId] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isNewOrder, setIsNewOrder] = useState(false);
   const dispatch = useDispatch();
+  console.log(isNewOrder);
+  useEffect(() => {
+    // Connect to the server and listen for private messages
+    socket.emit("restaurantLogin", id);
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.connect();
+    console.log("xd");
+
+    const handleNewOrder = () => {
+      setIsNewOrder((prevIsNewOrder) => !prevIsNewOrder);
+      console.log("GG");
+    };
+
+    socket.on("newOrder", handleNewOrder);
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off("newOrder", handleNewOrder);
+      socket.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     async function fetchOrder() {
       const res = await getOrders(id);
@@ -30,9 +107,9 @@ export default function Orders() {
       }
     }
     fetchOrder();
-  }, []);
+  }, [isNewOrder]);
   // console.log("orders:", orders[0].items);
-  const [isModalOpen, setModalOpen] = useState(false);
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -41,17 +118,32 @@ export default function Orders() {
     setModalOpen(false);
   };
   const statusList = [
-    "pending",
-    "received",
-    "in progress",
-    "ready",
-    "delivered",
+    "PENDING",
+    "RECEIVED",
+    "IN PROGRESS",
+    "READY",
+    "DELIVERED",
   ];
 
   const columns = [
     { field: "id", headerName: "Order ID", width: 200 },
     { field: "studentName", headerName: "Student Name", width: 200 },
-    { field: "createdAt", headerName: "Ordered At", width: 200 },
+    {
+      field: "createdAt",
+      headerName: "Ordered At",
+      width: 200,
+      valueFormatter: (params) => {
+        const date = new Date(params.value);
+        return new Intl.DateTimeFormat("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        }).format(date);
+      },
+    },
     {
       field: "status",
       headerName: "Status",
@@ -60,12 +152,15 @@ export default function Orders() {
         <div
           style={{
             backgroundColor: getStatusColor(params.row.status),
-            width: "100%",
-            height: "100%",
+            width: "70%",
+            height: "85%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            fontWeight: "500",
             color: "#fff",
+            margin: 2,
+            borderRadius: 20,
           }}
         >
           {params.row.status}
@@ -78,50 +173,53 @@ export default function Orders() {
       headerName: "Update To",
       width: 200,
 
-      renderCell: (params) => (
-        <Button
-          sx={{
-            backgroundColor: "#8F00FF",
-            color: "white",
-            width: 130,
-            borderColor: "#8F00FF",
-            ":hover": {
-              color: "#8F00FF",
-              backgroundColor: "white",
+      renderCell: (params) =>
+        params.row.status !== "DELIVERED" && (
+          <Button
+            sx={{
+              backgroundColor: "#8F00FF",
+              color: "white",
+              width: 130,
               borderColor: "#8F00FF",
-            },
-          }}
-          variant="outlined"
-          color="primary"
-          onClick={() => handleUpdateClick(params.row.id, params.row.status)}
-        >
-          {getNextStatus(params.row.status)}
-        </Button>
-      ),
+              borderRadius: 25,
+              ":hover": {
+                color: "#8F00FF",
+                backgroundColor: "white",
+                borderColor: "#8F00FF",
+              },
+            }}
+            variant="outlined"
+            color="primary"
+            onClick={() => handleUpdateClick(params.row.id, params.row.status)}
+          >
+            {getNextStatus(params.row.status)}
+          </Button>
+        ),
     },
     {
       field: "cancel",
       headerName: "",
       width: 150,
-      renderCell: (params) => (
-        <Button
-          sx={{
-            color: "#8F00FF",
-            width: 130,
-            borderColor: "#8F00FF",
-            ":hover": {
+      renderCell: (params) =>
+        params.row.status !== "DELIVERED" && (
+          <Button
+            sx={{
               color: "#8F00FF",
-              backgroundColor: "white",
+              width: 130,
               borderColor: "#8F00FF",
-            },
-          }}
-          variant="text"
-          color="primary"
-          onClick={() => handleDetailsClick(params.row.id)}
-        >
-          cancel
-        </Button>
-      ),
+              ":hover": {
+                color: "#8F00FF",
+                backgroundColor: "white",
+                borderColor: "#8F00FF",
+              },
+            }}
+            variant="text"
+            color="primary"
+            onClick={() => handleDetailsClick(params.row.id)}
+          >
+            cancel
+          </Button>
+        ),
     },
     {
       field: "details",
@@ -162,6 +260,9 @@ export default function Orders() {
     );
     const res = await updateOrders(id, orderId);
     let status = res.status;
+
+    console.log(res);
+
     if (status === 200) {
       const newOrder = orders.map((order) =>
         order.id === orderId ? { ...order, status: nextStatus } : order
@@ -176,7 +277,6 @@ export default function Orders() {
       }
       console.log(res);
     }
-
     console.log(res);
   };
   const handleDetailsClick = (orderId) => {
@@ -187,17 +287,17 @@ export default function Orders() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "pending":
-        return "red"; // yellow
-      case "received":
+      case "PENDING":
+        return "#FF5959"; // yellow
+      case "RECEIVED":
         return "orange"; // green
-      case "in progress":
-        return "#FFD700"; // blue
-      case "ready":
+      case "IN PROGRESS":
+        return "#BBB900"; // blue
+      case "READY":
         return "green"; // orange
-      case "delivered":
+      case "DELIVERED":
         return "#8F00FF"; // dark green
-      case "cancelled":
+      case "CANCELLED":
         return "red"; // dark green
       default:
         return "#ffffff"; // default color
