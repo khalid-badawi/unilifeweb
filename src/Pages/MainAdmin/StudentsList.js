@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Box, Button } from "@mui/material";
-import { getStudents } from "../../APIS/adminAPI";
+import { blockStudent, getStudents } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 
@@ -9,6 +9,28 @@ const StudentsList = () => {
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const [students, setStudents] = useState([]);
+  async function handleBan(studentId, blocked) {
+    console.log("removed clicked");
+    const res = await blockStudent(id, studentId);
+    console.log(res);
+    let { status } = res;
+    if (status === 200) {
+      const newStudents = students.map((student) =>
+        student.id !== studentId ? student : { ...student, blocked: !blocked }
+      );
+      setStudents(newStudents);
+    } else {
+      status = res.response.status;
+      if (status === 401 || status === 403 || status === 404) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      }
+    }
+  }
   useEffect(() => {
     async function fetcData() {
       const res = await getStudents(id);
@@ -53,11 +75,11 @@ const StudentsList = () => {
       renderCell: (params) => (
         <div
           style={{
-            color: params.row.banned ? "red" : "green",
+            color: params.row.blocked ? "red" : "green",
             fontWeight: "bold",
           }}
         >
-          {params.row.banned ? "Yes" : "No"}
+          {params.row.blocked ? "Yes" : "No"}
         </div>
       ),
     },
@@ -68,6 +90,7 @@ const StudentsList = () => {
 
       renderCell: (params) => (
         <Button
+          onClick={() => handleBan(params.row.id, params.row.blocked)}
           sx={{
             color: "#8F00FF",
             paddingY: 1,

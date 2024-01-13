@@ -260,7 +260,9 @@ export default function Orders() {
     );
     const res = await updateOrders(id, orderId);
     let status = res.status;
+
     console.log(res);
+
     if (status === 200) {
       const newOrder = orders.map((order) =>
         order.id === orderId ? { ...order, status: nextStatus } : order
