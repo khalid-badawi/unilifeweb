@@ -161,6 +161,22 @@ export default function Orders() {
       `Button clicked for order ID: ${orderId}. Updating status to: ${nextStatus}`
     );
     const res = await updateOrders(id, orderId);
+    let status = res.status;
+    if (status === 200) {
+      const newOrder = orders.map((order) =>
+        order.id === orderId ? { ...order, status: nextStatus } : order
+      );
+      dispatch(setOrder(newOrder));
+    } else {
+      status = res.response.status;
+      console.log(status);
+      if (status === 404 || status === 401 || status === 403) {
+        const message = res.response.data.message;
+        dispatch(setError(message));
+      }
+      console.log(res);
+    }
+
     console.log(res);
   };
   const handleDetailsClick = (orderId) => {

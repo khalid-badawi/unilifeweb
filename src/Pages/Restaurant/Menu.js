@@ -39,16 +39,12 @@ export default function Menu() {
       <Grid container spacing={1} rowSpacing={3}>
         {menu.map((menuItem) => {
           const { nameOFfood, price, description, image, foodId } = menuItem;
-          const buffer = image.data;
-          console.log("The buffer", buffer);
 
-          const img = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-          console.log(typeof img);
           return (
             <Grid item xs={3}>
               <MenuCard
                 title={nameOFfood}
-                img={img}
+                img={image}
                 price={price}
                 desc={description}
                 key={foodId}

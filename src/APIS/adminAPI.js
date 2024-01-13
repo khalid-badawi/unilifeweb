@@ -79,6 +79,18 @@ export async function getCalsses(adminId, facultyId, floorId) {
   const res = await getData("class", token, adminId, facultyId, floorId);
   return res;
 }
+export async function blockStudent(adminId, studentId) {
+  //  console.log(facultyId, " ", floorId);
+  const token = localStorage.getItem("token");
+  const res = await putData(
+    "student/block",
+    { blocked: true },
+    token,
+    adminId,
+    studentId
+  );
+  return res;
+}
 export async function getStudents(adminId) {
   //  console.log(facultyId, " ", floorId);
   const token = localStorage.getItem("token");
