@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 
 const StudentsList = () => {
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const [students, setStudents] = useState([]);
   async function handleBan(studentId, blocked) {

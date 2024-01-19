@@ -1,15 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  restaurants: [],
-  dormitories: [],
-  colleges: [],
-  floors: [],
-  classes: [],
-  facultyName: "",
   posts: [],
 };
-const admin = createSlice({
-  name: "admin",
+const dormitory = createSlice({
+  name: "dormitory",
   initialState,
   reducers: {
     setDormitories(state, action) {
@@ -43,5 +37,5 @@ export const {
   setClasses,
   setPosts,
   setDormitories,
-} = admin.actions;
-export default admin.reducer;
+} = dormitory.actions;
+export default dormitory.reducer;

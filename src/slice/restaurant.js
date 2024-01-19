@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   menu: [],
   orders: [],
-  reviewsData: [],
+  reviews: [],
   weeklyRevenue: "",
   weeklyPerc: "",
   totalPeople: "",
@@ -24,8 +24,8 @@ const restaurant = createSlice({
       state.orders = action.payload;
     },
 
-    addReview(state, action) {
-      state.reviewsData.push(action.payload);
+    setReviews(state, action) {
+      state.reviews = action.payload;
     },
     setWeeklyRevenue(state, action) {
       state.weeklyRevenue = action.payload;
@@ -51,7 +51,7 @@ export const {
   addFood,
   setMenu,
   setOrder,
-  addReview,
+  setReviews,
   setWeeklyRevenue,
   setWeeklyPerc,
   setTotalPeople,

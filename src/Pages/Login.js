@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../Components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -8,7 +8,6 @@ import {
   Button,
   Container,
   FormControl,
-  Link,
   Paper,
   Typography,
 } from "@mui/material";
@@ -17,7 +16,6 @@ import { setId, setRole, setError, setIsAuth } from "../slice/user";
 import Logo1 from "../assets/Logo1.png";
 import "./Login.css";
 import { useNavigate } from "react-router";
-
 export default function Login() {
   const role = useSelector((state) => state.user.role);
   const isAuth = useSelector((state) => state.user.isAuth);
@@ -25,8 +23,8 @@ export default function Login() {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      email: "admin@gmail.com",
-      password: "12345678",
+      email: "Orgada@gmail.com",
+      password: "Orgada1234@",
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
@@ -58,6 +56,7 @@ export default function Login() {
         dispatch(setIsAuth(true));
         dispatch(setId(id));
         dispatch(setRole(role));
+        localStorage.setItem("id", id);
       } else {
         console.log("status", res.response.data);
         status = res.response.status;
@@ -82,10 +81,12 @@ export default function Login() {
   useEffect(() => {
     console.log("The isAuth:", isAuth);
     if (isAuth) {
-      if (role === "admin") navigate("/admin/home", { replace: true });
-      else if (role === "restaurant")
+      if (role === "admin") {
+        navigate("/admin/home", { replace: true });
+      } else if (role === "restaurant") {
         navigate("/restaurant/home", { replace: true });
-      else if (role === "dormitory") navigate("/dormitory", { replace: true });
+      } else if (role === "dormitory")
+        navigate("/dormitory/dormitoryaddpost", { replace: true });
     } //else navigate("/");
   }, [isAuth, role, navigate]);
   return (

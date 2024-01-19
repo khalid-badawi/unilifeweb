@@ -21,7 +21,9 @@ import { setError } from "../../slice/user";
 const FacultyList = () => {
   const [selectedFaculty, setSelectedFaculty] = useState(null);
   const colleges = useSelector((state) => state.admin.colleges);
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
+  console.log("admind id=", id);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   async function handleEdit(faculty) {
