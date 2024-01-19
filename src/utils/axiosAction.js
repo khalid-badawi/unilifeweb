@@ -50,6 +50,35 @@ export async function postData(endpoint, value, token = null, ...params) {
     return err;
   }
 }
+export async function postDataWithFiles(
+  endpoint,
+  value,
+  files,
+  token = null,
+  ...params
+) {
+  try {
+    console.log("data=", value);
+    console.log("files=", files);
+    const formData = new FormData();
+    formData.append("data", value);
+    files.map((file, i) => formData.append(`image`, file));
+    console.log(formData.file);
+    const ids = params.join("/");
+    const res = await axios.post(`${BASE_URL}/${endpoint}/${ids}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        /*"x-rapidapi-host": RAPIDAPI_HOST,
+        "x-rapidapi-key": RAPIDAPI_KEY,*/
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res;
+  } catch (err) {
+    console.log(err.message);
+    return err;
+  }
+}
 export async function postDataFiles(
   endpoint,
   data,

@@ -6,38 +6,37 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addRestaurant } from "../../APIS/adminAPI";
+import { addRestaurant, editRestaurants } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import admin from "../../slice/admin";
+import { useParams } from "react-router";
 
-export default function AddRestaurant() {
-  const id = useSelector((state) => state.user.id)||localStorage.getItem("id")
+export default function EditRestaurant() {
+  const { restaurantId } = useParams();
+  console.log(restaurantId);
+  const restaurants = useSelector((state) => state.admin.restaurants);
+  const data = restaurants.filter(
+    (restaurant) => restaurant.id === parseInt(restaurantId)
+  )[0];
+  const { username, email, phoneNum, image } = data;
+  const adminId =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      restaurantName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phoneNum: "",
-      image: "",
+      restaurantName: username,
+      email,
+      phoneNum,
+      image,
     },
     validationSchema: Yup.object({
       restaurantName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email format").required("Required"),
-      password: Yup.string()
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-          "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character"
-        )
-        .required("Required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Required"),
       phoneNum: Yup.string()
         .matches(/^\d{10}$/, "Invalid phone number format")
         .required("Required"),
@@ -45,9 +44,10 @@ export default function AddRestaurant() {
     }),
     onSubmit: async (values) => {
       console.log("values:", values);
-      const res = await addRestaurant(id, values);
+      const res = await editRestaurants(values, adminId, restaurantId);
+      console.log("res:", res);
       let status = res.status;
-      if (status === 201) {
+      if (status === 200) {
       } else {
         status = res.response.status;
         if (status === 401 || status === 409 || status === 403) {
@@ -81,20 +81,6 @@ export default function AddRestaurant() {
           formik={formik}
           value={formik.values.email}
           setValue={(value) => formik.setFieldValue("email", value)}
-        />
-        <CustomInput
-          type="password"
-          placeholder="Password"
-          formik={formik}
-          value={formik.values.password}
-          setValue={(value) => formik.setFieldValue("password", value)}
-        />
-        <CustomInput
-          type="confirmPassword"
-          placeholder="Confirm Password"
-          formik={formik}
-          value={formik.values.confirmPassword}
-          setValue={(value) => formik.setFieldValue("confirmPassword", value)}
         />
 
         <CustomInput
@@ -166,7 +152,7 @@ export default function AddRestaurant() {
               },
             }}
           >
-            Add
+            Edit
           </Button>
         </Box>
       </form>

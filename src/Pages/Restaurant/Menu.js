@@ -16,15 +16,15 @@ export default function Menu() {
 
       let { status } = res;
       if (status === 200) {
-        const {
-          data: { data },
-        } = res;
         console.log(status);
+        const { data } = res;
+        console.log(data);
         dispatch(setMenu(data));
       } else {
         console.log("message", res.response.data);
         status = res.response.status;
         console.log("status", status);
+        console.log(status);
         if (status === 403 || status === 404 || status === 401) {
           const message = res.response.data.message;
           dispatch(setError(message));

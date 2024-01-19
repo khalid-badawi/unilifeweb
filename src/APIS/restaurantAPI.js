@@ -67,9 +67,16 @@ export async function getTotalOrder(restaurantId) {
   const response = await getData("totalorder", token, restaurantId);
   return response;
 }
+//reviwer API
 export async function getLastReviwer(restaurantId) {
   const token = localStorage.getItem("token");
   const response = await getData("lastreviwer", token, restaurantId);
   console.log(response);
   return response;
 }
+export async function getReviwer(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("rating", token, restaurantId);
+  return response;
+}
+//reviwer API

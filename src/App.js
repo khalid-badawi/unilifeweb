@@ -1,16 +1,15 @@
 import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Route, Routes, useLocation } from "react-router-dom";
-
-import Sidebar from "./Components/Restaurant/Sidebar";
-import Topbar from "./Components/Restaurant/Topbar";
-import Home from "./Pages/Restaurant/Home";
-import Login from "./Pages/Login";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuIcon from "@mui/icons-material/RestaurantMenu";
 import OrdersIcon from "@mui/icons-material/TableRestaurant";
 import ReviewsIcon from "@mui/icons-material/StarHalf";
 import AddIcon from "@mui/icons-material/Add";
+import Sidebar from "./Components/Restaurant/Sidebar";
+import Topbar from "./Components/Restaurant/Topbar";
+import Home from "./Pages/Restaurant/Home";
+import Login from "./Pages/Login";
 import Orders from "./Pages/Restaurant/Orders";
 import Menu from "./Pages/Restaurant/Menu";
 import AddItem from "./Pages/Restaurant/AddItem";
@@ -24,31 +23,48 @@ import EditFaculty from "./Pages/MainAdmin/EditFaculty";
 import ClassesList from "./Pages/MainAdmin/ClassesList";
 import StudentsList from "./Pages/MainAdmin/StudentsList";
 import RestaurantsList from "./Pages/MainAdmin/RestaurantsList";
+import EditRestaurant from "./Pages/MainAdmin/EditRestaurant";
 import Posts from "./Pages/MainAdmin/Posts";
-
-const restaurantSidebar = [
-  { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
-  { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
-  { title: "Add to menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
-  { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
-  { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
-];
-const adminSidebar = [
-  { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
-  { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
-  { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
-  { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
-  { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
-  { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
-  { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
-  { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
-];
+import AddDormitory from "./Pages/MainAdmin/AddDormitory";
+import { useSelector } from "react-redux";
+import DormitoriesList from "./Pages/MainAdmin/DormitoriesList";
+import AdminHome from "./Pages/MainAdmin/AdminHome";
+import EditDormitory from "./Pages/MainAdmin/EditDormitory";
+import Post from "./Pages/Dormitory/Post";
+import AddDormitoryPost from "./Pages/Dormitory/AddDormitory";
+import RoomInformation from "./Pages/Dormitory/RoomInformation";
 
 function App() {
   const location = useLocation();
+  const role = useSelector((state) => state.user.role);
 
   const isSignInPage = location.pathname === "/signin";
-
+  const restaurantSidebar = [
+    { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
+    { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
+    { title: "Add to menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
+    { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
+    { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
+  ];
+  const adminSidebar = [
+    { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
+    { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
+    { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
+    { title: "Add Dormitory", to: "/admin/dormitoryadd", icon: <AddIcon /> },
+    { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
+    { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
+    { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
+    { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
+    { title: "Dormitories", to: "/admin/dormitories", icon: <OrdersIcon /> },
+    { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
+  ];
+  const dormitorySidebar = [];
+  const sidebar =
+    role === "admin"
+      ? adminSidebar
+      : role === "restaurant"
+      ? restaurantSidebar
+      : dormitorySidebar;
   const renderSidebar = () => {
     if (isSignInPage) {
       return null;
@@ -56,7 +72,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={restaurantSidebar} />
+        <Sidebar menuItems={sidebar} />
       </>
     );
   };
@@ -80,18 +96,21 @@ function App() {
       <main className="content">
         {renderTopbar()}
         <Routes>
-          <Route path="/restaurant/home" element={<Home />} />
           <Route path="/signin" element={<Login />} index />
+          {/*restaurant route */}
+          <Route path="/restaurant/home" element={<Home />} />
           <Route path="/restaurant/orders" element={<Orders />} />
           <Route path="/restaurant/menu" element={<Menu />} />
           <Route path="/restaurant/menuadd" element={<AddItem />} />
           <Route path="/restaurant/menuedit/:foodId" element={<EditItem />} />
-          <Route path="/restaurant/reviews" elemen={<ReviewPage />} />
-          <Route path="/admin/addMenu" element={<ReviewPage />} />
-          <Route path="/admin/addMenu" element={<ReviewPage />} />
           <Route path="/restaurant/reviews" element={<ReviewPage />} />
-
+          {/*restaurant route end*/}
+          {/*Admin route*/}
           <Route path="/admin/restaurantadd" element={<AddRestaurant />} />
+          <Route
+            path="/admin/restaurantedit/:restaurantId"
+            element={<EditRestaurant />}
+          />
           <Route path="/admin/facultyadd" element={<AddFaculty />} />
           <Route
             path="/admin/facultyedit/:facultyId"
@@ -103,11 +122,25 @@ function App() {
             path="/admin/classes/:facultyId/:floorId"
             element={<ClassesList />}
           />
+          <Route path="/admin/home" element={<AdminHome />} />
           <Route path="/admin/students" element={<StudentsList />} />
           <Route path="/admin/restaurants" element={<RestaurantsList />} />
+          <Route path="/admin/dormitories" element={<DormitoriesList />} />
           <Route path="/admin/posts" element={<Posts />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
-          {/*edit to be like /admin/(facultyId)/floors*/}
+          <Route path="/admin/dormitoryadd" element={<AddDormitory />} />
+          <Route
+            path="/admin/dormitoryedit/:dormitoryId"
+            element={<EditDormitory />}
+          />
+          {/*Admin route End*/}
+          {/*dormitory route */}
+          <Route
+            path="/dormitory/dormitoryaddpost"
+            element={<AddDormitoryPost />}
+          />
+          <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
+          {/*dormitory route End*/}
         </Routes>
       </main>
     </div>
