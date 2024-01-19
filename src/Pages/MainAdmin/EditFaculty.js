@@ -9,7 +9,8 @@ import { setError } from "../../slice/user";
 import { useParams } from "react-router";
 import { setColleges } from "../../slice/admin";
 export default function EditFaculty() {
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const colleges = useSelector((state) => state.admin.colleges);
   const { facultyId } = useParams();
   const dispatch = useDispatch();

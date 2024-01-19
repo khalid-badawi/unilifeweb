@@ -3,23 +3,23 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Box, Button } from "@mui/material";
 //import { restaurants } from "../../data/mockData";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteRestaurants, getRestaurants } from "../../APIS/adminAPI";
-import { setRestaurants } from "../../slice/admin";
+import { deleteDormitory, getDormitory } from "../../APIS/adminAPI";
+import { setDormitories } from "../../slice/admin";
 import { setError } from "../../slice/user";
 import { useNavigate } from "react-router";
 
-const RestaurantsList = () => {
+const DormitoriesList = () => {
   const adminId = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const restaurants = useSelector((state) => state.admin.restaurants);
+  const dormitories = useSelector((state) => state.admin.dormitories);
   useEffect(() => {
     async function fetchData() {
-      const res = await getRestaurants(adminId);
+      const res = await getDormitory(adminId);
       let { status } = res;
       if (status === 200) {
         const { data } = res;
-        dispatch(setRestaurants(data));
+        dispatch(setDormitories(data));
       } else {
         status = res.response.status;
         const {
@@ -34,19 +34,19 @@ const RestaurantsList = () => {
     }
     fetchData();
   }, []);
-  async function handleEdit(restaurantId) {
-    console.log(restaurantId);
-    navigate(`/admin/restaurantedit/${restaurantId}`);
+  async function handleEdit(dormitoryId) {
+    console.log(dormitoryId);
+    navigate(`/admin/dormitoryedit/${dormitoryId}`);
   }
-  async function handleDelete(restaurantId) {
-    const res = await deleteRestaurants(adminId, restaurantId);
+  async function handleDelete(dormitoryId) {
+    const res = await deleteDormitory(adminId, dormitoryId);
     let { status } = res;
     console.log(res);
     if (status === 204) {
-      const newRestaurants = restaurants.filter(
-        (restaurant) => restaurant.id !== restaurantId
+      const newDormitories = dormitories.filter(
+        (dormitory) => dormitory.id !== dormitoryId
       );
-      dispatch(setRestaurants(newRestaurants));
+      dispatch(setDormitories(newDormitories));
     } else {
       status = res.response.status;
       const {
@@ -54,7 +54,12 @@ const RestaurantsList = () => {
           data: { message },
         },
       } = res;
-      if (status === 401 || status === 403 || status === 500) {
+      if (
+        status === 401 ||
+        status === 403 ||
+        status === 500 ||
+        status === 404
+      ) {
         dispatch(setError(message));
       }
     }
@@ -74,6 +79,7 @@ const RestaurantsList = () => {
 
     { field: "phoneNum", headerName: "Phone Number", width: 150 },
     { field: "createdAt", headerName: "Registered on", width: 150 },
+    { field: "SSN", headerName: "SSN", width: 150 },
 
     {
       field: "action1",
@@ -128,7 +134,7 @@ const RestaurantsList = () => {
       <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}
-          rows={restaurants}
+          rows={dormitories}
           getRowId={(row) => row.id}
           getRowClassName={(params) => `status-${params.row.status}`}
           pageSize={10}
@@ -139,4 +145,4 @@ const RestaurantsList = () => {
   );
 };
 
-export default RestaurantsList;
+export default DormitoriesList;

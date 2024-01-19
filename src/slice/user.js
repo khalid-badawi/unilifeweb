@@ -4,6 +4,7 @@ const initialState = {
   role: "",
   isAuth: false,
   error: "",
+  sidebar: [],
 };
 const user = createSlice({
   name: "user",
@@ -21,7 +22,10 @@ const user = createSlice({
     setError(state, action) {
       state.error = action.payload;
     },
+    setSidebar(state, action) {
+      state.error = action.payload;
+    },
   },
 });
-export const { setId, setRole, setIsAuth, setError } = user.actions;
+export const { setId, setRole, setIsAuth, setError, setSidebar } = user.actions;
 export default user.reducer;

@@ -20,7 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setClasses } from "../../slice/admin";
 import { setError } from "../../slice/user";
 const FloorList = () => {
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const classes = useSelector((state) => state.admin.classes);
   async function handleDelete(classId) {
@@ -107,7 +108,8 @@ const ClassesList = () => {
   const [newClass, setNewClass] = useState("");
   const classes = useSelector((state) => state.admin.classes);
   const { floorId, facultyId } = useParams();
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
 
   useEffect(() => {

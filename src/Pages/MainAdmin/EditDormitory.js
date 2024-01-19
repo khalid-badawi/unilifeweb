@@ -1,56 +1,66 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
-import React from "react";
-import { Formik, useFormik } from "formik";
+import { Box, Button, FormControl } from "@mui/material";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addRestaurant } from "../../APIS/adminAPI";
+import { editDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import { setDormitories } from "../../slice/admin";
+import { useParams } from "react-router";
 
-export default function AddRestaurant() {
-  const id = useSelector((state) => state.user.id)||localStorage.getItem("id")
+export default function EditDormitory() {
+  console.log("EditDormitory");
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
+  const { dormitoryId } = useParams();
+
+  const dormitories = useSelector((state) => state.admin.dormitories);
+  const { username, email, SSN, image, phoneNum } = dormitories.filter(
+    (dormitory) => dormitory.id === parseInt(dormitoryId)
+  )[0];
+  console.log(username, email, SSN, image, phoneNum);
   const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
-      restaurantName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phoneNum: "",
-      image: "",
+      dormitoryName: username,
+      email,
+      phoneNum,
+      SSN,
+      image,
     },
     validationSchema: Yup.object({
-      restaurantName: Yup.string().required("Required"),
+      dormitoryName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email format").required("Required"),
-      password: Yup.string()
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-          "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character"
-        )
-        .required("Required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Required"),
       phoneNum: Yup.string()
         .matches(/^\d{10}$/, "Invalid phone number format")
         .required("Required"),
-      image: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
+      SSN: Yup.string()
+        .matches(/^\d{9}$/, "Invalid SSN format")
+        .required("Required"),
+      image: Yup.mixed().required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log("values:", values);
-      const res = await addRestaurant(id, values);
+      console.log("values from dormitory:", values);
+      const { dormitoryName, email, SSN, phoneNum } = values;
+      const res = await editDormitory(id, dormitoryId, values);
+      console.log("res:", res);
       let status = res.status;
-      if (status === 201) {
+      if (status === 200) {
+        const newDormitories = dormitories.map((dormitory) =>
+          dormitory.id === dormitoryId
+            ? { ...dormitory, dormitoryName, SSN, email, phoneNum }
+            : dormitory
+        );
+        dispatch(setDormitories(newDormitories));
       } else {
         status = res.response.status;
-        if (status === 401 || status === 409 || status === 403) {
+        if (
+          status === 401 ||
+          status === 404 ||
+          status === 403 ||
+          status === 400
+        ) {
           const {
             response: {
               data: { message },
@@ -61,17 +71,16 @@ export default function AddRestaurant() {
       }
     },
   });
-  console.log(formik.values.image);
   return (
-    <Box pl={2} pr={2}>
+    <Box /* pl={2} pr={2}*/>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput
-            type="restaurantName"
-            placeholder="Restaurant Name"
+            type="dormitoryName"
+            placeholder="dormitory Name"
             formik={formik}
-            value={formik.values.restaurantName}
-            setValue={(value) => formik.setFieldValue("restaurantName", value)}
+            value={formik.values.dormitoryName}
+            setValue={(value) => formik.setFieldValue("dormitoryName", value)}
           />
         </FormControl>
 
@@ -82,20 +91,6 @@ export default function AddRestaurant() {
           value={formik.values.email}
           setValue={(value) => formik.setFieldValue("email", value)}
         />
-        <CustomInput
-          type="password"
-          placeholder="Password"
-          formik={formik}
-          value={formik.values.password}
-          setValue={(value) => formik.setFieldValue("password", value)}
-        />
-        <CustomInput
-          type="confirmPassword"
-          placeholder="Confirm Password"
-          formik={formik}
-          value={formik.values.confirmPassword}
-          setValue={(value) => formik.setFieldValue("confirmPassword", value)}
-        />
 
         <CustomInput
           type="phoneNum"
@@ -103,6 +98,13 @@ export default function AddRestaurant() {
           formik={formik}
           value={formik.values.phoneNum}
           setValue={(value) => formik.setFieldValue("phoneNum", value)}
+        />
+        <CustomInput
+          type="SSN"
+          placeholder="SSN"
+          formik={formik}
+          value={formik.values.SSN}
+          setValue={(value) => formik.setFieldValue("SSN", value)}
         />
 
         <Box
@@ -161,12 +163,12 @@ export default function AddRestaurant() {
               height: 40,
 
               ":hover": {
-                backgroundColor: "#6A00CC", // Change this color for hover effect
-                cursor: "pointer", // Optional: Change cursor on hover
+                backgroundColor: "#6A00CC",
+                cursor: "pointer",
               },
             }}
           >
-            Add
+            Edit
           </Button>
         </Box>
       </form>

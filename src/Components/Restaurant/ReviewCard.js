@@ -5,9 +5,16 @@ import Rating from "@mui/material/Rating";
 import { CardMedia, Typography } from "@mui/material";
 import Boss from "../../assets/bozz.png";
 
-export default function ReviewCard({ lastReviwer }) {
-  const { reviewer, date, content, rating, image } = lastReviwer;
-  console.log("rating:", rating);
+export default function ReviewCard({
+  reviewer,
+  date,
+  content,
+  rating,
+  image,
+  phoneNum,
+  id,
+}) {
+  console.log("rating:", image);
   return (
     <Card
       sx={{
@@ -21,7 +28,7 @@ export default function ReviewCard({ lastReviwer }) {
     >
       <CardMedia
         component="img"
-        alt="menu item"
+        alt="profile"
         image={image}
         sx={{
           width: "80%",

@@ -16,10 +16,25 @@ import Logo1 from "../../assets/bozz.png";
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { blockStudent, deletePost } from "../../APIS/adminAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setError } from "../../slice/user";
+import { setPosts } from "../../slice/admin";
 
-export default function PostCard() {
+export default function PostCard({ data }) {
+  const {
+    description,
+    id,
+    createdAt,
+    image,
+    profileImage,
+    username,
+    studentId,
+  } = data;
   const [menuAnchor, setMenuAnchor] = useState(null);
-
+  const adminId = useSelector((state) => state.user.id);
+  const posts = useSelector((state) => state.admin.posts);
+  const dispatch = useDispatch();
   const handleMenuClick = (event) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -28,18 +43,53 @@ export default function PostCard() {
     setMenuAnchor(null);
   };
 
-  const handleDeletePost = () => {
+  const handleDeletePost = async () => {
     handleMenuClose();
+    const res = await deletePost(adminId, studentId, id);
+    let { status } = res;
+    console.log(res);
+    if (status === 204) {
+      const newPosts = posts.filter((post) => post.id !== id);
+      dispatch(setPosts(newPosts));
+    } else {
+      status = res.response.status;
+      const {
+        response: {
+          data: { message },
+        },
+      } = res;
+      if (status === 401 || status === 403 || status === 500) {
+        dispatch(setError(message));
+      }
+    }
   };
 
-  const handleBanUser = () => {
+  const handleBanUser = async () => {
     handleMenuClose();
+    console.log(studentId);
+    const res = await blockStudent(adminId, studentId);
+    let { status } = res;
+    if (status === 200) {
+    } else {
+      status = res.response.status;
+      const {
+        response: {
+          data: { message },
+        },
+      } = res;
+      if (status === 401 || status === 403 || status === 500) {
+        dispatch(setError(message));
+      }
+    }
   };
   return (
     <Card sx={{ width: 600, p: "1px", mb: 3, mt: 1 }} elevation={3}>
       <CardHeader
         avatar={
-          <Avatar alt="profile picture" src="/static/images/avatar/1.jpg" />
+          <Avatar
+            alt="profile picture"
+            src={profileImage ? profileImage : "/static/images/avatar/1.jpg"}
+          />
         }
         action={
           <div>
@@ -56,20 +106,18 @@ export default function PostCard() {
             </Menu>
           </div>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={username}
+        subheader={createdAt}
         sx={{}}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {description}
         </Typography>
       </CardContent>
       <CardMedia
         component="img"
-        image={Logo1}
+        image={image}
         alt="Paella dish"
         width={600}
         sx={{ objectFit: "cover" }}

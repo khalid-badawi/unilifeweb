@@ -1,33 +1,28 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import React from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addRestaurant } from "../../APIS/adminAPI";
+import { addDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 
-export default function AddRestaurant() {
-  const id = useSelector((state) => state.user.id)||localStorage.getItem("id")
+export default function AddDormitory() {
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      restaurantName: "",
+      dormitoryName: "",
       email: "",
       password: "",
       confirmPassword: "",
       phoneNum: "",
+      SSN: "",
       image: "",
     },
     validationSchema: Yup.object({
-      restaurantName: Yup.string().required("Required"),
+      dormitoryName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email format").required("Required"),
       password: Yup.string()
         .matches(
@@ -41,16 +36,32 @@ export default function AddRestaurant() {
       phoneNum: Yup.string()
         .matches(/^\d{10}$/, "Invalid phone number format")
         .required("Required"),
-      image: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
+      SSN: Yup.string()
+        .matches(/^\d{9}$/, "Invalid SSN format")
+        .required("Required"),
+      image: Yup.mixed().required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log("values:", values);
-      const res = await addRestaurant(id, values);
+      console.log("values from dormitory:", values);
+
+      const res = await addDormitory(id, values);
+      console.log("res:", res);
       let status = res.status;
       if (status === 201) {
+        formik.setFieldValue("email", "");
+        formik.setFieldValue("SSN", "");
+        formik.setFieldValue("dormitoryName", "");
+        formik.setFieldValue("password", "");
+        formik.setFieldValue("confirmPassword", "");
+        formik.setFieldValue("phoneNum", "");
       } else {
         status = res.response.status;
-        if (status === 401 || status === 409 || status === 403) {
+        if (
+          status === 401 ||
+          status === 409 ||
+          status === 403 ||
+          status === 400
+        ) {
           const {
             response: {
               data: { message },
@@ -61,17 +72,17 @@ export default function AddRestaurant() {
       }
     },
   });
-  console.log(formik.values.image);
+  console.log(formik.values);
   return (
     <Box pl={2} pr={2}>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput
-            type="restaurantName"
-            placeholder="Restaurant Name"
+            type="dormitoryName"
+            placeholder="dormitory Name"
             formik={formik}
-            value={formik.values.restaurantName}
-            setValue={(value) => formik.setFieldValue("restaurantName", value)}
+            value={formik.values.dormitoryName}
+            setValue={(value) => formik.setFieldValue("dormitoryName", value)}
           />
         </FormControl>
 
@@ -103,6 +114,13 @@ export default function AddRestaurant() {
           formik={formik}
           value={formik.values.phoneNum}
           setValue={(value) => formik.setFieldValue("phoneNum", value)}
+        />
+        <CustomInput
+          type="SSN"
+          placeholder="SSN"
+          formik={formik}
+          value={formik.values.SSN}
+          setValue={(value) => formik.setFieldValue("SSN", value)}
         />
 
         <Box
@@ -161,8 +179,8 @@ export default function AddRestaurant() {
               height: 40,
 
               ":hover": {
-                backgroundColor: "#6A00CC", // Change this color for hover effect
-                cursor: "pointer", // Optional: Change cursor on hover
+                backgroundColor: "#6A00CC",
+                cursor: "pointer",
               },
             }}
           >

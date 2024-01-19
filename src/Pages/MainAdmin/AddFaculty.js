@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
 export default function AddFaculty() {
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
 
   const dispatch = useDispatch();
   const formik = useFormik({

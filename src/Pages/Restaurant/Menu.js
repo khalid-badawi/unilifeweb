@@ -16,15 +16,15 @@ export default function Menu() {
 
       let { status } = res;
       if (status === 200) {
-        const {
-          data: { data },
-        } = res;
         console.log(status);
+        const { data } = res;
+        console.log(data);
         dispatch(setMenu(data));
       } else {
         console.log("message", res.response.data);
         status = res.response.status;
         console.log("status", status);
+        console.log(status);
         if (status === 403 || status === 404 || status === 401) {
           const message = res.response.data.message;
           dispatch(setError(message));
@@ -39,16 +39,12 @@ export default function Menu() {
       <Grid container spacing={1} rowSpacing={3}>
         {menu.map((menuItem) => {
           const { nameOFfood, price, description, image, foodId } = menuItem;
-          const buffer = image.data;
-          console.log("The buffer", buffer);
 
-          const img = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-          console.log(typeof img);
           return (
             <Grid item xs={3}>
               <MenuCard
                 title={nameOFfood}
-                img={img}
+                img={image}
                 price={price}
                 desc={description}
                 key={foodId}

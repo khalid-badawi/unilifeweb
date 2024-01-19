@@ -26,7 +26,8 @@ const FloorList = () => {
   const { facultyId } = useParams();
   const navigate = useNavigate();
   console.log("facultyId:", facultyId);
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const handleViewClasses = (floor) => {
     setSelectedFloor(floor);
@@ -147,7 +148,8 @@ const FloorsList = () => {
   const facultyName = useSelector((state) => state.admin.facultyName);
   console.log(facultyName);
   const { facultyId } = useParams();
-  const id = useSelector((state) => state.user.id);
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   // const [floors, setFloors] = useState(ff);
   const dispatch = useDispatch();
   const handleAddFloorClick = () => {

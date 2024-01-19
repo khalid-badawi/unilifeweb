@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "../../Components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function AddDormitory() {
+export default function AddDormitoryPost() {
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const [distance, setDistance] = useState(0);
@@ -43,14 +43,14 @@ export default function AddDormitory() {
     initialValues: {
       dormitoryName: "",
       services: "",
-      numRooms: 0,
+      numberOfRoom: 0,
       gender: "",
       dormitoryImage: "",
     },
     validationSchema: Yup.object({
       dormitoryName: Yup.string().required("Required"),
       services: Yup.string().required("Required"),
-      numRooms: Yup.number()
+      numberOfRoom: Yup.number()
         .required("Required")
         .min(1, "Should be at least 1 room"),
       gender: Yup.string().required("Required"),
@@ -147,17 +147,17 @@ export default function AddDormitory() {
         </FormControl>
 
         <CustomInput
-          type="numRooms"
+          type="numberOfRoom"
           placeholder="Number of Rooms"
           formik={formik}
-          value={formik.values.numRooms}
-          setValue={(value) => formik.setFieldValue("numRooms", value)}
+          value={formik.values.numberOfRoom}
+          setValue={(value) => formik.setFieldValue("numberOfRoom", value)}
         />
 
         <FormControl fullWidth sx={{ marginBottom: 3 }}>
           <input
             id="dormitory-image-picker"
-            name="dormitoryImage"
+            name="image"
             type="file"
             accept="image/*"
             onChange={(event) => {
