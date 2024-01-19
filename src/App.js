@@ -33,7 +33,32 @@ import EditDormitory from "./Pages/MainAdmin/EditDormitory";
 import Post from "./Pages/Dormitory/Post";
 import AddDormitoryPost from "./Pages/Dormitory/AddDormitory";
 import RoomInformation from "./Pages/Dormitory/RoomInformation";
+const restaurantSidebar = [
+  { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
+  { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
+  { title: "Add to menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
+  { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
+  { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
+];
+const adminSidebar = [
+  { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
+  { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
+  { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
+  { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
+  { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
+  { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
+  { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
+  { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
+];
 
+
+const dormitorySidebar = [
+  {
+    title: "Add Dormitory",
+    to: "/dormitory/dormitoryadd",
+    icon: <HomeOutlinedIcon />,
+  },
+];
 function App() {
   const location = useLocation();
   const role = useSelector((state) => state.user.role);
@@ -72,6 +97,7 @@ function App() {
 
     return (
       <>
+
         <Sidebar menuItems={sidebar} />
       </>
     );
@@ -128,6 +154,7 @@ function App() {
           <Route path="/admin/dormitories" element={<DormitoriesList />} />
           <Route path="/admin/posts" element={<Posts />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
+
           <Route path="/admin/dormitoryadd" element={<AddDormitory />} />
           <Route
             path="/admin/dormitoryedit/:dormitoryId"
@@ -141,6 +168,7 @@ function App() {
           />
           <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
           {/*dormitory route End*/}
+
         </Routes>
       </main>
     </div>

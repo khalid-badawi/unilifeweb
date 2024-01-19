@@ -18,32 +18,32 @@ const RoomForm = ({ formik, roomIndex }) => {
         Room {roomIndex + 1}
       </Typography>
       <CustomInput
-        type={`numberOfPerson`}
-        placeholder={`Capacity`}
+        type={numberOfPerson}
+        placeholder={Capacity}
         formik={formik}
         value={formik.values.rooms[roomIndex].numberOfPerson}
         setValue={(value) =>
-          formik.setFieldValue(`rooms[${roomIndex}].numberOfPerson`, value)
+          formik.setFieldValue(rooms[${roomIndex}].numberOfPerson, value)
         }
       />
       <CustomInput
-        type={`avilableSeat`}
+        type={avilableSeat}
         placeholder={`avilableSeat `}
         formik={formik}
         value={formik.values.rooms[roomIndex].avilableSeat}
         setValue={(value) =>
-          formik.setFieldValue(`rooms[${roomIndex}].avilableSeat`, value)
+          formik.setFieldValue(rooms[${roomIndex}].avilableSeat, value)
         }
       />
       <FormControl fullWidth sx={{ marginBottom: "15px" }}>
-        <InputLabel id={`roomType-label-${roomIndex}`}>Room Type</InputLabel>
+        <InputLabel id={roomType-label-${roomIndex}}>Room Type</InputLabel>
         <Select
-          labelId={`roomType-label-${roomIndex}`}
-          id={`roomType-${roomIndex}`}
-          label={`Room Type ${roomIndex + 1}`}
+          labelId={roomType-label-${roomIndex}}
+          id={roomType-${roomIndex}}
+          label={Room Type ${roomIndex + 1}}
           value={formik.values.rooms[roomIndex].type}
           onChange={(event) =>
-            formik.setFieldValue(`rooms[${roomIndex}].type`, event.target.value)
+            formik.setFieldValue(rooms[${roomIndex}].type, event.target.value)
           }
         >
           <MenuItem value="master">Master</MenuItem>
@@ -52,12 +52,12 @@ const RoomForm = ({ formik, roomIndex }) => {
         </Select>
       </FormControl>
       <CustomInput
-        type={`rent${roomIndex}`}
-        placeholder={`rent Per Person in Room ${roomIndex + 1}`}
+        type={rent${roomIndex}}
+        placeholder={rent Per Person in Room ${roomIndex + 1}}
         formik={formik}
         value={formik.values.rooms[roomIndex].rent} // Update this line
         setValue={
-          (value) => formik.setFieldValue(`rooms[${roomIndex}].rent`, value) // Update this line
+          (value) => formik.setFieldValue(rooms[${roomIndex}].rent, value) // Update this line
         }
       />
       <FormControl fullWidth sx={{ marginBottom: 3 }}>
@@ -69,10 +69,10 @@ const RoomForm = ({ formik, roomIndex }) => {
           onChange={(event) => {
             const selectedImage = event.target.files[0];
             formik.setFieldValue(
-              `rooms[${roomIndex}].roomImage`,
+              rooms[${roomIndex}].roomImage,
               selectedImage
             );
-            formik.setFieldTouched(`rooms[${roomIndex}].roomImage`, true);
+            formik.setFieldTouched(rooms[${roomIndex}].roomImage, true);
           }}
           style={{ display: "none" }}
         />
