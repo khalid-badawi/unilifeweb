@@ -20,9 +20,9 @@ const CustomInput = ({ type, placeholder, value, setValue, formik }) => {
           },
         }}
         variant="outlined"
-        margin="normal"
         fullWidth
         id={type}
+        style={{ marginBottom: "15px" }}
         label={placeholder}
         name={type}
         autoFocus

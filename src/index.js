@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import "mapbox-gl/dist/mapbox-gl.css";
 import store from "./store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

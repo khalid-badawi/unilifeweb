@@ -25,6 +25,9 @@ import ClassesList from "./Pages/MainAdmin/ClassesList";
 import StudentsList from "./Pages/MainAdmin/StudentsList";
 import RestaurantsList from "./Pages/MainAdmin/RestaurantsList";
 import Posts from "./Pages/MainAdmin/Posts";
+import AddDormitory from "./Pages/Dormitory/AddDormitory";
+import RoomInformation from "./Pages/Dormitory/RoomInformation";
+import Dormitories from "./Pages/Dormitory/Dormitories";
 
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
@@ -44,6 +47,13 @@ const adminSidebar = [
   { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
 ];
 
+const dormitorySidebar = [
+  {
+    title: "Add Dormitory",
+    to: "/dormitory/dormitoryadd",
+    icon: <HomeOutlinedIcon />,
+  },
+];
 function App() {
   const location = useLocation();
 
@@ -56,7 +66,7 @@ function App() {
 
     return (
       <>
-        <Sidebar menuItems={restaurantSidebar} />
+        <Sidebar menuItems={dormitorySidebar} />
       </>
     );
   };
@@ -107,6 +117,10 @@ function App() {
           <Route path="/admin/restaurants" element={<RestaurantsList />} />
           <Route path="/admin/posts" element={<Posts />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
+          <Route path="/dormitory/dormitoryadd" element={<AddDormitory />} />
+          <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
+          <Route path="/dormitory/dormitories" element={<Dormitories />} />
+          <Route path="/dormitory/rooms" element={<Dormitories />} />
           {/*edit to be like /admin/(facultyId)/floors*/}
         </Routes>
       </main>
