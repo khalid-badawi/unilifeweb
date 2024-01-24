@@ -1,4 +1,3 @@
-import img from "./room1.jpg";
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -41,7 +40,7 @@ export default function Post() {
   };
   return (
     <Card sx={{ maxWidth: 800 }}>
-      <CardMedia component="img" alt="green iguana" height="400" image={img} />
+      <CardMedia component="img" alt="green iguana" height="400" />
       <Box
         sx={{
           display: "flex",

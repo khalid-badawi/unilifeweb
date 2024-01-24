@@ -45,6 +45,17 @@ const restaurant = createSlice({
     setLastReviwer(state, action) {
       state.lastReviwer = action.payload;
     },
+    setStateRestaurant(state, action) {
+      state.lastReviwer = {};
+      state.menu = [];
+      state.reviews = [];
+      state.orders = [];
+      state.weeklyRevenue = "";
+      state.weeklyPerc = "";
+      state.totalPeople = "";
+      state.dashBoardFood = [];
+      state.totalOrder = "";
+    },
   },
 });
 export const {
@@ -58,5 +69,6 @@ export const {
   setDashboard,
   setTotalOrder,
   setLastReviwer,
+  setStateRestaurant,
 } = restaurant.actions;
 export default restaurant.reducer;
