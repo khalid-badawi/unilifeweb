@@ -1,12 +1,25 @@
-import { configureStore } from "@reduxjs/toolkit";
-import restaurant from "./slice/restaurant";
-import user from "./slice/user";
-import admin from "./slice/admin";
-const store = configureStore({
-  reducer: {
-    user,
-    restaurant,
-    admin,
-  },
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import restaurantReducer from "./slice/restaurant";
+import userReducer from "./slice/user";
+import adminReducer from "./slice/admin";
+
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  restaurant: restaurantReducer,
+  admin: adminReducer,
 });
-export default store;
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+});
+
+export const persistor = persistStore(store);

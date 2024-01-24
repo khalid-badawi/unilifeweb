@@ -33,6 +33,9 @@ import EditDormitory from "./Pages/MainAdmin/EditDormitory";
 import Post from "./Pages/Dormitory/Post";
 import AddDormitoryPost from "./Pages/Dormitory/AddDormitory";
 import RoomInformation from "./Pages/Dormitory/RoomInformation";
+import MajorsList from "./Pages/MainAdmin/Majors";
+import AddADs from "./Pages/MainAdmin/CreateADs";
+import ADsList from "./Pages/MainAdmin/ADsList";
 const restaurantSidebar = [
   { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
   { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
@@ -50,7 +53,6 @@ const adminSidebar = [
   { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
   { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
 ];
-
 
 const dormitorySidebar = [
   {
@@ -82,6 +84,9 @@ function App() {
     { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
     { title: "Dormitories", to: "/admin/dormitories", icon: <OrdersIcon /> },
     { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
+    { title: "Majors", to: "/admin/majors", icon: <OrdersIcon /> },
+    { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
+    { title: "ADs", to: "/admin/ads", icon: <OrdersIcon /> },
   ];
   const dormitorySidebar = [];
   const sidebar =
@@ -97,7 +102,6 @@ function App() {
 
     return (
       <>
-
         <Sidebar menuItems={sidebar} />
       </>
     );
@@ -156,6 +160,9 @@ function App() {
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
 
           <Route path="/admin/dormitoryadd" element={<AddDormitory />} />
+          <Route path="/admin/majors" element={<MajorsList />} />
+          <Route path="/admin/adsadd" element={<AddADs />} />
+          <Route path="/admin/ads" element={<ADsList />} />
           <Route
             path="/admin/dormitoryedit/:dormitoryId"
             element={<EditDormitory />}
@@ -168,7 +175,6 @@ function App() {
           />
           <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
           {/*dormitory route End*/}
-
         </Routes>
       </main>
     </div>

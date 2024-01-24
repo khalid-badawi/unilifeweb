@@ -25,7 +25,14 @@ const user = createSlice({
     setSidebar(state, action) {
       state.error = action.payload;
     },
+    setSatesUser(state, action) {
+      state.error = "";
+      state.isAuth = false;
+      state.isAuth = false;
+      state.isAuth = "";
+    },
   },
 });
-export const { setId, setRole, setIsAuth, setError, setSidebar } = user.actions;
+export const { setId, setRole, setIsAuth, setError, setSidebar, setSatesUser } =
+  user.actions;
 export default user.reducer;

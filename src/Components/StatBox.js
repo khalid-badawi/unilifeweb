@@ -5,6 +5,7 @@ export default function StatBox({ title, subtitle, icon, day, perc }) {
   return (
     <Box
       width="300px"
+      height="130px"
       m="0 30px"
       backgroundColor="#f1eef0"
       p={3}

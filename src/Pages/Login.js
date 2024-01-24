@@ -23,8 +23,8 @@ export default function Login() {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      email: "Orgada@gmail.com",
-      password: "Orgada1234@",
+      email: "admin@gmail.com",
+      password: "12345678",
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),

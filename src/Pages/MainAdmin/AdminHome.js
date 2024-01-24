@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import StatBox from "../../Components/StatBox";
 import MoneyIcon from "@mui/icons-material/PriceCheck";
 import OrdersIcon from "@mui/icons-material/Restaurant";
@@ -13,6 +13,7 @@ import {
   getTopResaurants,
   getPoularResaurants,
 } from "../../APIS/adminAPI";
+import AdminBarChart from "../../Components/Main Admin/AdminBarChart";
 function AdminHome() {
   const userId =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -55,27 +56,38 @@ function AdminHome() {
   }, []);
   return (
     <Box m="20px">
-      <StatBox
-        title={`${totalUsers}₪`}
-        // perc={weeklyPerc}
-        subtitle="New user this week"
-        icon={<MoneyIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-      />
-      <StatBox
-        title={totalPosts}
-        subtitle="Total post today"
-        icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-      />
-      <StatBox
-        title={topRestaurants}
-        subtitle="Top Restaurants"
-        icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-      />
-      <StatBox
-        title={popularRestaurants}
-        subtitle="Popular Restaurants"
-        icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-      />
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <StatBox
+            title={`${totalUsers}₪`}
+            // perc={weeklyPerc}
+            subtitle="New user this week"
+            icon={<MoneyIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <StatBox
+            title={totalPosts}
+            subtitle="Total post today"
+            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <StatBox
+            title={topRestaurants}
+            subtitle="Top Restaurants"
+            icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+          />{" "}
+        </Grid>
+        <Grid item xs={3}>
+          <StatBox
+            title={popularRestaurants}
+            subtitle="Popular Restaurants"
+            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+          />{" "}
+        </Grid>
+      </Grid>
+      <AdminBarChart />
     </Box>
   );
 }
