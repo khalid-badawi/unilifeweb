@@ -229,3 +229,46 @@ export async function getPoularResaurants(adminId, dormitoryId, values) {
   return res;
 }
 /*DashBoard API End*/
+
+/*major API*/
+export async function addMajor(adminId, values) {
+  const token = localStorage.getItem("token");
+  const res = await postData("major", values, token, adminId);
+  return res;
+}
+export async function getMajor(adminId) {
+  const token = localStorage.getItem("token");
+  const res = await getData("major", token, adminId);
+  return res;
+}
+export async function removeMajor(adminId, majorId) {
+  const token = localStorage.getItem("token");
+  const res = await deleteData("major", token, adminId, majorId);
+  return res;
+}
+/*major API End*/
+/*ADDs API */
+export async function addAdds(adminId, data) {
+  const { image, title, description } = data;
+  const value = {
+    title,
+    description,
+  };
+  console.log("value:", value);
+  const token = localStorage.getItem("token");
+  const res = await postDataFiles(
+    "adds",
+    JSON.stringify(value),
+    image,
+    token,
+    adminId
+  );
+  return res;
+}
+export async function getAdds(adminId) {
+  const token = localStorage.getItem("token");
+  console.log("adminId", adminId);
+  const res = await getData("adds", token, adminId);
+  return res;
+}
+/*ADDs API End*/
