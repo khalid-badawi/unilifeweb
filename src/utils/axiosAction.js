@@ -8,6 +8,9 @@ export async function getData(endpoint, token, ...params) {
     //console.log("The value", value);
     //console.log("The URL", env.BASE_URL);
     const ids = params.join("/");
+
+    console.log("endpoint", endpoint);
+    console.log("ids", ids);
     console.log("my token", token);
     const res = await axios.get(
       `${BASE_URL}/${endpoint}/${ids}`,

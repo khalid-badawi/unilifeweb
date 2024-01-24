@@ -16,6 +16,7 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
 import { setMajors } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
+import { addMajor, getMajor, removeMajor } from "../../APIS/adminAPI";
 const dummyMajors = [
   { id: 1, majorName: "Computer Science" },
   { id: 2, majorName: "Mathematics" },
@@ -27,26 +28,29 @@ const MajorsList = () => {
   const majors = useSelector((state) => state.admin.majors); // Assuming you have majors in the Redux state
   const [isAddingMajor, setIsAddingMajor] = useState(false);
   const [newMajor, setNewMajor] = useState("");
-
+  const handleRemove = async (majorId) => {
+    try {
+      const res = await removeMajor(id, majorId);
+      const { status } = res;
+      if (status === 204) {
+        const newMajors = majors.filter((item) => item.id !== majorId);
+        dispatch(setMajors(newMajors));
+      } else {
+        const { message } = res.response.data;
+        dispatch(setError(message));
+      }
+    } catch (error) {
+      console.error("Error fetching majors:", error);
+    }
+  };
   useEffect(() => {
     async function fetchData() {
       try {
-        // Replace the following line with your API call to fetch majors
-        // const res = await getMajors(id);
-        // For demonstration purposes, using mock data
-        const res = {
-          data: {
-            majors: [
-              { id: 1, majorName: "Computer Science" },
-              { id: 2, majorName: "Mathematics" },
-            ],
-          },
-        };
-
+        const res = await getMajor(id);
         const { status } = res;
         if (status === 200) {
-          const { majors } = res.data.majors;
-          dispatch(setMajors(majors));
+          const { data } = res;
+          dispatch(setMajors(data));
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
@@ -67,15 +71,13 @@ const MajorsList = () => {
     e.preventDefault();
     if (newMajor.trim() !== "") {
       try {
-        // Replace the following line with your API call to add a major
-        // const res = await addMajor({ majorName: newMajor }, id);
-        // For demonstration purposes, using mock data
-        const res = { data: { id: 3 } };
+        const res = await addMajor(id, { name: newMajor });
 
         const { status } = res;
         if (status === 201) {
           const { id } = res.data;
-          const newMajors = [...majors, { id, majorName: newMajor }];
+          console.log(res.data);
+          const newMajors = [...majors, { id, name: newMajor }];
           setNewMajor("");
           setIsAddingMajor(false);
           dispatch(setMajors(newMajors));
@@ -112,10 +114,10 @@ const MajorsList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyMajors.map((item, index) => (
+            {majors.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.id}</TableCell>
-                <TableCell>{item.majorName}</TableCell>
+                <TableCell>{item.name}</TableCell>
 
                 <TableCell>
                   <Button
@@ -129,7 +131,7 @@ const MajorsList = () => {
                         cursor: "pointer",
                       },
                     }}
-                    // onClick={() => handleDelete(faculty.id)}
+                    onClick={() => handleRemove(item.id)}
                   >
                     Remove
                   </Button>

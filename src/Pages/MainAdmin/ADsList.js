@@ -17,6 +17,7 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
 import { setMajors } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
+import { getAdds } from "../../APIS/adminAPI";
 const dummyADs = [
   {
     id: 1,
@@ -32,27 +33,18 @@ const ADsList = () => {
   const dispatch = useDispatch();
   const majors = useSelector((state) => state.admin.majors); // Assuming you have majors in the Redux state
   const [isAddingMajor, setIsAddingMajor] = useState(false);
-  const [newMajor, setNewMajor] = useState("");
+  const [adds, setAdds] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Replace the following line with your API call to fetch majors
-        // const res = await getMajors(id);
-        // For demonstration purposes, using mock data
-        const res = {
-          data: {
-            majors: [
-              { id: 1, majorName: "Computer Science" },
-              { id: 2, majorName: "Mathematics" },
-            ],
-          },
-        };
-
+        console.log(id);
+        const res = await getAdds(id);
+        console.log(res);
         const { status } = res;
         if (status === 200) {
-          const { majors } = res.data.majors;
-          dispatch(setMajors(majors));
+          const { data } = res;
+          setAdds(data);
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
@@ -70,7 +62,7 @@ const ADsList = () => {
   };
 
   const handleAddMajor = async (e) => {
-    e.preventDefault();
+    /* e.preventDefault();
     if (newMajor.trim() !== "") {
       try {
         // Replace the following line with your API call to add a major
@@ -92,7 +84,7 @@ const ADsList = () => {
       } catch (error) {
         console.error("Error adding major:", error);
       }
-    }
+    }*/
   };
 
   return (
@@ -113,7 +105,7 @@ const ADsList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyADs.map((item, index) => (
+            {adds.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>

@@ -1,42 +1,42 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import React from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addAdds, addRestaurant } from "../../APIS/adminAPI";
+import { addDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 
-export default function AddADs() {
+export default function AddMajor() {
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const formik = useFormik({
-    initialValues: {
-      title: "",
-      description: "",
-      image: "",
-    },
+    initialValues: {},
     validationSchema: Yup.object({
-      title: Yup.string().required("Required"),
-      description: Yup.string().required("Required"),
-      image: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
+      name: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log("values:", values);
-      const res = await addAdds(id, values);
+      console.log("values from dormitory:", values);
+
+      const res = await addDormitory(id, values);
+      console.log("res:", res);
       let status = res.status;
       if (status === 201) {
+        formik.setFieldValue("email", "");
+        formik.setFieldValue("SSN", "");
+        formik.setFieldValue("dormitoryName", "");
+        formik.setFieldValue("password", "");
+        formik.setFieldValue("confirmPassword", "");
+        formik.setFieldValue("phoneNum", "");
       } else {
         status = res.response.status;
-        if (status === 401 || status === 409 || status === 403) {
+        if (
+          status === 401 ||
+          status === 409 ||
+          status === 403 ||
+          status === 400
+        ) {
           const {
             response: {
               data: { message },
@@ -47,26 +47,55 @@ export default function AddADs() {
       }
     },
   });
-  console.log(formik.values.image);
+  console.log(formik.values);
   return (
     <Box pl={2} pr={2}>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput
-            type="title"
-            placeholder="AD title"
+            type="dormitoryName"
+            placeholder="dormitory Name"
             formik={formik}
-            value={formik.values.title}
-            setValue={(value) => formik.setFieldValue("title", value)}
+            value={formik.values.dormitoryName}
+            setValue={(value) => formik.setFieldValue("dormitoryName", value)}
           />
         </FormControl>
 
         <CustomInput
-          type="description"
-          placeholder="Description"
+          type="email"
+          placeholder="Email"
           formik={formik}
-          value={formik.values.description}
-          setValue={(value) => formik.setFieldValue("description", value)}
+          value={formik.values.email}
+          setValue={(value) => formik.setFieldValue("email", value)}
+        />
+        <CustomInput
+          type="password"
+          placeholder="Password"
+          formik={formik}
+          value={formik.values.password}
+          setValue={(value) => formik.setFieldValue("password", value)}
+        />
+        <CustomInput
+          type="confirmPassword"
+          placeholder="Confirm Password"
+          formik={formik}
+          value={formik.values.confirmPassword}
+          setValue={(value) => formik.setFieldValue("confirmPassword", value)}
+        />
+
+        <CustomInput
+          type="phoneNum"
+          placeholder="Phone Number"
+          formik={formik}
+          value={formik.values.phoneNum}
+          setValue={(value) => formik.setFieldValue("phoneNum", value)}
+        />
+        <CustomInput
+          type="SSN"
+          placeholder="SSN"
+          formik={formik}
+          value={formik.values.SSN}
+          setValue={(value) => formik.setFieldValue("SSN", value)}
         />
 
         <Box
@@ -125,8 +154,8 @@ export default function AddADs() {
               height: 40,
 
               ":hover": {
-                backgroundColor: "#6A00CC", // Change this color for hover effect
-                cursor: "pointer", // Optional: Change cursor on hover
+                backgroundColor: "#6A00CC",
+                cursor: "pointer",
               },
             }}
           >
