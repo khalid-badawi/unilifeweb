@@ -42,42 +42,49 @@ import RoomInformation from "./Pages/Dormitory/RoomInformation";
 import MajorsList from "./Pages/MainAdmin/Majors";
 import AddADs from "./Pages/MainAdmin/CreateADs";
 import ADsList from "./Pages/MainAdmin/ADsList";
-const restaurantSidebar = [
-  { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
-  { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
-  { title: "Add to menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
-  { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
-  { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
-];
-const adminSidebar = [
-  { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
-  { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
-  { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
-  { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
-  { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
-  { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
-  { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
-  { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
-];
-
-const dormitorySidebar = [
-  {
-    title: "Add Dormitory",
-    to: "/dormitory/dormitoryadd",
-    icon: <HomeOutlinedIcon />,
-  },
-];
+import EditAd from "./Pages/MainAdmin/EditAd";
 function App() {
   const location = useLocation();
   const role = useSelector((state) => state.user.role);
 
   const isSignInPage = location.pathname === "/signin";
-  const restaurantSidebar = [
+  /* const restaurantSidebar = [
     { title: "Dashboard", to: "/restaurant/home", icon: <HomeOutlinedIcon /> },
     { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
-    { title: "Add to menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
+    { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
     { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
     { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
+  ];*/
+  const restaurantSidebar = [
+    {
+      section: "Dashboard",
+      items: [
+        {
+          title: "Dashboard",
+          to: "/restaurant/home",
+          icon: <HomeOutlinedIcon />,
+        },
+      ],
+    },
+    {
+      section: "Menu",
+      items: [
+        { title: "Menu", to: "/restaurant/menu", icon: <MenuIcon /> },
+        { title: "Menu", to: "/restaurant/menuadd", icon: <AddIcon /> },
+      ],
+    },
+    {
+      section: "Orders",
+      items: [
+        { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
+      ],
+    },
+    {
+      section: "Ratings",
+      items: [
+        { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
+      ],
+    },
   ];
   // const adminSidebar = [
   //   { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
@@ -154,8 +161,6 @@ function App() {
         { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
       ],
     },
-
-    // ... add other sections and items
   ];
 
   const dormitorySidebar = [];
@@ -194,7 +199,6 @@ function App() {
 
       <CssBaseline />
       <main className="content">
-        
         <Routes>
           <Route path="/signin" element={<Login />} index />
           {/*restaurant route */}
@@ -233,6 +237,7 @@ function App() {
           <Route path="/admin/majors" element={<MajorsList />} />
           <Route path="/admin/adsadd" element={<AddADs />} />
           <Route path="/admin/ads" element={<ADsList />} />
+          <Route path="/admin/adsedit/:adId" element={<EditAd />} />
           <Route
             path="/admin/dormitoryedit/:dormitoryId"
             element={<EditDormitory />}

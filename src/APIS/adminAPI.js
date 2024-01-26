@@ -257,10 +257,11 @@ export async function removeMajor(adminId, majorId) {
 /*major API End*/
 /*ADDs API */
 export async function addAdds(adminId, data) {
-  const { image, title, description } = data;
+  const { image, title, description, link } = data;
   const value = {
     title,
     description,
+    link,
   };
   console.log("value:", value);
   const token = localStorage.getItem("token");
@@ -270,6 +271,25 @@ export async function addAdds(adminId, data) {
     image,
     token,
     adminId
+  );
+  return res;
+}
+export async function editAd(adminId, adId, data) {
+  const { image, title, description, link } = data;
+  const value = {
+    title,
+    description,
+    link,
+  };
+  console.log("value:", value);
+  const token = localStorage.getItem("token");
+  const res = await putDataFiles(
+    "adds",
+    JSON.stringify(value),
+    image,
+    token,
+    adminId,
+    adId
   );
   return res;
 }

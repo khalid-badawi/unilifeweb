@@ -8,6 +8,7 @@ const initialState = {
   facultyName: "",
   posts: [],
   majors: [],
+  ads: [],
 };
 const admin = createSlice({
   name: "admin",
@@ -37,6 +38,9 @@ const admin = createSlice({
     setMajors(state, action) {
       state.majors = action.payload;
     },
+    setAds(state, action) {
+      state.ads = action.payload;
+    },
     setAdminState(state, action) {
       state.posts = [];
       state.facultyName = "";
@@ -59,5 +63,6 @@ export const {
   setPosts,
   setDormitories,
   setAdminState,
+  setAds,
 } = admin.actions;
 export default admin.reducer;

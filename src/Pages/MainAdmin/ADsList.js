@@ -10,31 +10,24 @@ import {
   Paper,
   Typography,
   Button,
-  TextField,
   Avatar,
 } from "@mui/material";
-import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
-import { setMajors } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
+import { setAds } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
 import { getAdds } from "../../APIS/adminAPI";
-const dummyADs = [
-  {
-    id: 1,
-    title: "Hello",
-    description: "NOOO PLEASEEEE",
-    image:
-      "https://firebasestorage.googleapis.com/v0/b/unilife-1b22d.appspot.com/o/student%20profile%2F3?alt=media&token=687f45c6-3a24-482e-93ea-031c2d7a5629",
-  },
-];
 const ADsList = () => {
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
+  const adds = useSelector((state) => state.admin.ads);
   const dispatch = useDispatch();
-  const majors = useSelector((state) => state.admin.majors); // Assuming you have majors in the Redux state
-  const [isAddingMajor, setIsAddingMajor] = useState(false);
-  const [adds, setAdds] = useState([]);
-
+  const [isAddingAdd, setIsAddingAdd] = useState(false);
+  async function handleEdit(id) {
+    console.log(id);
+    navigate(`/admin/adsedit/${id}`);
+  }
   useEffect(() => {
     async function fetchData() {
       try {
@@ -44,7 +37,7 @@ const ADsList = () => {
         const { status } = res;
         if (status === 200) {
           const { data } = res;
-          setAdds(data);
+          dispatch(setAds(data));
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
@@ -58,7 +51,7 @@ const ADsList = () => {
   }, []);
 
   const handleAddMajorClick = () => {
-    setIsAddingMajor(true);
+    setIsAddingAdd(true);
   };
 
   const handleAddMajor = async (e) => {
@@ -131,7 +124,7 @@ const ADsList = () => {
                         cursor: "pointer",
                       },
                     }}
-                    // onClick={() => handleDelete(faculty.id)}
+                    onClick={() => handleEdit(item.id)}
                   >
                     Edit
                   </Button>

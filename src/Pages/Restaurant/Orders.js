@@ -8,6 +8,7 @@ import { setError } from "../../slice/user";
 import { useDispatch, useSelector } from "react-redux";
 import { cancelOrder, getOrders, updateOrders } from "../../APIS/restaurantAPI";
 import io from "socket.io-client";
+import SwitchButton from "../../Components/Restaurant/SwitchButton";
 const socket = io.connect("http://192.168.1.8:3000");
 
 export default function Orders() {
@@ -331,6 +332,7 @@ export default function Orders() {
 
   return (
     <Box pl={2}>
+      <SwitchButton />
       <Box sx={{ height: 900 }}>
         <DataGrid
           columns={columns}
