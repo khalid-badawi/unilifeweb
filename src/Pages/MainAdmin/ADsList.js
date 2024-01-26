@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
 import { setAds } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
-import { getAdds } from "../../APIS/adminAPI";
+import { deleteAd, getAdds } from "../../APIS/adminAPI";
 const ADsList = () => {
   const navigate = useNavigate();
   const id =
@@ -24,10 +24,33 @@ const ADsList = () => {
   const adds = useSelector((state) => state.admin.ads);
   const dispatch = useDispatch();
   const [isAddingAdd, setIsAddingAdd] = useState(false);
-  async function handleEdit(id) {
+  const handleEdit = async (id) => {
     console.log(id);
     navigate(`/admin/adsedit/${id}`);
-  }
+  };
+  const handleRemove = async (adId) => {
+    const res = await deleteAd(id, adId);
+    let { status } = res;
+    if (status === 204) {
+      const newAds = adds.filter((ad) => ad.id !== adId);
+      dispatch(setAds(newAds));
+    } else {
+      status = res.response.status;
+      if (
+        status === 401 ||
+        status === 409 ||
+        status === 403 ||
+        status === 500
+      ) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      }
+    }
+  };
   useEffect(() => {
     async function fetchData() {
       try {
@@ -141,7 +164,7 @@ const ADsList = () => {
                         cursor: "pointer",
                       },
                     }}
-                    // onClick={() => handleDelete(faculty.id)}
+                    onClick={() => handleRemove(item.id)}
                   >
                     Remove
                   </Button>

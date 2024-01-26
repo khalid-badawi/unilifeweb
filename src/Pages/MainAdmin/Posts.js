@@ -4,13 +4,11 @@ import PostCard from "../../Components/Main Admin/PostCard";
 // import DateSelector from "../../Components/Main Admin/DateSelector";
 import Search from "../../Components/Search";
 import { useDispatch, useSelector } from "react-redux";
-import { getLatsPosts } from "../../APIS/adminAPI";
+import { getLatsPosts, searchPost } from "../../APIS/adminAPI";
 import { setPosts } from "../../slice/admin";
 import { setError } from "../../slice/user";
 
 export default function Posts() {
-  var currentDate = new Date();
-  const [date, setDate] = useState(currentDate);
   const posts = useSelector((state) => state.admin.posts);
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -36,6 +34,28 @@ export default function Posts() {
       }
     }
     fetchData();
+  }, []);
+  useEffect(() => {
+    /* async function fetchData() {
+      const res = await searchPost(id);
+      console.log(res);
+      let { status } = res;
+      if (status === 200) {
+        const { data } = res;
+        dispatch(setPosts(data));
+      } else {
+        status = res.response.status;
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        if (status === 401 || status === 403 || status === 500) {
+          dispatch(setError(message));
+        }
+      }
+    }
+    fetchData();*/
   }, []);
   return (
     <Box height="90%" sx={{ overflowY: "scroll", pt: 1 }}>

@@ -19,12 +19,12 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  // reducer: persistedReducer,
-  reducer: {
+  reducer: persistedReducer,
+  /*reducer: {
     user: userReducer,
     restaurant: restaurantReducer,
     admin: adminReducer,
-  },
+  },*/
 });
 
 export const persistor = persistStore(store);

@@ -5,6 +5,7 @@ import {
   putDataFiles,
   putData,
   postData,
+  getDataQuery,
 } from "../utils/axiosAction";
 /* Restaurants API  */
 export async function addRestaurant(adminId, data) {
@@ -236,6 +237,16 @@ export async function getPoularResaurants(adminId, dormitoryId, values) {
   const res = await getData("toprestaurant", token, adminId);
   return res;
 }
+export async function getDormitoryPostCount(adminId) {
+  const token = localStorage.getItem("token");
+  const res = await getData("dormitorycount", token, adminId);
+  return res;
+}
+export async function getReportedPostCount(adminId) {
+  const token = localStorage.getItem("token");
+  const res = await getData("reportppostcount", token, adminId);
+  return res;
+}
 /*DashBoard API End*/
 
 /*major API*/
@@ -293,6 +304,11 @@ export async function editAd(adminId, adId, data) {
   );
   return res;
 }
+export async function deleteAd(adminId, adId) {
+  const token = localStorage.getItem("token");
+  const res = await deleteData("adds", token, adminId, adId);
+  return res;
+}
 export async function getAdds(adminId) {
   const token = localStorage.getItem("token");
   console.log("adminId", adminId);
@@ -300,3 +316,10 @@ export async function getAdds(adminId) {
   return res;
 }
 /*ADDs API End*/
+export async function searchPost(adminId, data) {
+  const token = localStorage.getItem("token");
+  console.log("adminId", adminId);
+  const res = await getDataQuery("alladds", data, token, adminId);
+  return res;
+}
+/*{type:"reported",studentId:}*/
