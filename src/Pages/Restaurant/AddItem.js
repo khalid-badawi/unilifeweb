@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
+import SwitchButton from "../../Components/Restaurant/SwitchButton";
 import { addToMenu } from "../../APIS/restaurantAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
@@ -80,6 +81,7 @@ export default function AddItem() {
   console.log(until);
   return (
     <Box pl={2} pr={2}>
+      <SwitchButton />
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

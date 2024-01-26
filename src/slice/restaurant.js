@@ -10,6 +10,7 @@ const initialState = {
   dashBoardFood: [],
   totalOrder: "",
   lastReviwer: {},
+  isOpen: false,
 };
 const restaurant = createSlice({
   name: "restaurant",
@@ -49,6 +50,9 @@ const restaurant = createSlice({
     setLastReviwer(state, action) {
       state.lastReviwer = action.payload;
     },
+    setIsOpen(state, action) {
+      state.isOpen = action.payload;
+    },
     setStateRestaurant(state, action) {
       state.lastReviwer = {};
       state.menu = [];
@@ -76,5 +80,6 @@ export const {
   setTotalOrder,
   setLastReviwer,
   setStateRestaurant,
+  setIsOpen,
 } = restaurant.actions;
 export default restaurant.reducer;

@@ -24,6 +24,7 @@ import {
   setLastReviwer,
   setTodayRevenue,
 } from "../../slice/restaurant";
+import SwitchButton from "../../Components/Restaurant/SwitchButton";
 function Home() {
   const userId = useSelector((state) => state.user.id);
   const weeklyRevenue = useSelector((state) => state.restaurant.weeklyRevenue);
@@ -81,6 +82,7 @@ function Home() {
   console.log(lastReviwer);
   return (
     <Box m="20px">
+      <SwitchButton />
       <Grid container spacing={1}>
         <Grid item xs={3}>
           <StatBox

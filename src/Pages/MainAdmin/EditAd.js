@@ -1,50 +1,48 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import React from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
-import { addAdds, addRestaurant } from "../../APIS/adminAPI";
+import { editAd } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
-import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 
-export default function AddADs() {
-  const navigate = useNavigate();
+export default function EditAd() {
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
+  const ads = useSelector((state) => state.admin.ads);
+  const { addId } = useParams();
+  console.log(addId);
+  const ad = ads.filter((ad) => ad.id === parseInt(addId))[0];
+  const { title, description, link } = ad;
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      title: "",
-      description: "",
-      link: "",
+      title,
+      description,
+      link,
       image: "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Required"),
-      description: Yup.string().required("Required"),
+      title: Yup.string(),
+      description: Yup.string(),
       link: Yup.string(),
-      image: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
+      image: Yup.mixed(),
     }),
     onSubmit: async (values) => {
       console.log("values:", values);
-      const res = await addAdds(id, values);
+      const res = await editAd(id, addId, values);
       let status = res.status;
-      if (status === 201) {
-        formik.setFieldValue("title", "");
-        formik.setFieldValue("description", "");
-        formik.setFieldValue("image", "");
-        formik.setFieldValue("link", "");
+      if (status === 200) {
       } else {
         status = res.response.status;
-        if (status === 401 || status === 409 || status === 403) {
+        if (
+          status === 401 ||
+          status === 409 ||
+          status === 403 ||
+          status === 500
+        ) {
           const {
             response: {
               data: { message },
@@ -145,7 +143,7 @@ export default function AddADs() {
               },
             }}
           >
-            Add
+            EDIT
           </Button>
         </Box>
       </form>

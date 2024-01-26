@@ -6,6 +6,18 @@ import {
   putData,
 } from "../utils/axiosAction";
 
+export const setOpened = async (id) => {
+  const token = localStorage.getItem("token");
+  console.log("setOpened", id);
+  const response = await putData(
+    "restaurantstatus",
+    { id: "adasdsa" },
+    token,
+    id
+  );
+  console.log(response);
+  return response;
+};
 export const getMyMenu = async (id) => {
   const token = localStorage.getItem("token");
   const response = await getData("menu", token, id);
