@@ -1,4 +1,4 @@
-import { Box, Button, FormControl } from "@mui/material";
+import { Box, Button, FormControl, Typography } from "@mui/material";
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import CustomInput from "../../Components/CustomInput";
 import { addDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 export default function AddDormitory() {
   const id =
@@ -75,6 +76,9 @@ export default function AddDormitory() {
   console.log(formik.values);
   return (
     <Box pl={2} pr={2}>
+      <Topbar>
+        <Typography>Hello</Typography>
+      </Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

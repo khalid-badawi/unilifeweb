@@ -100,15 +100,28 @@ export default function SidebarNav({ menuItems }) {
           )}
 
           <Box>
-            {menuItems.map((menuItem) => (
-              <Item
-                key={menuItem.title}
-                title={menuItem.title}
-                to={menuItem.to}
-                icon={menuItem.icon}
-                selected={selected}
-                setSelected={setSelected}
-              />
+            {menuItems.map((section) => (
+              <React.Fragment key={section.section}>
+                <Box sx={{ mt: 2, ml: 2 }}>
+                  <Typography
+                    variant="subtitle1"
+                    color="gray"
+                    sx={{ fontSize: 12, fontWeight: "bold" }}
+                  >
+                    {section.section}
+                  </Typography>
+                </Box>
+                {section.items.map((menuItem) => (
+                  <Item
+                    key={menuItem.title}
+                    title={menuItem.title}
+                    to={menuItem.to}
+                    icon={menuItem.icon}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                ))}
+              </React.Fragment>
             ))}
           </Box>
         </Menu>

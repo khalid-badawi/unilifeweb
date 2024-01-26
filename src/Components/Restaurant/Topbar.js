@@ -9,7 +9,7 @@ import { setAdminState } from "../../slice/admin";
 import { setStateRestaurant } from "../../slice/restaurant";
 import { setStateDormitory } from "../../slice/dormitory";
 
-export default function Topbar() {
+export default function Topbar({ children }) {
   const dispatch = useDispatch();
   const role = useSelector((state) => state.user.role);
   function logout(e) {
@@ -27,6 +27,7 @@ export default function Topbar() {
   }
   return (
     <Box display="flex" justifyContent="space-between" padding={2}>
+      {children}
       <Box display="flex" color="white" marginLeft="auto">
         <IconButton>
           <Typography

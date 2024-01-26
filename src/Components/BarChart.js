@@ -71,8 +71,12 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "Food Type",
+
+        legend: isDashboard
+          ? undefined
+          : "Most ordered meals over the last week",
         legendPosition: "middle",
+
         legendOffset: 32,
       }}
       axisLeft={{

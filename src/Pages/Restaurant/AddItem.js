@@ -13,6 +13,7 @@ import CustomInput from "../../Components/CustomInput";
 import { addToMenu } from "../../APIS/restaurantAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import DateSelector from "../../Components/Main Admin/DateSelector";
 
 export default function AddItem() {
   const [title, setTitle] = useState("");
@@ -20,6 +21,7 @@ export default function AddItem() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
+  const [until, setUntil] = useState(new Date());
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   async function handleAdd(e) {
@@ -27,8 +29,9 @@ export default function AddItem() {
     const data = JSON.stringify({
       nameOfFood: title,
       description,
-      category,
+      category: formik.values.category,
       price,
+      until,
     });
     const res = await addToMenu(id, data, image);
     let status = res.status;
@@ -57,6 +60,7 @@ export default function AddItem() {
       price,
       category,
       image,
+      until,
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Required"),
@@ -72,7 +76,8 @@ export default function AddItem() {
       console.log("Form values:", values);
     },
   });
-  console.log(formik.values.description);
+  console.log(formik.values.until);
+  console.log(until);
   return (
     <Box pl={2} pr={2}>
       <form onSubmit={formik.handleSubmit}>
@@ -131,16 +136,20 @@ export default function AddItem() {
             id="demo-simple-select"
             label="Category"
             value={formik.values.category}
-            onChange={
-              (event) => setCategory(event.target.value)
-              /*formik.setFieldValue("category", event.target.value)*/
-            }
+            onChange={(event) => {
+              setCategory(event.target.value);
+              formik.setFieldValue(`category`, event.target.value);
+            }}
             onBlur={formik.handleBlur}
             error={formik.touched.category && Boolean(formik.errors.category)}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value="Meals">Meals</MenuItem>
+            <MenuItem value="Sandwiches">Sandwiches</MenuItem>
+            <MenuItem value="Salads">Salads</MenuItem>
+            <MenuItem value="Special Offers">Special Offers</MenuItem>
+            <MenuItem value="Drinks">Drinks</MenuItem>
+            <MenuItem value="Sauces">Sauces</MenuItem>
+            <MenuItem value="Appetizers">Appetizers</MenuItem>
           </Select>
           {formik.touched.category && formik.errors.category && (
             <div style={{ color: "#d32f6b", fontSize: 12, marginLeft: "10px" }}>
@@ -148,6 +157,16 @@ export default function AddItem() {
             </div>
           )}
         </FormControl>
+        {formik.values.category === "Special Offers" && (
+          <Box sx={{ mt: 1 }}>
+            <DateSelector
+              label="valid until"
+              value={until}
+              setValue={(value) => setUntil(value)}
+            />
+          </Box>
+        )}
+
         <Box
           sx={{
             flexDirection: "row",

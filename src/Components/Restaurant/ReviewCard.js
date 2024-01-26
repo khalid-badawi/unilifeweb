@@ -12,14 +12,15 @@ export default function ReviewCard({
   rating,
   image,
   phoneNum,
+  orderId,
   id,
 }) {
   console.log("rating:", image);
   return (
     <Card
       sx={{
-        maxWidth: 400, // Adjust the maximum width as needed
-        height: 550,
+        width: 400, // Adjust the maximum width as needed
+        height: 500,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -42,6 +43,7 @@ export default function ReviewCard({
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
         <Typography variant="h6">{reviewer}</Typography>
+        <Typography variant="body2">{`Order Id:${orderId}`}</Typography>
         <Typography variant="body2">{`Date: ${date}`}</Typography>
 
         <Rating

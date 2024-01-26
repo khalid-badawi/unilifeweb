@@ -59,23 +59,23 @@ function AdminHome() {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <StatBox
-            title={`${totalUsers}₪`}
+            title={`${totalUsers}`}
             // perc={weeklyPerc}
-            subtitle="New user this week"
+            subtitle="New users this week"
             icon={<MoneyIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
         </Grid>
         <Grid item xs={3}>
           <StatBox
             title={totalPosts}
-            subtitle="Total post today"
+            subtitle="Total posts today"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
         </Grid>
         <Grid item xs={3}>
           <StatBox
             title={topRestaurants}
-            subtitle="Top Restaurants"
+            subtitle="Top Rated Restaurant"
             icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />{" "}
         </Grid>
@@ -84,7 +84,7 @@ function AdminHome() {
             title={popularRestaurants}
             subtitle="Popular Restaurants"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />{" "}
+          />
         </Grid>
       </Grid>
       <AdminBarChart />
