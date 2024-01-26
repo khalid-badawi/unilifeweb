@@ -6,7 +6,7 @@ import OrderDetails from "./OrderDetails";
 import { setOrder } from "../../slice/restaurant";
 import { setError } from "../../slice/user";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders, updateOrders } from "../../APIS/restaurantAPI";
+import { cancelOrder, getOrders, updateOrders } from "../../APIS/restaurantAPI";
 import io from "socket.io-client";
 const socket = io.connect("http://192.168.1.8:3000");
 
@@ -167,7 +167,8 @@ export default function Orders() {
         </div>
       ),
     },
-    { field: "phoneNum", headerName: "Phone Number", width: 200 },
+    { field: "phoneNum", headerName: "Phone Number", width: 150 },
+    { field: "paymentType", headerName: "Payment", width: 150 },
     {
       field: "actions",
       headerName: "Update To",
@@ -215,7 +216,7 @@ export default function Orders() {
             }}
             variant="text"
             color="primary"
-            onClick={() => handleDetailsClick(params.row.id)}
+            onClick={() => handleCancelClick(params.row.id)}
           >
             cancel
           </Button>
@@ -279,6 +280,28 @@ export default function Orders() {
     }
     console.log(res);
   };
+  const handleCancelClick = async (orderId) => {
+    const res = await cancelOrder(id, orderId);
+    let status = res.status;
+
+    console.log(res);
+
+    if (status === 200) {
+      const newOrder = orders.map((order) =>
+        order.id === orderId ? { ...order, status: "CANCELLED" } : order
+      );
+      dispatch(setOrder(newOrder));
+    } else {
+      status = res.response.status;
+      console.log(status);
+      if (status === 404 || status === 401 || status === 403) {
+        const message = res.response.data.message;
+        dispatch(setError(message));
+      }
+      console.log(res);
+    }
+    console.log(res);
+  };
   const handleDetailsClick = (orderId) => {
     console.log(`Button clicked for order ID: ${orderId}.`);
     setOrderId(orderId);
@@ -309,7 +332,6 @@ export default function Orders() {
   return (
     <Box pl={2}>
       <Box sx={{ height: 900 }}>
-        (
         <DataGrid
           columns={columns}
           rows={orders}
@@ -324,7 +346,6 @@ export default function Orders() {
           }}
           rowSelection={false}
         />
-        )
       </Box>
       {orderId && (
         <OrderDetails
@@ -332,6 +353,7 @@ export default function Orders() {
           handleCloseModal={handleCloseModal}
           id={orderId}
           handleUpdateClick={handleUpdateClick}
+          handleCancelClick={handleCancelClick}
         />
       )}
     </Box>

@@ -225,7 +225,7 @@ export default function EditItem() {
               },
             }}
           >
-            Eidt
+            Edit
           </Button>
         </Box>
       </form>

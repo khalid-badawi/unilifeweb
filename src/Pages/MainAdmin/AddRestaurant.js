@@ -15,11 +15,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 
 export default function AddRestaurant() {
-  const id = useSelector((state) => state.user.id)||localStorage.getItem("id")
+  const id =
+    useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       restaurantName: "",
+      restaurantDesc: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -28,6 +30,7 @@ export default function AddRestaurant() {
     },
     validationSchema: Yup.object({
       restaurantName: Yup.string().required("Required"),
+      restaurantDesc: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email format").required("Required"),
       password: Yup.string()
         .matches(
@@ -72,6 +75,15 @@ export default function AddRestaurant() {
             formik={formik}
             value={formik.values.restaurantName}
             setValue={(value) => formik.setFieldValue("restaurantName", value)}
+          />
+        </FormControl>
+        <FormControl fullWidth>
+          <CustomInput
+            type="restaurantDesc"
+            placeholder="Restaurant description"
+            formik={formik}
+            value={formik.values.restaurantDesc}
+            setValue={(value) => formik.setFieldValue("restaurantDesc", value)}
           />
         </FormControl>
 

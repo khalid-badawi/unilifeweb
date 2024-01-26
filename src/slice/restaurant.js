@@ -4,6 +4,7 @@ const initialState = {
   orders: [],
   reviews: [],
   weeklyRevenue: "",
+  todayRevenue: "",
   weeklyPerc: "",
   totalPeople: "",
   dashBoardFood: [],
@@ -30,6 +31,9 @@ const restaurant = createSlice({
     setWeeklyRevenue(state, action) {
       state.weeklyRevenue = action.payload;
     },
+    setTodayRevenue(state, action) {
+      state.todayRevenue = action.payload;
+    },
     setWeeklyPerc(state, action) {
       state.weeklyPerc = action.payload;
     },
@@ -51,6 +55,7 @@ const restaurant = createSlice({
       state.reviews = [];
       state.orders = [];
       state.weeklyRevenue = "";
+      state.todayRevenue = "";
       state.weeklyPerc = "";
       state.totalPeople = "";
       state.dashBoardFood = [];
@@ -65,6 +70,7 @@ export const {
   setReviews,
   setWeeklyRevenue,
   setWeeklyPerc,
+  setTodayRevenue,
   setTotalPeople,
   setDashboard,
   setTotalOrder,

@@ -5,7 +5,13 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuIcon from "@mui/icons-material/RestaurantMenu";
 import OrdersIcon from "@mui/icons-material/TableRestaurant";
 import ReviewsIcon from "@mui/icons-material/StarHalf";
-import AddIcon from "@mui/icons-material/Add";
+import MajorIcon from "@mui/icons-material/School";
+import DormIcon from "@mui/icons-material/Apartment";
+import FacultyIcon from "@mui/icons-material/CorporateFare";
+import ADIcon from "@mui/icons-material/Campaign";
+import AddIcon from "@mui/icons-material/AddCircleOutline";
+import PeopleIcon from "@mui/icons-material/Groups";
+import PostIcon from "@mui/icons-material/DynamicFeed";
 import Sidebar from "./Components/Restaurant/Sidebar";
 import Topbar from "./Components/Restaurant/Topbar";
 import Home from "./Pages/Restaurant/Home";
@@ -73,21 +79,85 @@ function App() {
     { title: "Orders", to: "/restaurant/orders", icon: <OrdersIcon /> },
     { title: "Ratings", to: "/restaurant/reviews", icon: <ReviewsIcon /> },
   ];
+  // const adminSidebar = [
+  //   { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
+  //   { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
+  //   { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
+  //   { title: "Add Dormitory", to: "/admin/dormitoryadd", icon: <AddIcon /> },
+  //   { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
+  //   { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
+  //   { title: "Majors", to: "/admin/majors", icon: <OrdersIcon /> },
+  //   { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
+  //   { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
+  //   { title: "Dormitories", to: "/admin/dormitories", icon: <OrdersIcon /> },
+  //   { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
+  //   { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
+  //   { title: "ADs", to: "/admin/ads", icon: <OrdersIcon /> },
+  // ];
   const adminSidebar = [
-    { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
-    { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
-    { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
-    { title: "Add Dormitory", to: "/admin/dormitoryadd", icon: <AddIcon /> },
-    { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
-    { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
-    { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
-    { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
-    { title: "Dormitories", to: "/admin/dormitories", icon: <OrdersIcon /> },
-    { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
-    { title: "Majors", to: "/admin/majors", icon: <OrdersIcon /> },
-    { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
-    { title: "ADs", to: "/admin/ads", icon: <OrdersIcon /> },
+    {
+      section: "Dashboard",
+      items: [
+        { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
+      ],
+    },
+    {
+      section: "University Information",
+      items: [
+        { title: "Faculties", to: "/admin/faculties", icon: <FacultyIcon /> },
+        { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
+        { title: "Majors", to: "/admin/majors", icon: <MajorIcon /> },
+      ],
+    },
+    {
+      section: "Students",
+      items: [
+        { title: "Students", to: "/admin/students", icon: <PeopleIcon /> },
+
+        { title: "Posts", to: "/admin/posts", icon: <PostIcon /> },
+      ],
+    },
+    {
+      section: "Restaurants",
+      items: [
+        {
+          title: "Restaurants",
+          to: "/admin/restaurants",
+          icon: <OrdersIcon />,
+        },
+        {
+          title: "Add Restaurant",
+          to: "/admin/restaurantadd",
+          icon: <AddIcon />,
+        },
+      ],
+    },
+    {
+      section: "Dormitories",
+      items: [
+        {
+          title: "Dormitory Owners",
+          to: "/admin/dormitories",
+          icon: <DormIcon />,
+        },
+        {
+          title: "Add an Owner",
+          to: "/admin/dormitoryadd",
+          icon: <AddIcon />,
+        },
+      ],
+    },
+    {
+      section: "ADs",
+      items: [
+        { title: "ADs", to: "/admin/ads", icon: <ADIcon /> },
+        { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
+      ],
+    },
+
+    // ... add other sections and items
   ];
+
   const dormitorySidebar = [];
   const sidebar =
     role === "admin"
@@ -124,7 +194,7 @@ function App() {
 
       <CssBaseline />
       <main className="content">
-        {renderTopbar()}
+        
         <Routes>
           <Route path="/signin" element={<Login />} index />
           {/*restaurant route */}

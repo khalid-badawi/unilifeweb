@@ -38,12 +38,12 @@ export default function Menu() {
     <Box sx={{ pl: 2 }} display="grid">
       <Grid container spacing={1} rowSpacing={3}>
         {menu.map((menuItem) => {
-          const { nameOFfood, price, description, image, foodId } = menuItem;
+          const { nameOfFood, price, description, image, foodId } = menuItem;
 
           return (
             <Grid item xs={3}>
               <MenuCard
-                title={nameOFfood}
+                title={nameOfFood}
                 img={image}
                 price={price}
                 desc={description}

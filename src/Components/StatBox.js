@@ -1,7 +1,14 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import ProgressCircle from "./Progress";
-export default function StatBox({ title, subtitle, icon, day, perc }) {
+export default function StatBox({
+  title,
+  subtitle,
+  icon,
+  day,
+  perc,
+  withPercentage = false,
+}) {
   return (
     <Box
       width="300px"
@@ -44,20 +51,22 @@ export default function StatBox({ title, subtitle, icon, day, perc }) {
           </Typography>
         </Box>
       </Box>
-      <Box mt="10px">
-        <ProgressCircle />
-        <Typography
-          sx={{
-            color: "#8F00FF",
-            fontSize: 15,
-            mt: "10px",
-            ml: "6px",
-            fontWeight: "500",
-          }}
-        >
-          {perc}
-        </Typography>
-      </Box>
+      {withPercentage && (
+        <Box mt="10px">
+          <ProgressCircle />
+          <Typography
+            sx={{
+              color: "#8F00FF",
+              fontSize: 15,
+              mt: "10px",
+              ml: "6px",
+              fontWeight: "500",
+            }}
+          >
+            {perc}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

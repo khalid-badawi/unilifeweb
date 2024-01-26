@@ -15,6 +15,7 @@ export default function ReviewsList({ reviews }) {
               phoneNum={review.phoneNum}
               id={review.id}
               image={review.image}
+              orderId={review.orderId}
             />
           </Grid>
         ))}

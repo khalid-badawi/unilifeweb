@@ -8,14 +8,22 @@ import {
 } from "../utils/axiosAction";
 /* Restaurants API  */
 export async function addRestaurant(adminId, data) {
-  const { image, email, restaurantName, password, confirmPassword, phoneNum } =
-    data;
+  const {
+    image,
+    email,
+    restaurantName,
+    password,
+    confirmPassword,
+    phoneNum,
+    restaurantDesc,
+  } = data;
   const value = {
     username: restaurantName,
     email,
     password,
     confirmPassword,
     phoneNum,
+    restaurantDesc,
   };
   console.log("value:", value);
   const token = localStorage.getItem("token");
@@ -268,7 +276,7 @@ export async function addAdds(adminId, data) {
 export async function getAdds(adminId) {
   const token = localStorage.getItem("token");
   console.log("adminId", adminId);
-  const res = await getData("adds", token, adminId);
+  const res = await getData("alladds", token, adminId);
   return res;
 }
 /*ADDs API End*/

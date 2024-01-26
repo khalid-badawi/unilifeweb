@@ -23,6 +23,7 @@ export default function OrderDetails({
   handleCloseModal,
   id,
   handleUpdateClick,
+  
 }) {
   const orders = useSelector((state) => state.restaurant.orders);
   console.log("inside detailed:", id);
@@ -36,6 +37,7 @@ export default function OrderDetails({
     console.log(res);
   };*/
   console.log("inside detailed order:", order);
+  const formattedDate = new Date(createdAt);
   return (
     <React.Fragment>
       <Dialog
@@ -89,14 +91,16 @@ export default function OrderDetails({
           </Box>
           <Box>
             <Typography variant="subtitle2">Ordered at</Typography>
-            <Typography variant="body1">{createdAt}</Typography>
+            <Typography variant="body1">
+              {formattedDate.toLocaleString()}
+            </Typography>
           </Box>
         </Box>
         <Divider sx={{ backgroundColor: "#8F00FF", mr: 2, ml: 2 }} />
         <Box sx={{ pr: 2, pl: 2, mt: 2 }}>
           <List
             sx={{
-              height: 400,
+              height: 500,
               overflow: "auto",
               backgroundColor: "rgba(0, 0, 0, 0.05)",
               mt: 1,
@@ -139,6 +143,7 @@ export default function OrderDetails({
               pr: 2,
               pt: 1,
               backgroundColor: "rgba(0, 0, 0, 0.05)", // Adjust the opacity and color as needed
+              mb: 1,
             }}
           >
             <Typography
@@ -151,7 +156,7 @@ export default function OrderDetails({
             >
               Notes:
             </Typography>
-            (
+
             <Typography
               variant="body1"
               component="div"
@@ -162,7 +167,6 @@ export default function OrderDetails({
             >
               {notes}
             </Typography>
-            )
           </Box>
         )}
         <Box
@@ -172,50 +176,7 @@ export default function OrderDetails({
             alignItems: "center",
             justifyContent: "center",
           }}
-        >
-          <Button
-            sx={{
-              color: "white",
-              backgroundColor: "#8F00FF",
-              width: 150,
-              borderColor: "#8F00FF",
-              padding: 1,
-              borderRadius: 5,
-              mt: 3,
-              ":hover": {
-                color: "#8F00FF",
-                backgroundColor: "white",
-                borderColor: "#8F00FF",
-              },
-            }}
-            variant="outlined"
-            color="primary"
-            onClick={handleUpdateClick}
-          >
-            Update to
-          </Button>
-          <Button
-            sx={{
-              color: "white",
-              backgroundColor: "#8F00FF",
-              width: 150,
-              borderColor: "#8F00FF",
-              padding: 1,
-              borderRadius: 5,
-              m: 1,
-              mb: 3,
-              ":hover": {
-                color: "#8F00FF",
-                backgroundColor: "white",
-                borderColor: "#8F00FF",
-              },
-            }}
-            variant="outlined"
-            color="primary"
-          >
-            Cancel Order
-          </Button>
-        </Box>
+        ></Box>
       </Dialog>
     </React.Fragment>
   );

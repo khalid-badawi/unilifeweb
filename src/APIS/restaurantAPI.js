@@ -47,9 +47,25 @@ export async function updateOrders(restaurantId, orderId) {
   );
   return response;
 }
+export async function cancelOrder(restaurantId, orderId) {
+  const token = localStorage.getItem("token");
+  const response = await putData(
+    "order/cancel",
+    { id: "111" },
+    token,
+    restaurantId,
+    orderId
+  );
+  return response;
+}
 export async function getWeeklyRevenue(restaurantId) {
   const token = localStorage.getItem("token");
   const response = await getData("weeklydashboard", token, restaurantId);
+  return response;
+}
+export async function getTodayRevenue(restaurantId) {
+  const token = localStorage.getItem("token");
+  const response = await getData("dailyrevenue", token, restaurantId);
   return response;
 }
 export async function getTotalPeople(restaurantId) {
