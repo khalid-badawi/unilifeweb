@@ -30,6 +30,28 @@ export async function getData(endpoint, token, ...params) {
     return err;
   }
 }
+export async function getDataQuery(endpoint, data, token, ...params) {
+  try {
+    const ids = params.join("/");
+
+    console.log("endpoint", endpoint);
+    console.log("ids", ids);
+    console.log("my token", token);
+    const res = await axios.get(`${BASE_URL}/${endpoint}/${ids}`, {
+      params: data,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    //await storeTokenInKeychain(response.data.token);
+    //const token = await getTokenFromKeychain();
+    return res;
+  } catch (err) {
+    console.log(err.message);
+    return err;
+  }
+}
 export async function postData(endpoint, value, token = null, ...params) {
   try {
     // console.log("The URL", env.BASE_URL);

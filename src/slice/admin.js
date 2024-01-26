@@ -9,6 +9,8 @@ const initialState = {
   posts: [],
   majors: [],
   ads: [],
+  dormistoryPostCount: 0,
+  reportedPostCount: 0,
 };
 const admin = createSlice({
   name: "admin",
@@ -41,6 +43,12 @@ const admin = createSlice({
     setAds(state, action) {
       state.ads = action.payload;
     },
+    setDormistoryPostCount(state, action) {
+      state.dormistoryPostCount = action.payload;
+    },
+    setReportedPostCount(state, action) {
+      state.reportedPostCount = action.payload;
+    },
     setAdminState(state, action) {
       state.posts = [];
       state.facultyName = "";
@@ -64,5 +72,7 @@ export const {
   setDormitories,
   setAdminState,
   setAds,
+  setDormistoryPostCount,
+  setReportedPostCount,
 } = admin.actions;
 export default admin.reducer;

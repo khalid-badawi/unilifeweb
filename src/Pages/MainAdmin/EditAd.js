@@ -7,14 +7,15 @@ import { editAd } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { useParams } from "react-router";
+import { setAds } from "../../slice/admin";
 
 export default function EditAd() {
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const ads = useSelector((state) => state.admin.ads);
-  const { addId } = useParams();
-  console.log(addId);
-  const ad = ads.filter((ad) => ad.id === parseInt(addId))[0];
+  const { adId } = useParams();
+  console.log("edit ad=", useParams());
+  const ad = ads.filter((ad) => ad.id === parseInt(adId))[0];
   const { title, description, link } = ad;
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -32,9 +33,14 @@ export default function EditAd() {
     }),
     onSubmit: async (values) => {
       console.log("values:", values);
-      const res = await editAd(id, addId, values);
+      const res = await editAd(id, adId, values);
+      console.log(res);
       let status = res.status;
       if (status === 200) {
+        const newAds = ads.map((ad) =>
+          ad.id !== adId ? ad : { ...ad, title, description, link }
+        );
+        dispatch(setAds(newAds));
       } else {
         status = res.response.status;
         if (
