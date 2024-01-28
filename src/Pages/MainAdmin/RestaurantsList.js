@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Avatar, Box, Button } from "@mui/material";
 //import { restaurants } from "../../data/mockData";
@@ -10,6 +10,14 @@ import { useNavigate } from "react-router";
 import Topbar from "../../Components/Restaurant/Topbar";
 
 const RestaurantsList = () => {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const adminId = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,6 +26,7 @@ const RestaurantsList = () => {
     async function fetchData() {
       const res = await getRestaurants(adminId);
       let { status } = res;
+      console.log(res);
       if (status === 200) {
         const { data } = res;
         dispatch(setRestaurants(data));
@@ -48,6 +57,10 @@ const RestaurantsList = () => {
         (restaurant) => restaurant.id !== restaurantId
       );
       dispatch(setRestaurants(newRestaurants));
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       const {
@@ -125,19 +138,23 @@ const RestaurantsList = () => {
   ];
 
   return (
-    <Box pl={2}>
-      <Topbar></Topbar>
-      <Box sx={{ height: 800 }}>
-        <DataGrid
-          columns={columns}
-          rows={restaurants}
-          getRowId={(row) => row.id}
-          getRowClassName={(params) => `status-${params.row.status}`}
-          pageSize={10}
-          rowSelection={false}
-        />
-      </Box>
-    </Box>
+    <>
+      {restaurants && (
+        <Box pl={2}>
+          <Topbar></Topbar>
+          <Box sx={{ height: 800 }}>
+            <DataGrid
+              columns={columns}
+              rows={restaurants}
+              getRowId={(row) => row.id}
+              getRowClassName={(params) => `status-${params.row.status}`}
+              pageSize={10}
+              rowSelection={false}
+            />
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

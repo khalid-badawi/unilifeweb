@@ -14,13 +14,24 @@ import {
 } from "@mui/material";
 
 import { classes as mockClasses } from "../../data/mockData";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { addCalss, deleteCalss, getCalsses } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setClasses } from "../../slice/admin";
 import { setError } from "../../slice/user";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 const FloorList = () => {
+  const [success, setSuccess] = useState("");
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
@@ -33,6 +44,11 @@ const FloorList = () => {
     if (status === 204) {
       const newClasses = classes.filter((item) => item.id !== classId);
       dispatch(setClasses(newClasses));
+      setSuccess("Data deleted successfully");
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       if (status === 401 || status === 403 || status === 404) {
@@ -41,12 +57,16 @@ const FloorList = () => {
             data: { message },
           },
         } = res;
+
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      navigate("/error");
     }
   }
   return (
-    <Box  pl={2} pr={2}>
+    <Box pl={2} pr={2}>
       <Topbar></Topbar>
       <TableContainer
         component={Paper}
@@ -60,53 +80,68 @@ const FloorList = () => {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {classes.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.number}</TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    onClick={() => handleDelete(item.id)}
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    Set QR Reference
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {classes && (
+            <TableBody>
+              {classes.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.number}</TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      onClick={() => handleDelete(item.id)}
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      Set QR Reference
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="removed successfully!"
+      />
     </Box>
   );
 };
 
 const ClassesList = () => {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const [isAddingClass, setIsAddingClass] = useState(false);
   const [facultyName, setFacultyName] = useState("");
   const [newClass, setNewClass] = useState("");
@@ -161,6 +196,10 @@ const ClassesList = () => {
         setNewClass("");
         setIsAddingClass(false);
         dispatch(setClasses(newClasses));
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         const {
@@ -255,6 +294,11 @@ const ClassesList = () => {
           Add
         </Button>
       )}
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="added successfully!"
+      />
     </Box>
   );
 };

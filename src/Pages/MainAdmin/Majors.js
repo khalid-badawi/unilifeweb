@@ -113,33 +113,35 @@ const MajorsList = () => {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {majors.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.name}</TableCell>
+          {majors && (
+            <TableBody>
+              {majors.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>{item.name}</TableCell>
 
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleRemove(item.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                {/* You can add additional actions for each major if needed */}
-              </TableRow>
-            ))}
-          </TableBody>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleRemove(item.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                  {/* You can add additional actions for each major if needed */}
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
       {isAddingMajor ? (

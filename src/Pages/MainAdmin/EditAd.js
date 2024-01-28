@@ -1,16 +1,26 @@
 import { Box, Button, FormControl } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
 import { editAd } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { setAds } from "../../slice/admin";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 
 export default function EditAd() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const ads = useSelector((state) => state.admin.ads);
@@ -42,6 +52,10 @@ export default function EditAd() {
           ad.id !== adId ? ad : { ...ad, title, description, link }
         );
         dispatch(setAds(newAds));
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         if (
@@ -56,7 +70,10 @@ export default function EditAd() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -155,6 +172,11 @@ export default function EditAd() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data edited successfully"
+      />
     </Box>
   );
 }

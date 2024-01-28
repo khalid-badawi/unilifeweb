@@ -8,24 +8,41 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import MapGL, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomInput from "../../Components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 import Topbar from "../../Components/Restaurant/Topbar";
+import { editPost } from "../../APIS/dormitoryAPI";
+import { setError } from "../../slice/user";
+import SuccessMessage from "../../Components/Success";
 
-export default function AddDormitoryPost() {
-  const id = useSelector((state) => state.user.id);
-  const dispatch = useDispatch();
-  const [distance, setDistance] = useState(0);
+export default function EditPost() {
   const navigate = useNavigate();
+  const id = useSelector((state) => state.user.id);
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const posts = useSelector((state) => state.dormitory.posts);
+  console.log("edit pots", posts);
+  const dispatch = useDispatch();
+  const { dormitoryId } = useParams();
+  console.log("dormitoryId", dormitoryId);
+  const post = posts.filter((post) => post.id === parseInt(dormitoryId))[0];
+  const { lon, lat, services, gender, name } = post;
+  const [distance, setDistance] = useState(post.distance);
   const [viewport, setViewport] = useState({
-    latitude: 32.2268,
-    longitude: 35.2424,
+    latitude: lat,
+    longitude: lon,
     zoom: 12,
   });
 
@@ -39,41 +56,52 @@ export default function AddDormitoryPost() {
       longitude: viewport.longitude,
     });
   };
-  console.log(markerPosition);
+  console.log("position:", markerPosition);
   const formik = useFormik({
     initialValues: {
-      dormitoryName: "",
-      services: "",
-      numberOfRoom: 0,
-      gender: "",
+      dormitoryName: name,
+      services,
+      gender,
       dormitoryImage: "",
     },
+
     validationSchema: Yup.object({
       dormitoryName: Yup.string().required("Required"),
       services: Yup.string().required("Required"),
-      numberOfRoom: Yup.number()
-        .required("Required")
-        .min(1, "Should be at least 1 room"),
       gender: Yup.string().required("Required"),
-      dormitoryImage: Yup.mixed().required("Required"), // Use Yup.mixed() for file uploads
+      dormitoryImage: Yup.mixed(),
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       console.log("values:", values);
-      // Handle form submission logic here
-
-      // After handling the submission, trigger navigation
-      navigate("/dormitory/roomsinfo", {
-        state: {
-          dormitoryValues: {
-            ...values,
-            markerPosition,
-            distance,
-          },
-        },
-      });
-
-      // Optionally, reset the form after submission
-      //resetForm();
+      const data = {
+        ...values,
+        distance,
+        lon: markerPosition.longitude,
+        lat: markerPosition.latitude,
+      };
+      console.log("data:", data);
+      const res = await editPost(id, dormitoryId, data);
+      console.log("res:", res);
+      let status = res.status;
+      if (status === 200) {
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
+      } else {
+        status = res.response.status;
+        if (status === 401 || status === 409 || status === 403) {
+          const {
+            response: {
+              data: { message },
+            },
+          } = res;
+          dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
+        }
+        navigate("/error");
+      }
     },
   });
   // ... (other imports)
@@ -148,14 +176,6 @@ export default function AddDormitoryPost() {
             <MenuItem value="female">Female</MenuItem>
           </Select>
         </FormControl>
-
-        <CustomInput
-          type="numberOfRoom"
-          placeholder="Number of Rooms"
-          formik={formik}
-          value={formik.values.numberOfRoom}
-          setValue={(value) => formik.setFieldValue("numberOfRoom", value)}
-        />
 
         <FormControl fullWidth sx={{ marginBottom: 3 }}>
           <input
@@ -263,26 +283,16 @@ export default function AddDormitoryPost() {
                 backgroundColor: "#6A00CC",
                 cursor: "pointer",
               },
+              mb: 1,
             }}
-            /* onClick={() => {
-              console.log("VV:", {
-                ...formik.values,
-                markerPosition,
-                distance,
-              });
-              navigate("/dormitory/roomsinfo", {
-                state: {
-                  dormitoryValues: {
-                    ...formik.values,
-                    markerPosition,
-                    distance,
-                  },
-                },
-              });
-            }}*/
           >
-            Next
+            Edit
           </Button>
+          <SuccessMessage
+            open={successMessageOpen}
+            onClose={handleSuccessMessageClose}
+            message="Data edited successfully!" // Customize the success message
+          />
         </Box>
       </form>
     </Box>

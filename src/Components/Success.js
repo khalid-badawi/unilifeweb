@@ -5,7 +5,7 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 
-const SuccessMessage = ({ open, onClose, message }) => {
+const SuccessMessage = ({ open, onClose, message, color = "#4CAF50" }) => {
   return (
     <Snackbar
       anchorOrigin={{
@@ -17,7 +17,7 @@ const SuccessMessage = ({ open, onClose, message }) => {
       onClose={onClose}
     >
       <SnackbarContent
-        style={{ backgroundColor: "#4CAF50" }} // Customize background color
+        style={{ backgroundColor: color }} // Customize background color
         message={
           <span style={{ display: "flex", alignItems: "center" }}>
             <CheckCircleOutlineIcon style={{ marginRight: "8px" }} />

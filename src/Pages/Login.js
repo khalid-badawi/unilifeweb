@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CustomInput from "../Components/CustomInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -12,13 +12,32 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setId, setRole, setError, setIsAuth } from "../slice/user";
+import {
+  setId,
+  setRole,
+  setError,
+  setIsAuth,
+  setUsername,
+  setImage,
+} from "../slice/user";
 import Logo1 from "../assets/Logo1.png";
 import "./Login.css";
 import { useNavigate } from "react-router";
+import { setIsOpen } from "../slice/restaurant";
+import SuccessMessage from "../Components/Success";
 export default function Login() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+
   const role = useSelector((state) => state.user.role);
   const isAuth = useSelector((state) => state.user.isAuth);
+  const error = useSelector((state) => state.user.error);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -49,13 +68,20 @@ export default function Login() {
         const {
           data: {
             token,
-            data: { id, role },
+            data: { id, role, isOpen, image, username },
           },
         } = res;
         localStorage.setItem("token", token);
         dispatch(setIsAuth(true));
         dispatch(setId(id));
         dispatch(setRole(role));
+        dispatch(setUsername(username));
+        if (isOpen) {
+          dispatch(setIsOpen(isOpen));
+        }
+        if (image) {
+          dispatch(setImage(image));
+        }
         localStorage.setItem("id", id);
       } else {
         console.log("status", res.response.data);
@@ -72,6 +98,10 @@ export default function Login() {
         } else if (status === 500) {
           dispatch(setError("Internal Server Error"));
         }
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       }
     } catch (err) {
       dispatch(setError("Internal Server Error"));
@@ -86,7 +116,7 @@ export default function Login() {
       } else if (role === "restaurant") {
         navigate("/restaurant/home", { replace: true });
       } else if (role === "dormitory")
-        navigate("/dormitory/dormitoryaddpost", { replace: true });
+        navigate("/dormitory/dormitories", { replace: true });
     } //else navigate("/");
   }, [isAuth, role, navigate]);
   return (
@@ -170,6 +200,12 @@ export default function Login() {
           <Button sx={{ color: "gray" }}>Forgot Password?</Button>
         </Box>
       </Paper>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message={error} // Customize the success message
+        color="#f44336"
+      />
     </Container>
   );
 }

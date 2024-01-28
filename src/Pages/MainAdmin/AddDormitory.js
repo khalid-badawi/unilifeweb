@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
@@ -7,8 +7,19 @@ import { addDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import Topbar from "../../Components/Restaurant/Topbar";
+import { useNavigate } from "react-router";
+import SuccessMessage from "../../Components/Success";
 
 export default function AddDormitory() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
@@ -49,6 +60,10 @@ export default function AddDormitory() {
       console.log("res:", res);
       let status = res.status;
       if (status === 201) {
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
         formik.setFieldValue("email", "");
         formik.setFieldValue("SSN", "");
         formik.setFieldValue("dormitoryName", "");
@@ -69,15 +84,17 @@ export default function AddDormitory() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
   console.log(formik.values);
   return (
     <Box pl={2} pr={2}>
-      <Topbar>
-      </Topbar>
+      <Topbar></Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput
@@ -191,6 +208,11 @@ export default function AddDormitory() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data added successfully!"
+      />
     </Box>
   );
 }

@@ -3,15 +3,10 @@ import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import MenuIcon from "@mui/icons-material/RestaurantMenu";
-import OrdersIcon from "@mui/icons-material/TableRestaurant";
-import ReviewsIcon from "@mui/icons-material/StarHalf";
-import AddIcon from "@mui/icons-material/Add";
 import Logo1 from "../../assets/Logo1.png";
+import { useSelector } from "react-redux";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
-  const theme = useTheme();
   return (
     <Link to={to} style={{ textDecoration: "none", color: "inherit" }}>
       <MenuItem
@@ -29,7 +24,9 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 export default function SidebarNav({ menuItems }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-
+  const image = useSelector((state) => state.user.image);
+  const role = useSelector((state) => state.user.role);
+  const username = useSelector((state) => state.user.username);
   return (
     <Box
       sx={{
@@ -69,7 +66,7 @@ export default function SidebarNav({ menuItems }) {
               mt="5px"
             >
               <Typography variant="h4" color="#8F00FF" sx={{ mt: 1, mb: 1 }}>
-                Admin
+                {username}
               </Typography>
               <IconButton
                 onClick={() => {
@@ -92,7 +89,7 @@ export default function SidebarNav({ menuItems }) {
                   alt="Admin"
                   width="120px"
                   height="100px"
-                  src={Logo1}
+                  src={role === "admin" ? Logo1 : image}
                   style={{ cursor: "pointer" }}
                 />
               </Box>

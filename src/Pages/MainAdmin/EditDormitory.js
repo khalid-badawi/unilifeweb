@@ -6,10 +6,22 @@ import { editDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { setDormitories } from "../../slice/admin";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Topbar from "../../Components/Restaurant/Topbar";
+import { useState } from "react";
+import SuccessMessage from "../../Components/Success";
 
 export default function EditDormitory() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
+
   console.log("EditDormitory");
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -54,6 +66,10 @@ export default function EditDormitory() {
             : dormitory
         );
         dispatch(setDormitories(newDormitories));
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         if (
@@ -68,7 +84,10 @@ export default function EditDormitory() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -174,6 +193,11 @@ export default function EditDormitory() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data edited successfully"
+      />
     </Box>
   );
 }

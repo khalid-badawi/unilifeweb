@@ -12,14 +12,25 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
 import { setCategories } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
 import { addCategory, getCategory, removeCategory } from "../../APIS/adminAPI";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 
 const Categories = () => {
+  const [success, setSuccess] = useState("");
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
@@ -33,9 +44,15 @@ const Categories = () => {
       if (status === 204) {
         const newMajors = categories.filter((item) => item.id !== majorId);
         dispatch(setCategories(newMajors));
+        setSuccess("Data deleted successfully");
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         const { message } = res.response.data;
         dispatch(setError(message));
+        navigate("/error");
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -49,9 +66,15 @@ const Categories = () => {
         if (status === 200) {
           const { data } = res;
           dispatch(setCategories(data));
+          setSuccess("Data Geted successfully");
+          setSuccessMessageOpen(true);
+          setTimeout(() => {
+            handleSuccessMessageClose();
+          }, 3000);
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
+          navigate("/error");
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -205,6 +228,11 @@ const Categories = () => {
           Add Category
         </Button>
       )}
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message={success}
+      />
     </Box>
   );
 };

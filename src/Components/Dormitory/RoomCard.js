@@ -1,19 +1,26 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Button,
-  Grid,
-  Box,
-} from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Save, Delete } from "@mui/icons-material";
+import { Card, Typography, Button, Grid, Box } from "@mui/material";
+//import MoreVertIcon from "@mui/icons-material/MoreVert";
+//import { Save, Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router";
+import { deleteRoom } from "../../APIS/dormitoryAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { setError } from "../../slice/user";
+import { setPosts } from "../../slice/dormitory";
+import SuccessMessage from "../Success";
+const RoomCard = ({ item, dormitoryId }) => {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-const RoomCard = ({ item, index }) => {
+    setSuccessMessageOpen(false);
+  };
+  const id = useSelector((state) => state.user.id);
+  const posts = useSelector((state) => state.dormitory.posts);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -31,12 +38,47 @@ const RoomCard = ({ item, index }) => {
   };
 
   const handleEdit = () => {
-    // Add logic for edit functionality
+    console.log("edit room");
+    navigate(`/dormitory/roomedit/${dormitoryId}/${item.id}`);
     handleMenuClose();
   };
 
-  const handleDelete = () => {
-    // Add logic for delete functionality
+  const handleDelete = async () => {
+    const res = await deleteRoom(id, dormitoryId, item.id);
+    let { status } = res;
+    console.log(res);
+    if (status === 204) {
+      const post = posts.filter((post) => post.id === parseInt(dormitoryId))[0];
+      const { rooms } = post;
+      const newRooms = rooms.filter((room) => room.id !== item.id);
+      const newPost = posts.map((post) =>
+        post.id === parseInt(dormitoryId) ? { ...post, rooms: newRooms } : post
+      );
+      dispatch(setPosts(newPost));
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
+      console.log("deleted", posts);
+    } else {
+      status = res.response.status;
+      if (
+        status === 401 ||
+        status === 403 ||
+        status === 404 ||
+        status === 500
+      ) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
+      }
+      navigate("/error");
+    }
     handleMenuClose();
   };
 
@@ -44,7 +86,7 @@ const RoomCard = ({ item, index }) => {
     <Card sx={{ width: 350, margin: "5px", borderRadius: 1, boxShadow: 5 }}>
       <Box sx={{ width: "100%" }}>
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/unilife-1b22d.appspot.com/o/restaurant%2F4?alt=media&token=8f4c3666-7678-4a8a-9c7d-69d42d0c7bd7"
+          src={item.image}
           alt="Dormitory"
           style={{ width: "100%", height: 220, objectFit: "fill" }}
         />
@@ -53,7 +95,7 @@ const RoomCard = ({ item, index }) => {
       <Grid container spacing={2} sx={{ padding: 2 }}>
         <Grid item xs={12}>
           <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-            {typeCap} Room
+            {item.type} Room
           </Typography>
           <Typography variant="body1">
             {item.avilableSeat} Places Available ({item.numberOfPerson} Total)
@@ -80,6 +122,7 @@ const RoomCard = ({ item, index }) => {
             cursor: "pointer",
           },
         }}
+        onClick={() => handleEdit()}
       >
         Edit
       </Button>
@@ -94,9 +137,15 @@ const RoomCard = ({ item, index }) => {
             cursor: "pointer",
           },
         }}
+        onClick={handleDelete}
       >
         Delete
       </Button>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data deleted successfully!" // Customize the success message
+      />
     </Card>
   );
 };

@@ -21,48 +21,93 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Save, Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost } from "../../APIS/dormitoryAPI";
+import { setError } from "../../slice/user";
+import { setPosts } from "../../slice/dormitory";
+import SuccessMessage from "../Success";
 const APIKEY =
   "pk.eyJ1IjoiajFyZW4iLCJhIjoiY2xvcm9zdm85MHY5czJrbzZrdXI1amZmMSJ9.UW9QsP8ErGFgGNctDwoG5w";
-const dummyRoomData = [
-  {
-    type: "single",
-    image:
-      "https://firebasestorage.googleapis.com/v0/b/unilife-1b22d.appspot.com/o/restaurant%2F4?alt=media&token=8f4c3666-7678-4a8a-9c7d-69d42d0c7bd7",
-    avilableSeat: 1,
-    numberOfPerson: 1,
-    rent: 500,
-  },
-  {
-    type: "double",
-    image:
-      "https://firebasestorage.googleapis.com/v0/b/unilife-1b22d.appspot.com/o/restaurant%2F4?alt=media&token=8f4c3666-7678-4a8a-9c7d-69d42d0c7bd7",
-    avilableSeat: 2,
-    numberOfPerson: 2,
-    rent: 800,
-  },
-  // Add more dummy data as needed
-];
-const DormitoryCard = ({ item, posts, setPosts, type }) => {
+const DormitoryCard = ({ item }) => {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const navigate = useNavigate();
+  const { rooms } = item;
+  const dispatch = useDispatch();
+  const id = useSelector((state) => state.user.id);
+  const posts = useSelector((state) => state.dormitory.posts);
+  console.log("rooms=", rooms);
   const handleMenuClick = (event) => {
     setMenuAnchor(event.currentTarget);
   };
 
+  const handleAddRoom = (id) => {
+    console.log("addRoom=", id);
+    navigate(`/dormitory/roomadd/${id}`);
+    setMenuAnchor(null);
+  };
+  const handleEdit = (id) => {
+    console.log("handleEdit=", id);
+    navigate(`/dormitory/postedit/${id}`);
+    setMenuAnchor(null);
+  };
+  const handleDelete = async (dormitoryId) => {
+    console.log("handleDelete=", id);
+    const res = await deletePost(id, dormitoryId);
+    console.log("deletePost=", res);
+    let { status } = res;
+    if (status === 204) {
+      const newPost = posts.filter((post) => post.id !== parseInt(dormitoryId));
+      dispatch(setPosts(newPost));
+      console.log("deleted", posts);
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
+    } else {
+      status = res.response.status;
+      if (
+        status === 401 ||
+        status === 403 ||
+        status === 404 ||
+        status === 500
+      ) {
+        const {
+          response: {
+            data: { message },
+          },
+        } = res;
+        dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
+      }
+      navigate("/error");
+    }
+    setMenuAnchor(null);
+  };
   const handleMenuClose = () => {
     setMenuAnchor(null);
   };
   const [markerPosition, setMarkerPosition] = useState({
-    latitude: 32.2268,
-    longitude: 35.2424,
+    latitude: item.lat,
+    longitude: item.lon,
   });
   const [viewport, setViewport] = useState({
-    latitude: 32.2268,
-    longitude: 35.2424,
+    latitude: item.lat,
+    longitude: item.lon,
     zoom: 12,
   });
   const renderRoomCards = () => {
-    return dummyRoomData.map((room, index) => (
-      <RoomCard key={index} item={room} index={index} />
+    return rooms.map((room, index) => (
+      <RoomCard key={index} item={room} dormitoryId={item.id} />
     ));
   };
   return (
@@ -78,8 +123,11 @@ const DormitoryCard = ({ item, posts, setPosts, type }) => {
       <CardHeader
         title={
           <>
-            <Typography variant="body1" sx={{ fontWeight: "600" }}>
-              {item.username}
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: "600", marginBottom: "15px" }}
+            >
+              {item.name}
             </Typography>
           </>
         }
@@ -104,8 +152,11 @@ const DormitoryCard = ({ item, posts, setPosts, type }) => {
               open={Boolean(menuAnchor)}
               onClose={handleMenuClose}
             >
-              <MenuItem>Add a Room</MenuItem>
-              <MenuItem>Edit</MenuItem>
+              <MenuItem onClick={() => handleAddRoom(item.id)}>
+                Add a Room
+              </MenuItem>
+              <MenuItem onClick={() => handleEdit(item.id)}>Edit</MenuItem>
+              <MenuItem onClick={() => handleDelete(item.id)}>delete</MenuItem>
             </Menu>
           </div>
         }
@@ -193,12 +244,17 @@ const DormitoryCard = ({ item, posts, setPosts, type }) => {
           dots={true}
           infinite={true}
           speed={500}
-          slidesToShow={2} // Set the number of rooms to show at once
+          slidesToShow={2}
           slidesToScroll={1}
         >
           {renderRoomCards()}
         </Slider>
       </CardContent>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data deleted successfully"
+      />
     </Card>
   );
 };

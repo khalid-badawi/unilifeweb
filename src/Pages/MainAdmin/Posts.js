@@ -128,18 +128,20 @@ export default function Posts() {
         </Box> */}
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          pr: 3,
-        }}
-      >
-        {posts.map((post) => (
-          <PostCard data={post} key={post.id} />
-        ))}
-      </Box>
+      {posts && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            pr: 3,
+          }}
+        >
+          {posts.map((post) => (
+            <PostCard data={post} key={post.id} />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }

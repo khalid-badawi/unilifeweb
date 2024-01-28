@@ -18,7 +18,17 @@ import { setError } from "../../slice/user"; // Assuming you have appropriate Re
 import { setAds } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
 import { deleteAd, getAdds } from "../../APIS/adminAPI";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 const ADsList = () => {
+  const [success, setSucess] = useState("");
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -35,6 +45,11 @@ const ADsList = () => {
     if (status === 204) {
       const newAds = adds.filter((ad) => ad.id !== adId);
       dispatch(setAds(newAds));
+      setSucess("Data deleted successfully");
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       if (
@@ -49,7 +64,10 @@ const ADsList = () => {
           },
         } = res;
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      navigate("/error");
     }
   };
   useEffect(() => {
@@ -62,9 +80,15 @@ const ADsList = () => {
         if (status === 200) {
           const { data } = res;
           dispatch(setAds(data));
+          setSucess("Data Geted successfully");
+          setSuccessMessageOpen(true);
+          setTimeout(() => {
+            handleSuccessMessageClose();
+          }, 3000);
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
+          navigate("/error");
         }
       } catch (error) {
         console.error("Error fetching majors:", error);
@@ -105,86 +129,95 @@ const ADsList = () => {
   };
 
   return (
-    <Box ml={1} mr={1} height={500}>
-      <Topbar></Topbar>
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 750, overflowY: "auto" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: "#8F00FF" }}>id</TableCell>
-              <TableCell sx={{ color: "#8F00FF" }}>image</TableCell>
-              <TableCell sx={{ color: "#8F00FF" }}>title</TableCell>
-              <TableCell sx={{ color: "#8F00FF" }}>description</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {adds && adds.length > 0 ? (
-              adds.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell>
-                    {" "}
-                    <Avatar
-                      alt="AD image"
-                      src={item.image}
-                      sx={{ borderRadius: "5px" }}
-                    />
-                  </TableCell>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell>{item.description}</TableCell>
-
-                  <TableCell>
-                    <Button
-                      type="button"
-                      sx={{
-                        color: "#8F00FF",
-                        paddingY: 1,
-                        height: 40,
-                        ":hover": {
-                          backgroundColor: "rgba(0,0,0,0.05)",
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={() => handleEdit(item.id)}
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      type="button"
-                      sx={{
-                        color: "#8F00FF",
-                        paddingY: 1,
-                        height: 40,
-                        ":hover": {
-                          backgroundColor: "rgba(0,0,0,0.05)",
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={() => handleRemove(item.id)}
-                    >
-                      Remove
-                    </Button>
-                  </TableCell>
+    <>
+      {adds && adds.length > 0 && (
+        <Box ml={1} mr={1} height={500}>
+          <Topbar></Topbar>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: 750, overflowY: "auto" }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ color: "#8F00FF" }}>id</TableCell>
+                  <TableCell sx={{ color: "#8F00FF" }}>image</TableCell>
+                  <TableCell sx={{ color: "#8F00FF" }}>title</TableCell>
+                  <TableCell sx={{ color: "#8F00FF" }}>description</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6}>
-                  <Typography variant="body1">No ads available.</Typography>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+              </TableHead>
+              <TableBody>
+                {adds && adds.length > 0 ? (
+                  adds.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>
+                        {" "}
+                        <Avatar
+                          alt="AD image"
+                          src={item.image}
+                          sx={{ borderRadius: "5px" }}
+                        />
+                      </TableCell>
+                      <TableCell>{item.title}</TableCell>
+                      <TableCell>{item.description}</TableCell>
+
+                      <TableCell>
+                        <Button
+                          type="button"
+                          sx={{
+                            color: "#8F00FF",
+                            paddingY: 1,
+                            height: 40,
+                            ":hover": {
+                              backgroundColor: "rgba(0,0,0,0.05)",
+                              cursor: "pointer",
+                            },
+                          }}
+                          onClick={() => handleEdit(item.id)}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          type="button"
+                          sx={{
+                            color: "#8F00FF",
+                            paddingY: 1,
+                            height: 40,
+                            ":hover": {
+                              backgroundColor: "rgba(0,0,0,0.05)",
+                              cursor: "pointer",
+                            },
+                          }}
+                          onClick={() => handleRemove(item.id)}
+                        >
+                          Remove
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <Typography variant="body1">No ads available.</Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      )}
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message={success}
+      />
+    </>
   );
 };
 

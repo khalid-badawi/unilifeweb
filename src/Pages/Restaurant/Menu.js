@@ -41,24 +41,26 @@ export default function Menu() {
       <Topbar>
         <SwitchButton />
       </Topbar>
-      <Grid container spacing={1} rowSpacing={3}>
-        {menu.map((menuItem) => {
-          const { nameOfFood, price, description, image, foodId } = menuItem;
+      {menu && (
+        <Grid container spacing={1} rowSpacing={3}>
+          {menu.map((menuItem) => {
+            const { nameOfFood, price, description, image, foodId } = menuItem;
 
-          return (
-            <Grid item xs={3}>
-              <MenuCard
-                title={nameOfFood}
-                img={image}
-                price={price}
-                desc={description}
-                key={foodId}
-                foodId={foodId}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+            return (
+              <Grid item xs={3}>
+                <MenuCard
+                  title={nameOfFood}
+                  img={image}
+                  price={price}
+                  desc={description}
+                  key={foodId}
+                  foodId={foodId}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
     </Box>
   );
 }

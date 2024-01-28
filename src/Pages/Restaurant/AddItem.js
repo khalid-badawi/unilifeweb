@@ -16,8 +16,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import DateSelector from "../../Components/Main Admin/DateSelector";
 import Topbar from "../../Components/Restaurant/Topbar";
+import { useNavigate } from "react-router";
+import SuccessMessage from "../../Components/Success";
 
 export default function AddItem() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -39,6 +50,10 @@ export default function AddItem() {
     let status = res.status;
     if (status === 201) {
       console.log(status);
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       console.log(status);
@@ -50,7 +65,10 @@ export default function AddItem() {
       ) {
         const message = res.response.data.message;
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      navigate("/error");
       console.log(res);
     }
   }
@@ -239,6 +257,11 @@ export default function AddItem() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data added successfully"
+      />
     </Box>
   );
 }

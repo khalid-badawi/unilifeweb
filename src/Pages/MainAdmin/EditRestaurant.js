@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
@@ -14,10 +14,20 @@ import { addRestaurant, editRestaurants } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import admin from "../../slice/admin";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 
 export default function EditRestaurant() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const { restaurantId } = useParams();
   console.log(restaurantId);
   const restaurants = useSelector((state) => state.admin.restaurants);
@@ -49,6 +59,10 @@ export default function EditRestaurant() {
       console.log("res:", res);
       let status = res.status;
       if (status === 200) {
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         if (status === 401 || status === 409 || status === 403) {
@@ -58,7 +72,10 @@ export default function EditRestaurant() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -158,6 +175,11 @@ export default function EditRestaurant() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data edited successfully"
+      />
     </Box>
   );
 }

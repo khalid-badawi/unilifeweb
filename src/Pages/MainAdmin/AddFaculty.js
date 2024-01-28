@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+
 import { Box, Button, FormControl } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,7 +8,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
+import { useNavigate } from "react-router";
 export default function AddFaculty() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
 
@@ -36,12 +48,17 @@ export default function AddFaculty() {
         )
         .min(1, "At least one set of coordinates is required"),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       console.log("Form values:", values);
       const res = await addFaculty(id, values);
       console.log(res);
       let { status } = res;
       if (status === 201) {
+        resetForm();
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         const {
@@ -57,7 +74,10 @@ export default function AddFaculty() {
           status === 400
         ) {
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -198,6 +218,11 @@ export default function AddFaculty() {
           Add Faculty
         </Button>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data added successfully!"
+      />
     </Box>
   );
 }

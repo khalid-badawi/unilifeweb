@@ -98,48 +98,50 @@ const FloorList = () => {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {floors.map((floor, index) => (
-              <TableRow key={index} id={floor.id}>
-                <TableCell>{floor.name}</TableCell>
-                <TableCell>{floor.reference}</TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleDelete(floor.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    onClick={() => handleViewClasses(floor)}
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    Classes
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {floors && (
+            <TableBody>
+              {floors.map((floor, index) => (
+                <TableRow key={index} id={floor.id}>
+                  <TableCell>{floor.name}</TableCell>
+                  <TableCell>{floor.reference}</TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleDelete(floor.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      onClick={() => handleViewClasses(floor)}
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      Classes
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
     </Box>

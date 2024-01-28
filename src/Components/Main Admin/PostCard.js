@@ -22,8 +22,19 @@ import { blockStudent, deletePost } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { setPosts } from "../../slice/admin";
+import { useNavigate } from "react-router";
+import SuccessMessage from "../Success";
 
 export default function PostCard({ data }) {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const {
     description,
     id,
@@ -56,6 +67,10 @@ export default function PostCard({ data }) {
     if (status === 204) {
       const newPosts = posts.filter((post) => post.id !== id);
       dispatch(setPosts(newPosts));
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       const {
@@ -63,9 +78,17 @@ export default function PostCard({ data }) {
           data: { message },
         },
       } = res;
-      if (status === 401 || status === 403 || status === 500) {
+      if (
+        status === 401 ||
+        status === 403 ||
+        status === 500 ||
+        status === 404
+      ) {
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      navigate("/error");
     }
   };
 
@@ -210,6 +233,11 @@ export default function PostCard({ data }) {
           </Box>
         </Box>
       )}
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data deleted successfully!" // Customize the success message
+      />
     </Card>
   );
 }

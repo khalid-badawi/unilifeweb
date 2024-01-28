@@ -4,7 +4,8 @@ const initialState = {
   role: "",
   isAuth: false,
   error: "",
-  sidebar: [],
+  username: "",
+  image: "",
 };
 const user = createSlice({
   name: "user",
@@ -22,17 +23,31 @@ const user = createSlice({
     setError(state, action) {
       state.error = action.payload;
     },
-    setSidebar(state, action) {
-      state.error = action.payload;
+    setUsername(state, action) {
+      state.username = action.payload;
     },
+    setImage(state, action) {
+      state.image = action.payload;
+    },
+
     setSatesUser(state, action) {
       state.error = "";
-      state.isAuth = false;
-      state.isAuth = false;
+      state.role = false;
+      state.id = false;
       state.isAuth = "";
+      state.username = "";
+      state.image = "";
     },
   },
 });
-export const { setId, setRole, setIsAuth, setError, setSidebar, setSatesUser } =
-  user.actions;
+export const {
+  setId,
+  setRole,
+  setIsAuth,
+  setError,
+  setSidebar,
+  setUsername,
+  setImage,
+  setSatesUser,
+} = user.actions;
 export default user.reducer;
