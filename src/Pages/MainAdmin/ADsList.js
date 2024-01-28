@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
 import { setAds } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
 import { deleteAd, getAdds } from "../../APIS/adminAPI";
+import Topbar from "../../Components/Restaurant/Topbar";
 const ADsList = () => {
   const navigate = useNavigate();
   const id =
@@ -105,6 +106,7 @@ const ADsList = () => {
 
   return (
     <Box ml={1} mr={1} height={500}>
+      <Topbar></Topbar>
       <TableContainer
         component={Paper}
         sx={{ maxHeight: 750, overflowY: "auto" }}
@@ -121,57 +123,64 @@ const ADsList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {adds.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>
-                  {" "}
-                  <Avatar
-                    alt="AD image"
-                    src={item.image}
-                    sx={{ borderRadius: "5px" }}
-                  />
-                </TableCell>
-                <TableCell>{item.title}</TableCell>
-                <TableCell>{item.description}</TableCell>
+            {adds && adds.length > 0 ? (
+              adds.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>
+                    {" "}
+                    <Avatar
+                      alt="AD image"
+                      src={item.image}
+                      sx={{ borderRadius: "5px" }}
+                    />
+                  </TableCell>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>{item.description}</TableCell>
 
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleEdit(item.id)}
-                  >
-                    Edit
-                  </Button>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleEdit(item.id)}
+                    >
+                      Edit
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleRemove(item.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <Typography variant="body1">No ads available.</Typography>
                 </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleRemove(item.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                {/* You can add additional actions for each major if needed */}
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

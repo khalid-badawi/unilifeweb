@@ -7,13 +7,15 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Logo1 from "../../assets/bozz.png";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { blockStudent, deletePost } from "../../APIS/adminAPI";
@@ -30,11 +32,14 @@ export default function PostCard({ data }) {
     profileImage,
     username,
     studentId,
+    blocked,
   } = data;
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const adminId = useSelector((state) => state.user.id);
   const posts = useSelector((state) => state.admin.posts);
+  const [blockUpdate, setBlockUpdate] = useState(blocked);
   const dispatch = useDispatch();
+  const [menuAnchor, setMenuAnchor] = useState(null);
   const handleMenuClick = (event) => {
     setMenuAnchor(event.currentTarget);
   };
@@ -70,6 +75,7 @@ export default function PostCard({ data }) {
     const res = await blockStudent(adminId, studentId);
     let { status } = res;
     if (status === 200) {
+      setBlockUpdate((prev) => !prev);
     } else {
       status = res.response.status;
       const {
@@ -77,11 +83,25 @@ export default function PostCard({ data }) {
           data: { message },
         },
       } = res;
+
       if (status === 401 || status === 403 || status === 500) {
         dispatch(setError(message));
       }
     }
   };
+
+  const handleNextReport = () => {
+    setCurrentReportIndex((prevIndex) =>
+      prevIndex < data.reports.length - 1 ? prevIndex + 1 : prevIndex
+    );
+  };
+
+  const handlePrevReport = () => {
+    setCurrentReportIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : prevIndex
+    );
+  };
+
   return (
     <Card sx={{ width: 600, p: "1px", mb: 3, mt: 1 }} elevation={3}>
       <CardHeader
@@ -102,7 +122,9 @@ export default function PostCard({ data }) {
               onClose={handleMenuClose}
             >
               <MenuItem onClick={handleDeletePost}>Delete Post</MenuItem>
-              <MenuItem onClick={handleBanUser}>Ban User</MenuItem>
+              <MenuItem onClick={handleBanUser}>
+                {blockUpdate ? "Unban user" : "Ban user"}
+              </MenuItem>
             </Menu>
           </div>
         }
@@ -122,6 +144,72 @@ export default function PostCard({ data }) {
         width={600}
         sx={{ objectFit: "cover" }}
       />
+      {data.reports && (
+        <Box mb={1} flex={1} justifyContent="center">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              padding: 1,
+              backgroundColor: "#8F00FF",
+              flex: 1,
+            }}
+          >
+            <Typography
+              sx={{
+                color: "white",
+                padding: 1,
+                fontWeight: "bold",
+              }}
+            >
+              {data.reports.length} Reports
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flex: 1,
+
+              mt: 1,
+              mb: 1,
+              pl: 3,
+              pr: 3,
+            }}
+          >
+            <IconButton onClick={handlePrevReport}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Box flexDirection="row" display="flex" alignItems="center">
+              <Avatar
+                alt="profile picture"
+                src={data.reports[currentReportIndex].student.image}
+                sx={{ mr: 1 }}
+              />
+              <Typography variant="body1">
+                {data.reports[currentReportIndex].student.user.username}
+              </Typography>
+            </Box>
+            <IconButton onClick={handleNextReport}>
+              <ArrowForwardIcon />
+            </IconButton>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              flex: 1,
+            }}
+          >
+            <Typography variant="subtitle1">
+              Reason: {data.reports[currentReportIndex].message}
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </Card>
   );
 }

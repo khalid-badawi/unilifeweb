@@ -77,7 +77,6 @@ export default function AddDormitory() {
   return (
     <Box pl={2} pr={2}>
       <Topbar>
-        <Typography>Hello</Typography>
       </Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>

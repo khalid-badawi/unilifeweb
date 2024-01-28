@@ -4,6 +4,7 @@ import { Avatar, Box, Button } from "@mui/material";
 import { blockStudent, getStudents } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 const StudentsList = () => {
   const id =
@@ -110,7 +111,8 @@ const StudentsList = () => {
   ];
 
   return (
-    <Box pl={2}>
+    <Box pl={2} pr={2}>
+      <Topbar></Topbar>
       <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}

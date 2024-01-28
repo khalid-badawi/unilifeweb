@@ -265,6 +265,21 @@ export async function removeMajor(adminId, majorId) {
   const res = await deleteData("major", token, adminId, majorId);
   return res;
 }
+export async function addCategory(adminId, values) {
+  const token = localStorage.getItem("token");
+  const res = await postData("category", values, token, adminId);
+  return res;
+}
+export async function getCategory(adminId) {
+  const token = localStorage.getItem("token");
+  const res = await getData("category", token, adminId);
+  return res;
+}
+export async function removeCategory(adminId, categoryId) {
+  const token = localStorage.getItem("token");
+  const res = await deleteData("category", token, adminId, categoryId);
+  return res;
+}
 /*major API End*/
 /*ADDs API */
 export async function addAdds(adminId, data) {
@@ -319,7 +334,7 @@ export async function getAdds(adminId) {
 export async function searchPost(adminId, data) {
   const token = localStorage.getItem("token");
   console.log("adminId", adminId);
-  const res = await getDataQuery("alladds", data, token, adminId);
+  const res = await getDataQuery("post/search/admin", data, token, adminId);
   return res;
 }
 /*{type:"reported",studentId:}*/

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { setDormitories } from "../../slice/admin";
 import { useParams } from "react-router";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 export default function EditDormitory() {
   console.log("EditDormitory");
@@ -72,7 +73,8 @@ export default function EditDormitory() {
     },
   });
   return (
-    <Box /* pl={2} pr={2}*/>
+    <Box pl={2} pr={2}>
+      <Topbar></Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

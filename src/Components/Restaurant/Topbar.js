@@ -28,7 +28,7 @@ export default function Topbar({ children }) {
   return (
     <Box display="flex" justifyContent="space-between" padding={2}>
       {children}
-      <Box display="flex" color="white" marginLeft="auto">
+      <Box display="flex" color="white" marginLeft="auto" pb={2}>
         <IconButton>
           <Typography
             variant="body"

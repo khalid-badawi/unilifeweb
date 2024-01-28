@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMenu } from "../../slice/restaurant";
 import { setError, setId } from "../../slice/user";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
+import Topbar from "../../Components/Restaurant/Topbar";
 //import { Buffer } from "buffer";
 export default function Menu() {
   const id = useSelector((state) => state.user.id);
@@ -37,7 +38,9 @@ export default function Menu() {
 
   return (
     <Box sx={{ pl: 2 }} display="grid">
-      <SwitchButton />
+      <Topbar>
+        <SwitchButton />
+      </Topbar>
       <Grid container spacing={1} rowSpacing={3}>
         {menu.map((menuItem) => {
           const { nameOfFood, price, description, image, foodId } = menuItem;

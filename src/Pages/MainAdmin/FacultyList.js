@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteFaculty, editFaculty, getFaculties } from "../../APIS/adminAPI";
 import { setColleges, setFloors } from "../../slice/admin";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 const FacultyList = () => {
   const [selectedFaculty, setSelectedFaculty] = useState(null);
@@ -81,6 +82,7 @@ const FacultyList = () => {
 
   return (
     <Box sx={{ mr: 1, ml: 1 }}>
+      <Topbar></Topbar>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -95,70 +97,73 @@ const FacultyList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {colleges.map((faculty, index) => (
-              <TableRow key={index}>
-                <TableCell>{faculty.facultyName}</TableCell>
-                <TableCell>{faculty.facultyNumber}</TableCell>
-                <TableCell>
-                  {faculty.locations.map((coord, coordIndex) => (
-                    <div key={coordIndex}>
-                      Longitude: {coord.lon}, Latitude: {coord.lat}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => navigate(`/admin/facultyedit/${faculty.id}`)}
-                  >
-                    Edit
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleDelete(faculty.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    type="button"
-                    onClick={() => handleViewFloors(faculty)}
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    View Floors
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {colleges &&
+              colleges.map((faculty, index) => (
+                <TableRow key={index}>
+                  <TableCell>{faculty.facultyName}</TableCell>
+                  <TableCell>{faculty.facultyNumber}</TableCell>
+                  <TableCell>
+                    {faculty.locations.map((coord, coordIndex) => (
+                      <div key={coordIndex}>
+                        Longitude: {coord.lon}, Latitude: {coord.lat}
+                      </div>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() =>
+                        navigate(`/admin/facultyedit/${faculty.id}`)
+                      }
+                    >
+                      Edit
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleDelete(faculty.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      type="button"
+                      onClick={() => handleViewFloors(faculty)}
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      View Floors
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

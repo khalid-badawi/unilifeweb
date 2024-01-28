@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { setMenu } from "../../slice/restaurant";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
+import Topbar from "../../Components/Restaurant/Topbar";
 export default function EditItem() {
   const { foodId } = useParams();
   console.log("foodId", foodId);
@@ -90,7 +91,9 @@ export default function EditItem() {
   console.log(formik.values.description);
   return (
     <Box pl={2} pr={2}>
-      <SwitchButton />
+      <Topbar>
+        <SwitchButton />
+      </Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

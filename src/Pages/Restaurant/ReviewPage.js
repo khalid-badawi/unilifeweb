@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getReviwer } from "../../APIS/restaurantAPI";
 import { setError } from "../../slice/user";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 function ReviewPage() {
   const id = useSelector((state) => state.user.id);
@@ -37,10 +38,10 @@ function ReviewPage() {
   }, []);
   return (
     <Box sx={{ height: "91%", overflowY: "auto" }}>
-      <SwitchButton />
-      <Typography variant="h4" sx={{ m: 2 }}>
-        Customers Ratings
-      </Typography>
+      <Topbar>
+        <SwitchButton />
+      </Topbar>
+
       <ReviewsList reviews={reviews} />
     </Box>
   );

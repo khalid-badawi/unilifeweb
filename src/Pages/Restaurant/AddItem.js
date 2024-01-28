@@ -15,6 +15,7 @@ import { addToMenu } from "../../APIS/restaurantAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import DateSelector from "../../Components/Main Admin/DateSelector";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 export default function AddItem() {
   const [title, setTitle] = useState("");
@@ -81,7 +82,9 @@ export default function AddItem() {
   console.log(until);
   return (
     <Box pl={2} pr={2}>
-      <SwitchButton />
+      <Topbar>
+        <SwitchButton />
+      </Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

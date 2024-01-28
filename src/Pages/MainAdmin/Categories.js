@@ -15,49 +15,46 @@ import {
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user"; // Assuming you have appropriate Redux slice actions
-import { setMajors } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
-import { addMajor, getMajor, removeMajor } from "../../APIS/adminAPI";
+import { setCategories } from "../../slice/admin"; // Assuming you have appropriate Redux slice actions
+import { addCategory, getCategory, removeCategory } from "../../APIS/adminAPI";
 import Topbar from "../../Components/Restaurant/Topbar";
-const dummyMajors = [
-  { id: 1, majorName: "Computer Science" },
-  { id: 2, majorName: "Mathematics" },
-];
-const MajorsList = () => {
+
+const Categories = () => {
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
-  const majors = useSelector((state) => state.admin.majors); // Assuming you have majors in the Redux state
+  const categories = useSelector((state) => state.admin.categories); // Assuming you have categories in the Redux state
   const [isAddingMajor, setIsAddingMajor] = useState(false);
-  const [newMajor, setNewMajor] = useState("");
+  const [newCategory, setNewMajor] = useState("");
   const handleRemove = async (majorId) => {
     try {
-      const res = await removeMajor(id, majorId);
+      const res = await removeCategory(id, majorId);
       const { status } = res;
       if (status === 204) {
-        const newMajors = majors.filter((item) => item.id !== majorId);
-        dispatch(setMajors(newMajors));
+        const newMajors = categories.filter((item) => item.id !== majorId);
+        dispatch(setCategories(newMajors));
       } else {
         const { message } = res.response.data;
         dispatch(setError(message));
       }
     } catch (error) {
-      console.error("Error fetching majors:", error);
+      console.error("Error fetching categories:", error);
     }
   };
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await getMajor(id);
+        const res = await getCategory(id);
         const { status } = res;
         if (status === 200) {
           const { data } = res;
-          dispatch(setMajors(data));
+          dispatch(setCategories(data));
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
         }
       } catch (error) {
-        console.error("Error fetching majors:", error);
+        console.error("Error fetching categories:", error);
       }
     }
 
@@ -70,18 +67,18 @@ const MajorsList = () => {
 
   const handleAddMajor = async (e) => {
     e.preventDefault();
-    if (newMajor.trim() !== "") {
+    if (newCategory.trim() !== "") {
       try {
-        const res = await addMajor(id, { name: newMajor });
+        const res = await addCategory(id, { name: newCategory });
 
         const { status } = res;
         if (status === 201) {
           const { id } = res.data;
           console.log(res.data);
-          const newMajors = [...majors, { id, name: newMajor }];
+          const newMajors = [...categories, { id, name: newCategory }];
           setNewMajor("");
           setIsAddingMajor(false);
-          dispatch(setMajors(newMajors));
+          dispatch(setCategories(newMajors));
         } else {
           const { message } = res.response.data;
           dispatch(setError(message));
@@ -109,45 +106,45 @@ const MajorsList = () => {
           <TableHead>
             <TableRow>
               <TableCell sx={{ color: "#8F00FF" }}>id</TableCell>
-              <TableCell sx={{ color: "#8F00FF" }}>Major Name</TableCell>
+              <TableCell sx={{ color: "#8F00FF" }}>Category</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {majors.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.name}</TableCell>
+            {categories &&
+              categories.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>{item.name}</TableCell>
 
-                <TableCell>
-                  <Button
-                    type="button"
-                    sx={{
-                      color: "#8F00FF",
-                      paddingY: 1,
-                      height: 40,
-                      ":hover": {
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={() => handleRemove(item.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-                {/* You can add additional actions for each major if needed */}
-              </TableRow>
-            ))}
+                  <TableCell>
+                    <Button
+                      type="button"
+                      sx={{
+                        color: "#8F00FF",
+                        paddingY: 1,
+                        height: 40,
+                        ":hover": {
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={() => handleRemove(item.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       {isAddingMajor ? (
         <Box mt={2}>
           <TextField
-            label="New Major"
+            label="New Category"
             variant="outlined"
-            value={newMajor}
+            value={newCategory}
             onChange={(e) => setNewMajor(e.target.value)}
           />
           <Button
@@ -167,7 +164,7 @@ const MajorsList = () => {
               },
             }}
           >
-            Add Major
+            Add Category
           </Button>
           <Button
             variant="outlined"
@@ -205,11 +202,11 @@ const MajorsList = () => {
             },
           }}
         >
-          Add Major
+          Add Category
         </Button>
       )}
     </Box>
   );
 };
 
-export default MajorsList;
+export default Categories;

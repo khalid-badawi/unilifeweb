@@ -13,6 +13,7 @@ import CustomInput from "../../Components/CustomInput";
 import { addRestaurant } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 export default function AddRestaurant() {
   const id =
@@ -67,6 +68,7 @@ export default function AddRestaurant() {
   console.log(formik.values.image);
   return (
     <Box pl={2} pr={2}>
+      <Topbar></Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

@@ -8,7 +8,9 @@ const initialState = {
   facultyName: "",
   posts: [],
   majors: [],
+  categories: [],
   ads: [],
+  popularRestaurants: [],
   dormistoryPostCount: 0,
   reportedPostCount: 0,
 };
@@ -28,6 +30,10 @@ const admin = createSlice({
     setFloors(state, action) {
       state.floors = action.payload;
     },
+    setPopularRestaurant(state, action) {
+      state.popularRestaurants = action.payload;
+    },
+
     setClasses(state, action) {
       state.classes = action.payload;
     },
@@ -39,6 +45,9 @@ const admin = createSlice({
     },
     setMajors(state, action) {
       state.majors = action.payload;
+    },
+    setCategories(state, action) {
+      state.categories = action.payload;
     },
     setAds(state, action) {
       state.ads = action.payload;
@@ -58,6 +67,8 @@ const admin = createSlice({
       state.restaurants = [];
       state.dormitories = [];
       state.majors = [];
+      state.popularRestaurants = [];
+      state.categories = [];
     },
   },
 });
@@ -66,8 +77,10 @@ export const {
   setColleges,
   setFloors,
   setMajors,
+  setCategories,
   setFacultyName,
   setClasses,
+  setPopularRestaurant,
   setPosts,
   setDormitories,
   setAdminState,

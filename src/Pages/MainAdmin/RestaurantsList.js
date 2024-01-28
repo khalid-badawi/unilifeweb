@@ -7,6 +7,7 @@ import { deleteRestaurants, getRestaurants } from "../../APIS/adminAPI";
 import { setRestaurants } from "../../slice/admin";
 import { setError } from "../../slice/user";
 import { useNavigate } from "react-router";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 const RestaurantsList = () => {
   const adminId = useSelector((state) => state.user.id);
@@ -125,6 +126,7 @@ const RestaurantsList = () => {
 
   return (
     <Box pl={2}>
+      <Topbar></Topbar>
       <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}

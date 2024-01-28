@@ -6,6 +6,7 @@ import CustomInput from "../../Components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 import { addFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 export default function AddFaculty() {
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -76,6 +77,7 @@ export default function AddFaculty() {
 
   return (
     <Box pl={2} pr={2}>
+      <Topbar></Topbar>
       <form onSubmit={formik.handleSubmit}>
         <FormControl fullWidth>
           <CustomInput

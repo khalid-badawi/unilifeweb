@@ -9,7 +9,7 @@ const initialState = {
   totalPeople: "",
   dashBoardFood: [],
   totalOrder: "",
-  lastReviwer: {},
+  lastReviwer: [],
   isOpen: false,
 };
 const restaurant = createSlice({
@@ -64,6 +64,7 @@ const restaurant = createSlice({
       state.totalPeople = "";
       state.dashBoardFood = [];
       state.totalOrder = "";
+      state.lastReviwer = [];
     },
   },
 });

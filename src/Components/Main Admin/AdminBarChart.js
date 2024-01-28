@@ -15,12 +15,12 @@ const customTooltip = (bar) => {
 
 const AdminBarChart = ({ isDashboard = false }) => {
   // const theme = useTheme();
-  const foodDashBoard = useSelector((state) => state.restaurant.dashBoardFood);
-  const colors = ["green", "yellow", "orange", "red", "purple"];
+  const popRests = useSelector((state) => state.admin.popularRestaurants);
+  const colors = ["green", "pink", "orange", "red", "purple"];
 
-  const data = foodDashBoard.map((item, i) => ({ ...item, color: colors[i] }));
+  const data = popRests.map((item, i) => ({ ...item, color: colors[i] }));
   const theme = useTheme();
-
+  console.log("GGZ", data);
   return (
     <ResponsiveBar
       data={data}
@@ -54,13 +54,14 @@ const AdminBarChart = ({ isDashboard = false }) => {
         },
       }}
       keys={["orderCount"]}
-      indexBy="nameOfFood"
+      indexBy="username"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-      width={700}
+      height={500}
+      width={1000}
       padding={0.5}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={(bar) => bar.data.color} // Assign color dynamically from the data
+      colors={(bar) => bar.data.color}
       borderColor={{
         from: "color",
         modifiers: [["darker", "1.6"]],
@@ -71,7 +72,9 @@ const AdminBarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "Food Type",
+        legend: isDashboard
+          ? undefined
+          : "Top Order Count For Restaurants Last 7 Days",
         legendPosition: "middle",
         legendOffset: 32,
       }}

@@ -7,6 +7,7 @@ import { deleteDormitory, getDormitory } from "../../APIS/adminAPI";
 import { setDormitories } from "../../slice/admin";
 import { setError } from "../../slice/user";
 import { useNavigate } from "react-router";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 const DormitoriesList = () => {
   const adminId = useSelector((state) => state.user.id);
@@ -130,7 +131,8 @@ const DormitoriesList = () => {
   ];
 
   return (
-    <Box pl={2}>
+    <Box pl={2} pr={2}>
+      <Topbar></Topbar>
       <Box sx={{ height: 800 }}>
         <DataGrid
           columns={columns}
