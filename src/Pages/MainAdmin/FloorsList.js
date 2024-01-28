@@ -19,6 +19,7 @@ import { addFloor, deleteFloor, getFloors } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setFloors, setFacultyName } from "../../slice/admin";
 import { setError } from "../../slice/user";
+import Topbar from "../../Components/Restaurant/Topbar";
 
 const FloorList = () => {
   const [selectedFloor, setSelectedFloor] = useState("");
@@ -83,60 +84,65 @@ const FloorList = () => {
     fetchData();
   }, []);
   return (
-    <TableContainer component={Paper} sx={{}}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ color: "#8F00FF" }}>Floor</TableCell>
-            <TableCell sx={{ color: "#8F00FF" }}>QR Reference Class</TableCell>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {floors.map((floor, index) => (
-            <TableRow key={index} id={floor.id}>
-              <TableCell>{floor.name}</TableCell>
-              <TableCell>{floor.reference}</TableCell>
-              <TableCell>
-                <Button
-                  type="button"
-                  sx={{
-                    color: "#8F00FF",
-                    paddingY: 1,
-                    height: 40,
-                    ":hover": {
-                      backgroundColor: "rgba(0,0,0,0.05)",
-                      cursor: "pointer",
-                    },
-                  }}
-                  onClick={() => handleDelete(floor.id)}
-                >
-                  Remove
-                </Button>
+    <Box pl={2} pr={2}>
+      <Topbar></Topbar>
+      <TableContainer component={Paper} sx={{}}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: "#8F00FF" }}>Floor</TableCell>
+              <TableCell sx={{ color: "#8F00FF" }}>
+                QR Reference Class
               </TableCell>
-              <TableCell>
-                <Button
-                  type="button"
-                  onClick={() => handleViewClasses(floor)}
-                  sx={{
-                    color: "#8F00FF",
-                    paddingY: 1,
-                    height: 40,
-                    ":hover": {
-                      backgroundColor: "rgba(0,0,0,0.05)",
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  Classes
-                </Button>
-              </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {floors.map((floor, index) => (
+              <TableRow key={index} id={floor.id}>
+                <TableCell>{floor.name}</TableCell>
+                <TableCell>{floor.reference}</TableCell>
+                <TableCell>
+                  <Button
+                    type="button"
+                    sx={{
+                      color: "#8F00FF",
+                      paddingY: 1,
+                      height: 40,
+                      ":hover": {
+                        backgroundColor: "rgba(0,0,0,0.05)",
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={() => handleDelete(floor.id)}
+                  >
+                    Remove
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    type="button"
+                    onClick={() => handleViewClasses(floor)}
+                    sx={{
+                      color: "#8F00FF",
+                      paddingY: 1,
+                      height: 40,
+                      ":hover": {
+                        backgroundColor: "rgba(0,0,0,0.05)",
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    Classes
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 

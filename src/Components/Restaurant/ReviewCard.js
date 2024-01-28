@@ -32,11 +32,10 @@ export default function ReviewCard({
         alt="profile"
         image={image}
         sx={{
-          width: "80%",
+          width: "100%",
           height: "50%",
-          borderRadius: 500,
+          borderRadius: 1,
           objectFit: "cover",
-          mt: 2,
         }}
       />
       <CardContent

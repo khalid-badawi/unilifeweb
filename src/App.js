@@ -12,6 +12,7 @@ import ADIcon from "@mui/icons-material/Campaign";
 import AddIcon from "@mui/icons-material/AddCircleOutline";
 import PeopleIcon from "@mui/icons-material/Groups";
 import PostIcon from "@mui/icons-material/DynamicFeed";
+import CategoryIcon from "@mui/icons-material/Category";
 import Sidebar from "./Components/Restaurant/Sidebar";
 import Topbar from "./Components/Restaurant/Topbar";
 import Home from "./Pages/Restaurant/Home";
@@ -43,6 +44,9 @@ import MajorsList from "./Pages/MainAdmin/Majors";
 import AddADs from "./Pages/MainAdmin/CreateADs";
 import ADsList from "./Pages/MainAdmin/ADsList";
 import EditAd from "./Pages/MainAdmin/EditAd";
+import Dormitories from "./Pages/Dormitory/Dormitories";
+import Categories from "./Pages/MainAdmin/Categories";
+import AddRoom from "./Pages/Dormitory/AddRoom";
 function App() {
   const location = useLocation();
   const role = useSelector((state) => state.user.role);
@@ -122,6 +126,11 @@ function App() {
         { title: "Students", to: "/admin/students", icon: <PeopleIcon /> },
 
         { title: "Posts", to: "/admin/posts", icon: <PostIcon /> },
+        {
+          title: "Post Categories",
+          to: "/admin/categories",
+          icon: <CategoryIcon />,
+        },
       ],
     },
     {
@@ -163,7 +172,18 @@ function App() {
     },
   ];
 
-  const dormitorySidebar = [];
+  const dormitorySidebar = [
+    {
+      section: "Dormitories",
+      items: [
+        {
+          title: "My Dormitories",
+          to: "/dormitory/dormitories",
+          icon: <ADIcon />,
+        },
+      ],
+    },
+  ];
   const sidebar =
     role === "admin"
       ? adminSidebar
@@ -231,6 +251,7 @@ function App() {
           <Route path="/admin/restaurants" element={<RestaurantsList />} />
           <Route path="/admin/dormitories" element={<DormitoriesList />} />
           <Route path="/admin/posts" element={<Posts />} />
+          <Route path="/admin/categories" element={<Categories />} />
           <Route path="/admin/floors/:facultyId" element={<FloorsList />} />
 
           <Route path="/admin/dormitoryadd" element={<AddDormitory />} />
@@ -248,7 +269,10 @@ function App() {
             path="/dormitory/dormitoryaddpost"
             element={<AddDormitoryPost />}
           />
+          <Route path="/dormitory/dormitories" element={<Dormitories />} />
+          <Route path="/dormitory/roomadd" element={<AddRoom />} />
           <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
+
           {/*dormitory route End*/}
         </Routes>
       </main>

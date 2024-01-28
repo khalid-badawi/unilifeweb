@@ -6,7 +6,7 @@ import OrdersIcon from "@mui/icons-material/Restaurant";
 import PeopleIcon from "@mui/icons-material/People";
 import BarChart from "../../Components/BarChart";
 import ReviewCard from "../../Components/Restaurant/ReviewCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getUserJoined,
   getTotalPosts,
@@ -16,15 +16,19 @@ import {
   getReportedPostCount,
 } from "../../APIS/adminAPI";
 import AdminBarChart from "../../Components/Main Admin/AdminBarChart";
+import Topbar from "../../Components/Restaurant/Topbar";
+import { setPopularRestaurant } from "../../slice/admin";
+import LastRatingsList from "../../Components/Restaurant/LastRatingsList";
 function AdminHome() {
   const userId =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
-  const [totalUsers, setTotalUsers] = useState("");
-  const [totalPosts, setTotalPosts] = useState("");
-  const [topRestaurants, setTopRestaurants] = useState("");
-  const [popularRestaurants, setPopularRestaurants] = useState("");
-  const [dormitoryPostCount, setDormitoryPostCount] = useState("");
+  const [users, setUsers] = useState({});
+  const [posts, setPosts] = useState({});
+  const [topRestaurants, setTopRestaurants] = useState([]);
+  const [dormitories, setDormitories] = useState({});
   const [reportedPostCount, setReportedPostCount] = useState("");
+  const dispatch = useDispatch();
+
   useEffect(() => {
     async function fetchData(userId) {
       const [res1, res2, res3, res4, res5, res6] = await Promise.all([
@@ -56,53 +60,115 @@ function AdminHome() {
         status5 === 200 &&
         status6 === 200
       ) {
-        const { totalUsers } = res1.data;
-        const { totalPosts } = res2.data;
-        const topRest = res3.data;
-        const popRestaurants = res4.data;
-        const countDormitory = res5.data.count;
-        const countReported = res6.data.count;
-
-        setTotalUsers(totalUsers);
-        setTotalPosts(totalPosts);
+        const { allUsers, totalUsers } = res1.data;
+        console.log(res1.data);
+        const { totalPosts, allPosts } = res2.data;
+        console.log("H", totalPosts);
+        const topRest = res4.data;
+        const popRestaurants = res3.data;
+        const { todayDorms, allDorms } = res5.data;
+        const countReported = res6.data;
+        dispatch(setPopularRestaurant(popRestaurants));
+        setTopRestaurants(topRest);
+        setUsers({ allUsers, totalUsers });
+        setPosts({ totalPosts, allPosts });
+        setDormitories({ todayDorms, allDorms });
+        setReportedPostCount(countReported);
+        console.log(users);
       }
     }
     fetchData(userId);
   }, []);
   return (
-    <Box m="20px">
-      <Grid container spacing={2}>
-        <Grid item xs={3}>
+    <Box pl={2} pr={2}>
+      <Topbar></Topbar>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(12,1fr)"
+        gridAutoRows="140px"
+        gap="20px 30px"
+      >
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
-            title={`${totalUsers}`}
-            // perc={weeklyPerc}
-            subtitle="New users this week"
-            icon={<MoneyIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Grid>
-        <Grid item xs={3}>
-          <StatBox
-            title={totalPosts}
-            subtitle="Total posts today"
+            title={users.totalUsers}
+            total={users.allUsers}
+            subtitle="Users Joined Last 7 days"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-        <Grid item xs={3}>
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
-            title={topRestaurants}
-            subtitle="Top Rated Restaurant"
+            title={posts.totalPosts}
+            subtitle="Today's Exchange Posts"
+            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+          />
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <StatBox
+            title={reportedPostCount}
+            subtitle="Reported Posts Today"
             icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />{" "}
-        </Grid>
-        <Grid item xs={3}>
+          />
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
-            title={popularRestaurants}
-            subtitle="Popular Restaurants"
+            title={dormitories.todayDorms}
+            subtitle="Dormitory Posts Last 7 Days"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-      </Grid>
-      <AdminBarChart />
+        </Box>
+        <Box
+          gridColumn="span 8"
+          gridRow="span 4"
+          backgroundColor="#f1eef0"
+          padding="30px"
+        >
+          <Box>
+            <Typography variant="h5" color="#8F00FF" fontWeight="600">
+              Top Restaurants
+            </Typography>
+          </Box>
+
+          <Box height="400px">
+            <AdminBarChart />
+          </Box>
+        </Box>
+        <Box
+          gridColumn="span 4"
+          gridRow="span 4"
+          backgroundColor="#f1eef0"
+          padding="30px"
+        >
+          <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
+            Restaurants Rating
+          </Typography>
+          <LastRatingsList ratingsData={topRestaurants} />
+        </Box>
+      </Box>
     </Box>
   );
 }

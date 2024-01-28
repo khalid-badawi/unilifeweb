@@ -8,12 +8,13 @@ export default function StatBox({
   day,
   perc,
   withPercentage = false,
+  total,
 }) {
   return (
     <Box
-      width="300px"
-      height="130px"
-      m="0 30px"
+      flexDirection="row"
+      flex={1}
+      height="150px"
       backgroundColor="#f1eef0"
       p={3}
       pl={2}
@@ -24,14 +25,6 @@ export default function StatBox({
       <Box>
         <Box display="flex" justifyContent="space-between">
           {icon}
-          <Typography
-            sx={{
-              color: "#FFFF00",
-              fontSize: 15,
-              fontWeight: "500",
-              mt: "1px",
-            }}
-          ></Typography>
         </Box>
         <Box>
           <Typography variant="h5" fontWeight="bold" sx={{ color: "black" }}>
@@ -50,6 +43,21 @@ export default function StatBox({
             {subtitle}
           </Typography>
         </Box>
+        {total && (
+          <Box flexDirection="row" display="flex">
+            <Typography
+              sx={{
+                color: "black",
+                fontSize: 15,
+                fontWeight: "500",
+                mt: "1px",
+              }}
+            >
+              {"("}
+              {total} Total{")"}
+            </Typography>
+          </Box>
+        )}
       </Box>
       {withPercentage && (
         <Box mt="10px">

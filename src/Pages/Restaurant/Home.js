@@ -25,6 +25,8 @@ import {
   setTodayRevenue,
 } from "../../slice/restaurant";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
+import Topbar from "../../Components/Restaurant/Topbar";
+import LastRatingsList from "../../Components/Restaurant/LastRatingsList";
 function Home() {
   const userId = useSelector((state) => state.user.id);
   const weeklyRevenue = useSelector((state) => state.restaurant.weeklyRevenue);
@@ -68,6 +70,7 @@ function Home() {
         const revenue2 = res6.data.revenue;
         const perc2 = res6.data.perc;
         console.log("from fetch:", reviewer);
+        console.log("GG", data);
         dispatch(setWeeklyRevenue(revenue));
         dispatch(setWeeklyPerc(perc));
         dispatch(setTotalPeople(count));
@@ -81,58 +84,97 @@ function Home() {
   }, []);
   console.log(lastReviwer);
   return (
-    <Box m="20px">
-      <SwitchButton />
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
+    <Box pl={2} pr={2}>
+      <Topbar>
+        <SwitchButton />
+      </Topbar>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(12,1fr)"
+        gridAutoRows="140px"
+        gap="20px 30px"
+      >
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
             title={`${weeklyRevenue}₪`}
             perc={weeklyPerc}
             subtitle="this week revenue"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-        <Grid item xs={3}>
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
             title={todayRevenue}
             subtitle="Today's Revenue"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-        <Grid item xs={3}>
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
             title={totalOrder}
             subtitle="Today's Total Orders"
             icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-        <Grid item xs={3}>
+        </Box>
+        <Box
+          grid
+          gridColumn="span 3"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <StatBox
             title={totalPeople}
             subtitle="Users Ordered last 7 days"
             icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
           />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={5}>
-          <Box height={500} width={650}>
+        </Box>
+        <Box
+          gridColumn="span 8"
+          gridRow="span 4"
+          backgroundColor="#f1eef0"
+          padding="30px"
+        >
+          <Box>
+            <Typography variant="h5" color="#8F00FF" fontWeight="600">
+              Most Ordered
+            </Typography>
+          </Box>
+
+          <Box height="400px">
             <BarChart />
           </Box>
-        </Grid>
-        <Grid item xs={5} mt={2}>
-          <ReviewCard
-            reviewer={lastReviwer.reviewer}
-            date={lastReviwer.date}
-            content={lastReviwer.content}
-            rating={lastReviwer.rating}
-            phoneNum={lastReviwer.phoneNum}
-            id={lastReviwer.id}
-            image={lastReviwer.image}
-            orderId={lastReviwer.orderId}
-          />
-        </Grid>
-      </Grid>
+        </Box>
+        <Box
+          gridColumn="span 4"
+          gridRow="span 4"
+          backgroundColor="#f1eef0"
+          padding="30px"
+        >
+          <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
+            Latest Ratings
+          </Typography>
+          <LastRatingsList ratingsData={lastReviwer} />
+        </Box>
+      </Box>
     </Box>
   );
 }

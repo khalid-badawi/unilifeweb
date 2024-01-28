@@ -13,6 +13,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { Box, ListItemSecondaryAction } from "@mui/material";
 import { useSelector } from "react-redux";
+import Topbar from "../../Components/Restaurant/Topbar";
+import SwitchButton from "../../Components/Restaurant/SwitchButton";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -23,7 +25,6 @@ export default function OrderDetails({
   handleCloseModal,
   id,
   handleUpdateClick,
-  
 }) {
   const orders = useSelector((state) => state.restaurant.orders);
   console.log("inside detailed:", id);
@@ -40,6 +41,9 @@ export default function OrderDetails({
   const formattedDate = new Date(createdAt);
   return (
     <React.Fragment>
+      {/* <Topbar>
+        <SwitchButton/>
+      </Topbar> */}
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -97,10 +101,10 @@ export default function OrderDetails({
           </Box>
         </Box>
         <Divider sx={{ backgroundColor: "#8F00FF", mr: 2, ml: 2 }} />
-        <Box sx={{ pr: 2, pl: 2, mt: 2 }}>
+        <Box sx={{ pr: 2, pl: 2, mt: 2, pb: 2 }}>
           <List
             sx={{
-              height: 500,
+              height: 600,
               overflow: "auto",
               backgroundColor: "rgba(0, 0, 0, 0.05)",
               mt: 1,

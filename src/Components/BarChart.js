@@ -16,7 +16,7 @@ const customTooltip = (bar) => {
 const BarChart = ({ isDashboard = false }) => {
   // const theme = useTheme();
   const foodDashBoard = useSelector((state) => state.restaurant.dashBoardFood);
-  const colors = ["green", "yellow", "orange", "red", "purple"];
+  const colors = ["green", "pink", "orange", "red", "purple"];
 
   const data = foodDashBoard.map((item, i) => ({ ...item, color: colors[i] }));
   const theme = useTheme();
@@ -56,7 +56,8 @@ const BarChart = ({ isDashboard = false }) => {
       keys={["orderCount"]}
       indexBy="nameOfFood"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-      width={700}
+      height={500}
+      width={1000}
       padding={0.5}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
