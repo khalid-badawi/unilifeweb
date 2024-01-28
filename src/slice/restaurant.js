@@ -6,6 +6,7 @@ const initialState = {
   weeklyRevenue: "",
   todayRevenue: "",
   weeklyPerc: "",
+  todayPerc: "",
   totalPeople: "",
   dashBoardFood: [],
   totalOrder: "",
@@ -53,6 +54,9 @@ const restaurant = createSlice({
     setIsOpen(state, action) {
       state.isOpen = action.payload;
     },
+    setTodayPerc(state, action) {
+      state.todayPerc = action.payload;
+    },
     setStateRestaurant(state, action) {
       state.lastReviwer = {};
       state.menu = [];
@@ -82,5 +86,6 @@ export const {
   setLastReviwer,
   setStateRestaurant,
   setIsOpen,
+  setTodayPerc,
 } = restaurant.actions;
 export default restaurant.reducer;

@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
-import { useNavigate, useParams } from "react-router-dom";
-import { addRoom } from "../../APIS/dormitoryAPI";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { addPost, addRoom, editRoom } from "../../APIS/dormitoryAPI";
 import OneRoomForm from "../../Components/Dormitory/OneRoomForm";
 import SuccessMessage from "../../Components/Success";
 
-const AddRoom = () => {
-  const id = useSelector((state) => state.user.id);
-  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
-  const dispatch = useDispatch();
+const EditRoom = () => {
   const navigate = useNavigate();
+  const id = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
   console.log("addRoom");
-  //   const { dormitoryValues } = location.state;
-  const { dormitoryId } = useParams();
-  console.log("dormitoryId", dormitoryId);
-  //   const location = useLocation();
+  const { dormitoryId, roomId } = useParams();
+  console.log("dormitoryId", dormitoryId, "roomId", roomId);
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
   const handleSuccessMessageClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -26,20 +24,23 @@ const AddRoom = () => {
 
     setSuccessMessageOpen(false);
   };
+  const posts = useSelector((state) => state.dormitory.posts);
+  const post = posts.filter((post) => post.id === parseInt(dormitoryId))[0];
+  const { rooms } = post;
+  const room = rooms.filter((room) => room.id === parseInt(roomId))[0];
+  const { numberOfPerson, avilableSeat, type, rent, image } = room;
+  console.log("room", room);
   const formik = useFormik({
     initialValues: {
-      roomImage: null,
-      numberOfPerson: 0,
-      avilableSeat: 0,
-      type: "",
-      rent: 0,
+      roomImage: "",
+      numberOfPerson,
+      avilableSeat,
+      type,
+      rent,
+      URL: image,
     },
     validationSchema: Yup.object({
-      roomImage: Yup.mixed()
-        .test("fileFormat", "Invalid file format", (value) => {
-          return value && ["image/jpeg", "image/png"].includes(value.type);
-        })
-        .required("Required"),
+      roomImage: Yup.mixed(),
       numberOfPerson: Yup.number()
         .required("Required")
         .min(1, "Should be at least 1 person"),
@@ -54,17 +55,17 @@ const AddRoom = () => {
 
       console.log("dormitoryId", dormitoryId);
       console.log("id", id);
-      const res = await addRoom(id, dormitoryId, values);
+      const res = await editRoom(id, dormitoryId, roomId, values);
       console.log("API Response:", res);
       let status = res.status;
       console.log(res);
-      if (status === 201) {
-        setSuccessMessageOpen(true);
+      if (status === 200) {
         formik.setFieldValue("numberOfPerson", "");
         formik.setFieldValue("avilableSeat", "");
         formik.setFieldValue("type", "");
         formik.setFieldValue("rent", "");
         formik.setFieldValue("image", "");
+        setSuccessMessageOpen(true);
         setTimeout(() => {
           handleSuccessMessageClose();
         }, 3000);
@@ -81,7 +82,6 @@ const AddRoom = () => {
           } = res;
           dispatch(setError(message));
         } else {
-          console.log("err");
           dispatch(setError("An error occured please try again"));
         }
         navigate("/error");
@@ -110,16 +110,16 @@ const AddRoom = () => {
               mb: 1,
             }}
           >
-            Add Room
+            Edit Room
           </Button>
-          <SuccessMessage
-            open={successMessageOpen}
-            onClose={handleSuccessMessageClose}
-            message="Data added successfully!" // Customize the success message
-          />
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data edited successfully!" // Customize the success message
+      />
     </Box>
   );
 };
-export default AddRoom;
+export default EditRoom;

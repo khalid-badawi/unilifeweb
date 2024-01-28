@@ -47,6 +47,10 @@ import EditAd from "./Pages/MainAdmin/EditAd";
 import Dormitories from "./Pages/Dormitory/Dormitories";
 import Categories from "./Pages/MainAdmin/Categories";
 import AddRoom from "./Pages/Dormitory/AddRoom";
+import OneRoomForm from "./Components/Dormitory/OneRoomForm";
+import EditPost from "./Pages/Dormitory/EditPost";
+import EditRoom from "./Pages/Dormitory/EditRoom";
+import Error from "./Components/Error";
 function App() {
   const location = useLocation();
   const role = useSelector((state) => state.user.role);
@@ -90,21 +94,6 @@ function App() {
       ],
     },
   ];
-  // const adminSidebar = [
-  //   { title: "Dashboard", to: "/admin/home", icon: <HomeOutlinedIcon /> },
-  //   { title: "Users", to: "/admin/users", icon: <MenuIcon /> },
-  //   { title: "Add Restaurant", to: "/admin/restaurantadd", icon: <AddIcon /> },
-  //   { title: "Add Dormitory", to: "/admin/dormitoryadd", icon: <AddIcon /> },
-  //   { title: "Add Faculty", to: "/admin/facultyadd", icon: <AddIcon /> },
-  //   { title: "Faculties", to: "/admin/faculties", icon: <OrdersIcon /> },
-  //   { title: "Majors", to: "/admin/majors", icon: <OrdersIcon /> },
-  //   { title: "Students", to: "/admin/students", icon: <OrdersIcon /> },
-  //   { title: "Restaurants", to: "/admin/restaurants", icon: <OrdersIcon /> },
-  //   { title: "Dormitories", to: "/admin/dormitories", icon: <OrdersIcon /> },
-  //   { title: "Posts", to: "/admin/posts", icon: <OrdersIcon /> },
-  //   { title: "Create AD", to: "/admin/adsadd", icon: <OrdersIcon /> },
-  //   { title: "ADs", to: "/admin/ads", icon: <OrdersIcon /> },
-  // ];
   const adminSidebar = [
     {
       section: "Dashboard",
@@ -177,6 +166,11 @@ function App() {
       section: "Dormitories",
       items: [
         {
+          title: "Add Dormitory",
+          to: "/dormitory/dormitoryaddpost",
+          icon: <AddIcon />,
+        },
+        {
           title: "My Dormitories",
           to: "/dormitory/dormitories",
           icon: <ADIcon />,
@@ -189,7 +183,9 @@ function App() {
       ? adminSidebar
       : role === "restaurant"
       ? restaurantSidebar
-      : dormitorySidebar;
+      : role === "dormitory"
+      ? dormitorySidebar
+      : [];
   const renderSidebar = () => {
     if (isSignInPage) {
       return null;
@@ -221,6 +217,7 @@ function App() {
       <main className="content">
         <Routes>
           <Route path="/signin" element={<Login />} index />
+          <Route path="/error" element={<Error />} index />
           {/*restaurant route */}
           <Route path="/restaurant/home" element={<Home />} />
           <Route path="/restaurant/orders" element={<Orders />} />
@@ -270,8 +267,16 @@ function App() {
             element={<AddDormitoryPost />}
           />
           <Route path="/dormitory/dormitories" element={<Dormitories />} />
-          <Route path="/dormitory/roomadd" element={<AddRoom />} />
           <Route path="/dormitory/roomsinfo" element={<RoomInformation />} />
+          <Route path="/dormitory/roomadd/:dormitoryId" element={<AddRoom />} />
+          <Route
+            path="/dormitory/postedit/:dormitoryId"
+            element={<EditPost />}
+          />
+          <Route
+            path="/dormitory/roomedit/:dormitoryId/:roomId"
+            element={<EditRoom />}
+          />
 
           {/*dormitory route End*/}
         </Routes>

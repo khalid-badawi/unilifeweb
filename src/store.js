@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import restaurantReducer from "./slice/restaurant";
 import userReducer from "./slice/user";
 import adminReducer from "./slice/admin";
+import dormitoryReducer from "./slice/dormitory";
 
 const persistConfig = {
   key: "root",
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   restaurant: restaurantReducer,
   admin: adminReducer,
+  dormitory: dormitoryReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

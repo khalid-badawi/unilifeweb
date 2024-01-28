@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,7 +17,17 @@ import { setError } from "../../slice/user";
 import { setMenu } from "../../slice/restaurant";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 export default function EditItem() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const { foodId } = useParams();
   console.log("foodId", foodId);
   const userId = useSelector((state) => state.user.id);
@@ -61,7 +71,10 @@ export default function EditItem() {
       ) {
         const message = res.response.data.message;
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      navigate("/error");
       console.log(res);
     }
   }
@@ -234,6 +247,11 @@ export default function EditItem() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data edited successfully"
+      />
     </Box>
   );
 }

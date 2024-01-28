@@ -7,12 +7,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography,
 } from "@mui/material";
 import CustomInput from "../CustomInput";
 import Topbar from "../Restaurant/Topbar";
 
 const OneRoomForm = ({ formik }) => {
+  console.log("one room form=", formik);
   return (
     <Box pl={2} pb={2}>
       <Topbar></Topbar>

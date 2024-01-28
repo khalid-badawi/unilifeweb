@@ -332,35 +332,39 @@ export default function Orders() {
   // ... rest of the component
 
   return (
-    <Box pl={2}>
-      <Topbar>
-        <SwitchButton />
-      </Topbar>
-      <Box sx={{ height: 900 }}>
-        <DataGrid
-          columns={columns}
-          rows={orders}
-          getRowId={(row) => row.id}
-          getRowClassName={(params) => `status-${params.row.status}`}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 30,
-              },
-            },
-          }}
-          rowSelection={false}
-        />
-      </Box>
-      {orderId && (
-        <OrderDetails
-          isModalOpen={isModalOpen}
-          handleCloseModal={handleCloseModal}
-          id={orderId}
-          handleUpdateClick={handleUpdateClick}
-          handleCancelClick={handleCancelClick}
-        />
+    <>
+      {orders && (
+        <Box pl={2}>
+          <Topbar>
+            <SwitchButton />
+          </Topbar>
+          <Box sx={{ height: 900 }}>
+            <DataGrid
+              columns={columns}
+              rows={orders}
+              getRowId={(row) => row.id}
+              getRowClassName={(params) => `status-${params.row.status}`}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 30,
+                  },
+                },
+              }}
+              rowSelection={false}
+            />
+          </Box>
+          {orderId && (
+            <OrderDetails
+              isModalOpen={isModalOpen}
+              handleCloseModal={handleCloseModal}
+              id={orderId}
+              handleUpdateClick={handleUpdateClick}
+              handleCancelClick={handleCancelClick}
+            />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 }

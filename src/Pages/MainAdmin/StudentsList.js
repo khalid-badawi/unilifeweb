@@ -111,19 +111,23 @@ const StudentsList = () => {
   ];
 
   return (
-    <Box pl={2} pr={2}>
-      <Topbar></Topbar>
-      <Box sx={{ height: 800 }}>
-        <DataGrid
-          columns={columns}
-          rows={students}
-          getRowId={(row) => row.id}
-          getRowClassName={(params) => `status-${params.row.status}`}
-          pageSize={10}
-          rowSelection={false}
-        />
-      </Box>
-    </Box>
+    <>
+      {students && (
+        <Box pl={2} pr={2}>
+          <Topbar></Topbar>
+          <Box sx={{ height: 800 }}>
+            <DataGrid
+              columns={columns}
+              rows={students}
+              getRowId={(row) => row.id}
+              getRowClassName={(params) => `status-${params.row.status}`}
+              pageSize={10}
+              rowSelection={false}
+            />
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

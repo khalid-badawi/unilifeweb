@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -11,9 +11,18 @@ import { deleteFood } from "../../APIS/restaurantAPI";
 import { setMenu } from "../../slice/restaurant";
 import { setError } from "../../slice/user";
 import { useNavigate } from "react-router";
+import SuccessMessage from "../Success";
 ///import { idID } from "@mui/material/locale";
 
 export default function MenuCard({ title, desc, img, price, foodId }) {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const menu = useSelector((state) => state.restaurant.menu);
   const naviagte = useNavigate();
   const id = useSelector((state) => state.user.id);
@@ -27,13 +36,20 @@ export default function MenuCard({ title, desc, img, price, foodId }) {
       console.log(status);
       const newMenu = menu.filter((item) => item.foodId !== foodId);
       dispatch(setMenu(newMenu));
+      setSuccessMessageOpen(true);
+      setTimeout(() => {
+        handleSuccessMessageClose();
+      }, 3000);
     } else {
       status = res.response.status;
       console.log(status);
       if (status === 403 || status === 401 || status === 404) {
         const message = res.response.data.message;
         dispatch(setError(message));
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      naviagte("/error");
     }
   }
   return (
@@ -73,6 +89,11 @@ export default function MenuCard({ title, desc, img, price, foodId }) {
           {price}₪
         </Typography>
       </Box>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data deleted successfully!" // Customize the success message
+      />
     </Card>
   );
 }

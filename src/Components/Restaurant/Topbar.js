@@ -8,9 +8,11 @@ import { setSatesUser, setRole } from "../../slice/user";
 import { setAdminState } from "../../slice/admin";
 import { setStateRestaurant } from "../../slice/restaurant";
 import { setStateDormitory } from "../../slice/dormitory";
+import { useNavigate } from "react-router";
 
 export default function Topbar({ children }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const role = useSelector((state) => state.user.role);
   function logout(e) {
     e.preventDefault();
@@ -24,6 +26,7 @@ export default function Topbar({ children }) {
     }
     dispatch(setRole(""));
     localStorage.setItem("token", "");
+    navigate("/signin");
   }
   return (
     <Box display="flex" justifyContent="space-between" padding={2}>

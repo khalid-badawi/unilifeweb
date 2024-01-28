@@ -19,7 +19,19 @@ import AdminBarChart from "../../Components/Main Admin/AdminBarChart";
 import Topbar from "../../Components/Restaurant/Topbar";
 import { setPopularRestaurant } from "../../slice/admin";
 import LastRatingsList from "../../Components/Restaurant/LastRatingsList";
+import { setError } from "../../slice/user";
+import { useNavigate } from "react-router";
+import SuccessMessage from "../../Components/Success";
 function AdminHome() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const userId =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const [users, setUsers] = useState({});
@@ -75,101 +87,113 @@ function AdminHome() {
         setDormitories({ todayDorms, allDorms });
         setReportedPostCount(countReported);
         console.log(users);
+      } else {
+        dispatch(setError("An error occured please try again"));
       }
+      //navigate("/error");
     }
     fetchData(userId);
   }, []);
   return (
-    <Box pl={2} pr={2}>
-      <Topbar></Topbar>
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(12,1fr)"
-        gridAutoRows="140px"
-        gap="20px 30px"
-      >
+    <>
+      <Box pl={2} pr={2}>
+        <Topbar></Topbar>
         <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          display="grid"
+          gridTemplateColumns="repeat(12,1fr)"
+          gridAutoRows="140px"
+          gap="20px 30px"
         >
-          <StatBox
-            title={users.totalUsers}
-            total={users.allUsers}
-            subtitle="Users Joined Last 7 days"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={posts.totalPosts}
-            subtitle="Today's Exchange Posts"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={reportedPostCount}
-            subtitle="Reported Posts Today"
-            icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={dormitories.todayDorms}
-            subtitle="Dormitory Posts Last 7 Days"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          gridColumn="span 8"
-          gridRow="span 4"
-          backgroundColor="#f1eef0"
-          padding="30px"
-        >
-          <Box>
-            <Typography variant="h5" color="#8F00FF" fontWeight="600">
-              Top Restaurants
-            </Typography>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={users.totalUsers}
+              total={users.allUsers}
+              subtitle="Users Joined Last 7 days"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
           </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={posts.totalPosts}
+              total={posts.allPosts}
+              subtitle="Today's Exchange Posts"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
+          </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={reportedPostCount}
+              subtitle="Reported Posts Today"
+              icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
+          </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={dormitories.todayDorms}
+              total={dormitories.allDorms}
+              subtitle="Dormitory Posts Last 7 Days"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
+          </Box>
+          <Box
+            gridColumn="span 8"
+            gridRow="span 4"
+            backgroundColor="#f1eef0"
+            padding="30px"
+          >
+            <Box>
+              <Typography variant="h5" color="#8F00FF" fontWeight="600">
+                Top Restaurants
+              </Typography>
+            </Box>
 
-          <Box height="400px">
-            <AdminBarChart />
+            <Box height="400px">
+              <AdminBarChart />
+            </Box>
+          </Box>
+          <Box
+            gridColumn="span 4"
+            gridRow="span 4"
+            backgroundColor="#f1eef0"
+            padding="30px"
+          >
+            <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
+              Restaurants Rating
+            </Typography>
+            <LastRatingsList ratingsData={topRestaurants} />
           </Box>
         </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 4"
-          backgroundColor="#f1eef0"
-          padding="30px"
-        >
-          <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
-            Restaurants Rating
-          </Typography>
-          <LastRatingsList ratingsData={topRestaurants} />
-        </Box>
+        <SuccessMessage
+          open={successMessageOpen}
+          onClose={handleSuccessMessageClose}
+          message="Data added successfully!"
+        />
       </Box>
-    </Box>
+    </>
   );
 }
 

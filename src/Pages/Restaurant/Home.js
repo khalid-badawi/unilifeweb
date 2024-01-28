@@ -23,6 +23,7 @@ import {
   setTotalOrder,
   setLastReviwer,
   setTodayRevenue,
+  setTodayPerc,
 } from "../../slice/restaurant";
 import SwitchButton from "../../Components/Restaurant/SwitchButton";
 import Topbar from "../../Components/Restaurant/Topbar";
@@ -35,6 +36,7 @@ function Home() {
   const totalPeople = useSelector((state) => state.restaurant.totalPeople);
   const totalOrder = useSelector((state) => state.restaurant.totalOrder);
   const lastReviwer = useSelector((state) => state.restaurant.lastReviwer);
+  const todayPerc = useSelector((state) => state.restaurant.todayPerc);
   console.log("lastReviwer", lastReviwer);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -53,7 +55,12 @@ function Home() {
       const status4 = res4.status;
       const status5 = res5.status;
       const status6 = res6.status;
-      console.log(status1, status2);
+      console.log("getWeeklyRevenue", res1);
+      console.log("getTotalPeople", res2);
+      console.log("getWeeklyRevenue", res3);
+      console.log("getTotalOrder", res4);
+      console.log("getLastReviwer", res5);
+      console.log("getTodayRevenue", res6);
       if (
         status1 === 200 &&
         status2 === 200 &&
@@ -78,104 +85,111 @@ function Home() {
         dispatch(setTotalOrder(totalOrder));
         dispatch(setLastReviwer(reviewer));
         dispatch(setTodayRevenue(revenue2));
+        dispatch(setTodayPerc(perc2));
       }
     }
     fetchData(userId);
   }, []);
   console.log(lastReviwer);
   return (
-    <Box pl={2} pr={2}>
-      <Topbar>
-        <SwitchButton />
-      </Topbar>
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(12,1fr)"
-        gridAutoRows="140px"
-        gap="20px 30px"
-      >
+    <>
+      (
+      <Box pl={2} pr={2}>
+        <Topbar>
+          <SwitchButton />
+        </Topbar>
         <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          display="grid"
+          gridTemplateColumns="repeat(12,1fr)"
+          gridAutoRows="140px"
+          gap="20px 30px"
         >
-          <StatBox
-            title={`${weeklyRevenue}₪`}
-            perc={weeklyPerc}
-            subtitle="this week revenue"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={todayRevenue}
-            subtitle="Today's Revenue"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalOrder}
-            subtitle="Today's Total Orders"
-            icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          grid
-          gridColumn="span 3"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title={totalPeople}
-            subtitle="Users Ordered last 7 days"
-            icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
-          />
-        </Box>
-        <Box
-          gridColumn="span 8"
-          gridRow="span 4"
-          backgroundColor="#f1eef0"
-          padding="30px"
-        >
-          <Box>
-            <Typography variant="h5" color="#8F00FF" fontWeight="600">
-              Most Ordered
-            </Typography>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={`${weeklyRevenue}₪`}
+              perc={weeklyPerc}
+              subtitle="this week revenue"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+              withPercentage={true}
+            />
           </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={todayRevenue}
+              subtitle="Today's Revenue"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+              withPercentage={true}
+            />
+          </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={totalOrder}
+              subtitle="Today's Total Orders"
+              icon={<OrdersIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
+          </Box>
+          <Box
+            grid
+            gridColumn="span 3"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <StatBox
+              title={totalPeople}
+              subtitle="Users Ordered last 7 days"
+              icon={<PeopleIcon sx={{ color: "#8F00FF", fontSize: 30 }} />}
+            />
+          </Box>
+          <Box
+            gridColumn="span 8"
+            gridRow="span 4"
+            backgroundColor="#f1eef0"
+            padding="30px"
+          >
+            <Box>
+              <Typography variant="h5" color="#8F00FF" fontWeight="600">
+                Most Ordered
+              </Typography>
+            </Box>
 
-          <Box height="400px">
-            <BarChart />
+            <Box height="400px">
+              <BarChart />
+            </Box>
           </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 4"
-          backgroundColor="#f1eef0"
-          padding="30px"
-        >
-          <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
-            Latest Ratings
-          </Typography>
-          <LastRatingsList ratingsData={lastReviwer} />
+          <Box
+            gridColumn="span 4"
+            gridRow="span 4"
+            backgroundColor="#f1eef0"
+            padding="30px"
+          >
+            <Typography variant="h5" color="#8F00FF" fontWeight="600" mb="30px">
+              Latest Ratings
+            </Typography>
+            <LastRatingsList ratingsData={lastReviwer} />
+          </Box>
         </Box>
       </Box>
-    </Box>
+      )
+    </>
   );
 }
 

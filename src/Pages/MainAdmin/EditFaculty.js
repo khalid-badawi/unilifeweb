@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, FormControl } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,10 +6,20 @@ import CustomInput from "../../Components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 import { addFaculty, editFaculty } from "../../APIS/adminAPI";
 import { setError } from "../../slice/user";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { setColleges } from "../../slice/admin";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 export default function EditFaculty() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const colleges = useSelector((state) => state.admin.colleges);
@@ -53,6 +63,10 @@ export default function EditFaculty() {
             : item
         );
         dispatch(setColleges(newFaculties));
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         const {
@@ -68,7 +82,10 @@ export default function EditFaculty() {
           status === 400
         ) {
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -217,6 +234,11 @@ export default function EditFaculty() {
           Edit Faculty
         </Button>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="data edited successfully"
+      />
     </Box>
   );
 }

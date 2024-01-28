@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
@@ -15,8 +15,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import { useNavigate } from "react-router";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
 
 export default function AddADs() {
+  const [success, setSuccess] = useState("");
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
@@ -43,6 +53,11 @@ export default function AddADs() {
         formik.setFieldValue("description", "");
         formik.setFieldValue("image", "");
         formik.setFieldValue("link", "");
+        setSuccess("Data added successfully");
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         if (status === 401 || status === 409 || status === 403) {
@@ -52,7 +67,10 @@ export default function AddADs() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -151,6 +169,11 @@ export default function AddADs() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message={success}
+      />
     </Box>
   );
 }

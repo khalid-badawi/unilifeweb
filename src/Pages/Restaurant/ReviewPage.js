@@ -37,13 +37,17 @@ function ReviewPage() {
     fetchData();
   }, []);
   return (
-    <Box sx={{ height: "91%", overflowY: "auto" }}>
-      <Topbar>
-        <SwitchButton />
-      </Topbar>
+    <>
+      {reviews && (
+        <Box sx={{ height: "91%", overflowY: "auto" }}>
+          <Topbar>
+            <SwitchButton />
+          </Topbar>
 
-      <ReviewsList reviews={reviews} />
-    </Box>
+          <ReviewsList reviews={reviews} />
+        </Box>
+      )}
+    </>
   );
 }
 export default ReviewPage;

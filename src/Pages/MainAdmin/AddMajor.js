@@ -1,5 +1,5 @@
 import { Box, Button, FormControl } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "../../Components/CustomInput";
@@ -7,8 +7,19 @@ import { addDormitory } from "../../APIS/adminAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
 import Topbar from "../../Components/Restaurant/Topbar";
+import SuccessMessage from "../../Components/Success";
+import { useNavigate } from "react-router";
 
 export default function AddMajor() {
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
+  const navigate = useNavigate();
   const id =
     useSelector((state) => state.user.id) || localStorage.getItem("id");
   const dispatch = useDispatch();
@@ -30,6 +41,10 @@ export default function AddMajor() {
         formik.setFieldValue("password", "");
         formik.setFieldValue("confirmPassword", "");
         formik.setFieldValue("phoneNum", "");
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
       } else {
         status = res.response.status;
         if (
@@ -44,7 +59,10 @@ export default function AddMajor() {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -165,6 +183,11 @@ export default function AddMajor() {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data added successfully!"
+      />
     </Box>
   );
 }

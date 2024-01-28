@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
-import { Formik, useFormik } from "formik";
-import * as Yup from "yup";
+import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setError } from "../../slice/user";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RoomForm from "../../Components/Dormitory/RoomForm";
 import { addPost } from "../../APIS/dormitoryAPI";
+import SuccessMessage from "../../Components/Success";
 
 const RoomInformation = () => {
+  const navigate = useNavigate();
   const id = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const handleSuccessMessageClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSuccessMessageOpen(false);
+  };
   const location = useLocation();
   const { dormitoryValues } = location.state;
   console.log("SS=", dormitoryValues);
@@ -45,13 +54,18 @@ const RoomInformation = () => {
       ),
     }),*/
 
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       console.log("AAAA");
       console.log("values:", values);
       const res = await addPost(id, dormitoryValues, values);
       console.log("res:", res);
       let status = res.status;
       if (status === 201) {
+        setSuccessMessageOpen(true);
+        setTimeout(() => {
+          handleSuccessMessageClose();
+        }, 3000);
+        resetForm();
       } else {
         status = res.response.status;
         if (status === 401 || status === 409 || status === 403) {
@@ -61,7 +75,10 @@ const RoomInformation = () => {
             },
           } = res;
           dispatch(setError(message));
+        } else {
+          dispatch(setError("An error occured please try again"));
         }
+        navigate("/error");
       }
     },
   });
@@ -94,6 +111,11 @@ const RoomInformation = () => {
           </Button>
         </Box>
       </form>
+      <SuccessMessage
+        open={successMessageOpen}
+        onClose={handleSuccessMessageClose}
+        message="Data added successfully!" // Customize the success message
+      />
     </Box>
   );
 };
